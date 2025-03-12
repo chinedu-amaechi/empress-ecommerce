@@ -1,0 +1,28 @@
+{
+  "name": "empress-ecommerce",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/empress-app",
+    "apps/empress-admin-app",
+    "backend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspaces",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecommerce",
+    "nextjs",
+    "supabase",
+    "monorepo"
+  ],
+  "author": "Isabelle Helbig, Chinedu Amaechi, Faruq Ogunkunle, Manjot Singh",
+  "license": "ISC",
+  "description": "An e-commerce platform featuring a client app and admin panel built with Next.js and Supabase, optimized for scalability and modularity.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chinedu-amaechi/empress-ecommerce"
+  }
+}
