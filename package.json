@@ -24,5 +24,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/chinedu-amaechi/empress-ecommerce"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1"
   }
 }
