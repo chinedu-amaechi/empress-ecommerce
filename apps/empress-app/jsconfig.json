@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".", // Ensure paths are resolved from the project root
     "paths": {
-      "@/*": ["./src/*"]
+      // "@/*": ["./src/*"], // Keep existing alias for internal `src/`
+      "@backend/*": ["../../backend/*"] // Allow access to backend from empress-app
     }
   }
 }
