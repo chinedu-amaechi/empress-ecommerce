@@ -7,6 +7,10 @@
     "apps/empress-admin-app",
     "backend"
   ],
+  "packageManager": "npm@10",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "npm run build --workspaces",
     "dev": "npm run dev --workspaces",
