@@ -22,7 +22,7 @@ const Header = () => {
         </div>
 
         {/* Minimal Hero Content */}
-        <div className="container relative mx-auto px-4 py-12 md:py-16">
+        <div className="container relative mx-auto px-1 py-12 md:py-16">
           <div className="max-w-lg">
             <h1 className="text-white font-light text-4xl md:text-5xl mb-4 leading-tight">
               Elegance for the{" "}
