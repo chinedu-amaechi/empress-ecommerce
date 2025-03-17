@@ -1,213 +1,548 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
-// SVG Icons to avoid additional package
-const StarFullIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className="w-5 h-5 text-yellow-500"
-  >
-    <path
-      fillRule="evenodd"
-      d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.007z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
+// Utility function to generate star ratings
+const generateStars = (rating) => {
+  return (
+    <div className="flex items-center">
+      {[...Array(5)].map((_, i) => (
+        <svg
+          key={i}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill={i < Math.floor(rating) ? "currentColor" : "none"}
+          stroke="currentColor"
+          className={`w-4 h-4 ${
+            i < Math.floor(rating) ? "text-yellow-400" : "text-gray-300"
+          } ${
+            i === Math.floor(rating) && !Number.isInteger(rating)
+              ? "text-yellow-400"
+              : ""
+          }`}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={i < Math.floor(rating) ? "0" : "1.5"}
+            d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+          />
+        </svg>
+      ))}
+    </div>
+  );
+};
 
-const StarHalfIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className="w-5 h-5 text-yellow-500"
-  >
-    <path
-      fillRule="evenodd"
-      d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.007z"
-      clipRule="evenodd"
-      opacity="0.5"
-    />
-  </svg>
-);
-
-const StarEmptyIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    className="w-5 h-5 text-gray-300"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-    />
-  </svg>
-);
-
-const HeartIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className="w-5 h-5 text-red-500"
-  >
-    <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-  </svg>
-);
-
-const CartIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className="w-5 h-5 text-gray-700"
-  >
-    <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.853a2.25 2.25 0 012.274-2.25h10.5a.75.75 0 00.714-.515l1.605-4.756a.75.75 0 00-.714-1.036H6.981a.75.75 0 00-.691.479L5.324 7.5H4.5a.75.75 0 00-.75.75v.75h.75a.75.75 0 01.75.75v.75h1.5v-1.5a.75.75 0 00-.75-.75H3.75v-1.5h.75a.75.75 0 00.75-.75V6h.75a.75.75 0 00.692-.479L7.324 4.5h8.024a.75.75 0 000-1.5H6.981a1.5 1.5 0 00-1.417.957l-.428 1.285a1.5 1.5 0 001.41 1.958h12.827a.75.75 0 00.714-1.036l-1.605-4.756a.75.75 0 00-.714-.514H8.25a.75.75 0 000 1.5h7.01l1.305 3.864a.75.75 0 01-.714 1.036H5.572a.75.75 0 01-.714-.514L3.25 4.457v9.19a3.75 3.75 0 105.304 2.803 3.739 3.739 0 00-2.804-1.303h7.5a3.75 3.75 0 105.304 2.803c0-1.19-.557-2.257-1.431-2.253a.75.75 0 000 1.5c.469 0 .75.48.75.748a2.25 2.25 0 01-4.5 0 2.25 2.25 0 012.25-2.25h1.5a.75.75 0 000-1.5h-1.5a3.75 3.75 0 00-3.75 3.75 3.75 3.75 0 005.304 2.803 3.739 3.739 0 00-2.804-1.303h-7.5a2.25 2.25 0 00-2.25 2.25c0 1.24 1.01 2.25 2.25 2.25h.75a.75.75 0 000-1.5H5.25a.75.75 0 01-.75-.75 2.25 2.25 0 012.25-2.25h10.5a.75.75 0 00.714-.515l1.605-4.756a.75.75 0 00-.714-1.036H6.981z" />
-  </svg>
-);
-
-const ChevronLeftIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    className="w-5 h-5 text-white"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M15 19l-7-7 7-7"
-    />
-  </svg>
-);
-
-const ChevronRightIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    className="w-5 h-5 text-white"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M9 5l7 7-7 7"
-    />
-  </svg>
-);
-
-export default function ProductCard() {
-  const rating = 4.5;
-  const totalReviews = 120;
-  const productImages = [
-    "/bracelet-01.jpg",
-    "/bracelet-02.jpg",
-    "/bracelet-03.jpg",
-    "/bracelet-04.jpg",
-    "/bracelet-05.jpg",
-  ];
-  const [currentImage, setCurrentImage] = useState(0);
+export default function ProductCard({
+  product = {
+    id: "1",
+    name: "Ethereal Moonstone Bracelet",
+    price: 129.99,
+    originalPrice: 159.99,
+    rating: 4.5,
+    reviews: 24,
+    material: "Sterling Silver",
+    colors: ["Silver", "Rose Gold", "Gold"],
+    description:
+      "A delicate bracelet featuring authentic moonstone beads. The soft luminescence of the stones creates an ethereal effect, perfect for both day and evening wear.",
+    images: [
+      "/bracelet-01.jpg",
+      "/bracelet-02.jpg",
+      "/bracelet-03.jpg",
+      "/bracelet-04.jpg",
+      "/bracelet-05.jpg",
+    ],
+    isNew: true,
+    isBestseller: true,
+  },
+}) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(
+    product.colors ? product.colors[0] : null
+  );
+  const [quantity, setQuantity] = useState(1);
+  const modalRef = useRef(null);
 
-  // Function to go to the next image
-  const nextImage = () => {
-    setCurrentImage((prev) => (prev + 1) % productImages.length);
+  // Navigation for image carousel
+  const nextImage = (e) => {
+    e?.stopPropagation();
+    setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
   };
 
-  // Function to go to the previous image
-  const prevImage = () => {
-    setCurrentImage(
-      (prev) => (prev - 1 + productImages.length) % productImages.length
+  const prevImage = (e) => {
+    e?.stopPropagation();
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? product.images.length - 1 : prev - 1
     );
   };
 
-  // Render star rating
-  const renderStars = () => {
-    return Array.from({ length: 5 }, (_, index) => {
-      if (rating >= index + 1) return <StarFullIcon key={index} />;
-      if (rating >= index + 0.5) return <StarHalfIcon key={index} />;
-      return <StarEmptyIcon key={index} />;
-    });
+  // Close modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsModalOpen(false);
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      // Prevent scrolling when modal is open
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "auto";
+    };
+  }, [isModalOpen]);
+
+  // Handle modal open
+  const openModal = (e) => {
+    e.preventDefault();
+    setIsModalOpen(true);
+  };
+
+  // Handle quantity changes
+  const increaseQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const decreaseQuantity = () => {
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   };
 
   return (
-    <div className="w-fit overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 shadow-lg transition-shadow duration-300 hover:shadow-xl">
-      {/* Product Image with Icons */}
+    <>
       <div
-        className="relative h-56 w-full bg-cover bg-center transition-all duration-300 sm:h-48"
-        style={{ backgroundImage: `url(${productImages[currentImage]})` }}
+        className="group relative bg-white rounded-lg border border-gray-200 hover:shadow-xl transition-all duration-300 w-80 overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Wishlist Heart Icon */}
-        <div className="absolute left-2 top-2 cursor-pointer rounded-full bg-white p-2 shadow-md transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-red-100 sm:left-3 sm:top-3 sm:p-3">
-          <HeartIcon />
-        </div>
+        {/* Product badges removed as requested */}
 
-        {/* Cart Icon */}
-        <div className="absolute right-2 top-2 cursor-pointer rounded-full bg-white p-2 shadow-md transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-gray-100 sm:right-3 sm:top-3 sm:p-3">
-          <CartIcon />
-        </div>
+        {/* Product image with carousel */}
+        <div className="relative h-64 overflow-hidden">
+          {/* Make the entire image area clickable to open modal, except when interacting with other elements */}
+          <div
+            className="absolute inset-0 cursor-pointer z-0"
+            onClick={openModal}
+            aria-label="Open product details"
+          ></div>
+          <Image
+            src={product.images[currentImageIndex]}
+            alt={product.name}
+            className="object-cover w-full h-full transition-transform duration-500 ease-out group-hover:scale-110"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
 
-        {/* Arrows for image switching (only show on hover) */}
-        {isHovered && (
-          <>
-            {/* Left Arrow */}
+          {/* Image navigation buttons - always functional */}
+          {isHovered && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevImage();
+                }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-sm z-10"
+                aria-label="Previous image"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  className="w-4 h-4 text-gray-800"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15.75 19.5L8.25 12l7.5-7.5"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextImage();
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-sm z-10"
+                aria-label="Next image"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  className="w-4 h-4 text-gray-800"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+              </button>
+            </>
+          )}
+
+          {/* Dot indicators for image position */}
+          <div className="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 z-10">
+            {product.images.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentImageIndex(idx);
+                }}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${
+                  currentImageIndex === idx
+                    ? "bg-white w-3"
+                    : "bg-white/70 hover:bg-white"
+                }`}
+                aria-label={`View image ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Quick view button in bottom right corner */}
+          <div className="absolute bottom-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button
-              className="absolute left-2 top-1/2 -translate-y-1/2 transform rounded-full bg-gray-800 bg-opacity-50 p-2 text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-opacity-80"
-              onClick={prevImage}
+              onClick={openModal}
+              className="bg-white px-3 py-1.5 rounded-md text-xs font-medium text-gray-800 shadow-md hover:bg-gray-50 transition-all duration-200"
             >
-              <ChevronLeftIcon />
+              Quick View
             </button>
+          </div>
+        </div>
 
-            {/* Right Arrow */}
-            <button
-              className="absolute right-2 top-1/2 -translate-y-1/2 transform rounded-full bg-gray-800 bg-opacity-50 p-2 text-white transition-transform duration-300 ease-in-out hover:scale-110 hover:bg-opacity-80"
-              onClick={nextImage}
-            >
-              <ChevronRightIcon />
-            </button>
-          </>
-        )}
-      </div>
+        {/* Product details */}
+        <div className="p-4 sm:p-5">
+          <Link
+            href={`/products/${product.id}`}
+            className="group-hover:text-[#1E96FC] transition-colors duration-300"
+          >
+            <h3 className="font-medium text-gray-900 text-base sm:text-lg mb-2">
+              {product.name}
+            </h3>
+          </Link>
 
-      {/* Rating & Reviews */}
-      <div className="mt-3 flex items-center gap-1 px-2">
-        {/* Star Rating */}
-        <div className="flex items-center">{renderStars()}</div>
+          {/* Rating - with subtle animation on hover */}
+          <div className="flex items-center gap-1 mb-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+            {generateStars(product.rating)}
+            <span className="text-xs text-gray-500 ml-1">
+              ({product.reviews})
+            </span>
+          </div>
 
-        {/* Number of Reviews */}
-        <p className="ml-2 text-xs text-gray-600 sm:text-sm">
-          ({totalReviews} reviews)
-        </p>
-      </div>
+          {/* Price - with elegant styling */}
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-base sm:text-lg font-semibold text-[#11296B]">
+              ${product.price.toFixed(2)}
+            </span>
+            {product.originalPrice && (
+              <span className="text-xs text-gray-500 line-through">
+                ${product.originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
 
-      {/* Product Details */}
-      <div className="p-2 sm:p-4">
-        <h1 className="text-lg font-semibold text-gray-800 sm:text-xl">
-          Elegant Bracelet
-        </h1>
-        <p className="mt-1 text-xs text-gray-600 hidden md:block">
-          Elegant and stylish bracelet to elevate your look.
-        </p>
-
-        {/* Price */}
-        <div className="mt-2 flex items-center justify-start sm:mt-3">
-          <p className="text-base font-bold text-[#1E96FC] sm:text-lg">$100</p>
+          {/* Add to cart button - elegant hover effect */}
+          <button
+            onClick={openModal}
+            className="w-full mt-4 py-2.5 bg-[#11296B] text-white text-sm font-medium rounded-md hover:bg-[#1E96FC] transition-all duration-300 transform group-hover:translate-y-0 group-hover:shadow-md"
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
-    </div>
+
+      {/* Modal Window */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 animate-fadeIn">
+          <div
+            ref={modalRef}
+            className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-scaleIn"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Product Gallery */}
+              <div className="relative h-80 md:h-full p-6">
+                <div className="relative h-full w-full">
+                  <Image
+                    src={product.images[currentImageIndex]}
+                    alt={product.name}
+                    className="object-contain rounded-md"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+
+                  {/* Gallery Navigation */}
+                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2">
+                    <button
+                      onClick={prevImage}
+                      className="bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-colors"
+                      aria-label="Previous image"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        className="w-5 h-5 text-gray-800"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15.75 19.5L8.25 12l7.5-7.5"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-colors"
+                      aria-label="Next image"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        className="w-5 h-5 text-gray-800"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Thumbnail Navigation */}
+                  <div className="absolute bottom-0 inset-x-0 flex justify-center gap-2 pb-2">
+                    {product.images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentImageIndex(idx)}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          currentImageIndex === idx
+                            ? "bg-[#11296B] w-4"
+                            : "bg-gray-300 hover:bg-gray-400"
+                        }`}
+                        aria-label={`View image ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Details */}
+              <div className="p-6 flex flex-col">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-2xl font-medium text-gray-900 mb-2">
+                      {product.name}
+                    </h2>
+                    <div className="flex items-center gap-2 mb-4">
+                      {generateStars(product.rating)}
+                      <span className="text-sm text-gray-500">
+                        ({product.reviews} reviews)
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="text-gray-400 hover:text-gray-500 transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Price */}
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-xl font-semibold text-[#11296B]">
+                    ${product.price.toFixed(2)}
+                  </span>
+                  {product.originalPrice && (
+                    <span className="text-sm text-gray-500 line-through">
+                      ${product.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+
+                {/* Description */}
+                <p className="text-gray-600 mb-6">{product.description}</p>
+
+                {/* Material */}
+                {product.material && (
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium text-gray-900 mb-1">
+                      Material
+                    </h3>
+                    <p className="text-gray-600">{product.material}</p>
+                  </div>
+                )}
+
+                {/* Color Selection */}
+                {product.colors && product.colors.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="text-sm font-medium text-gray-900 mb-2">
+                      Color
+                    </h3>
+                    <div className="flex gap-2">
+                      {product.colors.map((color) => (
+                        <button
+                          key={color}
+                          onClick={() => setSelectedColor(color)}
+                          className={`px-3 py-1 rounded-md text-sm ${
+                            selectedColor === color
+                              ? "bg-[#11296B] text-white"
+                              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                          } transition-colors`}
+                        >
+                          {color}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Quantity Selector */}
+                <div className="mb-6">
+                  <h3 className="text-sm font-medium text-gray-900 mb-2">
+                    Quantity
+                  </h3>
+                  <div className="flex items-center">
+                    <button
+                      onClick={decreaseQuantity}
+                      className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l-md"
+                      disabled={quantity <= 1}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M18 12H6"
+                        />
+                      </svg>
+                    </button>
+                    <div className="w-12 h-8 flex items-center justify-center border-t border-b border-gray-300">
+                      {quantity}
+                    </div>
+                    <button
+                      onClick={increaseQuantity}
+                      className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r-md"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6v12M6 12h12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Call to Action */}
+                <div className="mt-auto flex gap-4">
+                  <button className="flex-1 py-3 bg-[#11296B] text-white font-medium rounded-md hover:bg-[#1E96FC] transition-colors">
+                    Add to Cart
+                  </button>
+                  <button className="px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      className="w-5 h-5 text-gray-600"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add CSS for animations */}
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.95);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.3s ease-out forwards;
+        }
+      `}</style>
+    </>
   );
 }
