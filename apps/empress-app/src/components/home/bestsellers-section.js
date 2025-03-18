@@ -142,12 +142,22 @@ const BestsellersSection = () => {
   return (
     <section className="bg-white py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-7xl mx-auto">
-        <Heading
-          level={2}
-          className="text-center mb-12 text-3xl md:text-4xl text-[#11296B] font-light tracking-tight"
-        >
-          Bestselling <span className="font-semibold">Bracelets</span>
-        </Heading>
+        <div className="text-center mb-4">
+          <Heading
+            level={2}
+            className="text-center mb-4 text-3xl md:text-5xl text-[#11296B] font-light tracking-tight"
+          >
+            Bestselling <span className="font-semibold">Bracelets</span>
+          </Heading>
+          {/* Added thin decorative line above heading */}
+          <div className="w-12 h-0.5 bg-gradient-to-r from-[#11296B]/30 via-[#11296B] to-[#11296B]/30 rounded-full mb-6 mx-auto"></div>
+        </div>
+
+        {/* Added descriptive subtitle */}
+        <p className="text-gray-600 max-w-xl mx-auto text-lg text-center mb-12">
+          Explore our most beloved pieces, each crafted with exceptional
+          artistry and timeless design.
+        </p>
 
         {/* Scroll Navigation */}
         <div className="absolute left-4 md:left-12 top-1/2 transform -translate-y-1/2 z-10">
