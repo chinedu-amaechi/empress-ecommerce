@@ -10,7 +10,7 @@ const Header = () => {
       <Navbar />
 
       {/* Compact Hero Section */}
-      <div className="relative pt-16 flex items-center min-h-[50vh]">
+      <div className="relative pt-16 flex items-center min-h-[100vh]">
         {/* Background Image with Subtle Overlay */}
         <div
           className="absolute top-0 w-full h-full bg-center bg-cover"

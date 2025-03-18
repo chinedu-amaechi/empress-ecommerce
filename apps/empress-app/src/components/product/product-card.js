@@ -257,7 +257,7 @@ export default function ProductCard({
 
           {/* Add to cart button - elegant hover effect */}
           <button
-            onClick={openModal}
+            
             className="w-full mt-4 py-2.5 bg-[#11296B] text-white text-sm font-medium rounded-md hover:bg-[#1E96FC] transition-all duration-300 transform group-hover:translate-y-0 group-hover:shadow-md"
           >
             Add to Cart
