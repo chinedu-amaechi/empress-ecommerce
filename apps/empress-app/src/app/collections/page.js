@@ -15,9 +15,10 @@ import Footer from "@/components/layout/footer";
 const checkerboardStyles = {
   checkerboardContainer: "relative w-full h-full overflow-hidden",
   imageWrapper: "absolute top-0 left-0 w-full h-full",
-  checkerCell: "absolute overflow-hidden bg-transparent transition-all duration-600",
+  checkerCell:
+    "absolute overflow-hidden bg-transparent transition-all duration-600",
   cellContent: "absolute w-full h-full object-cover",
-  cellHidden: "scale-0 opacity-0"
+  cellHidden: "scale-0 opacity-0",
 };
 
 export default function Collections() {
@@ -31,7 +32,8 @@ export default function Collections() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Checkerboard transition state
-  const [previousCollection, setPreviousCollection] = useState(activeCollection);
+  const [previousCollection, setPreviousCollection] =
+    useState(activeCollection);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [cells, setCells] = useState([]);
   const gridSize = 8; // 8x8 grid for the checkerboard
@@ -65,7 +67,7 @@ export default function Collections() {
     if (previousCollection !== activeCollection) {
       // Setup the transition
       setIsTransitioning(true);
-      
+
       // Create the cells array for the checkerboard
       const newCells = [];
       for (let row = 0; row < gridSize; row++) {
@@ -74,18 +76,18 @@ export default function Collections() {
             row,
             col,
             key: `${row}-${col}`,
-            delay: Math.random() * 0.5 // Random delay for more organic effect
+            delay: Math.random() * 0.5, // Random delay for more organic effect
           });
         }
       }
       setCells(newCells);
-      
+
       // After the transition completes
       const timer = setTimeout(() => {
         setIsTransitioning(false);
         setPreviousCollection(activeCollection);
       }, 1000); // Slightly longer than the transition time
-      
+
       return () => clearTimeout(timer);
     }
   }, [activeCollection, previousCollection]);
@@ -94,9 +96,9 @@ export default function Collections() {
   const handleOptionScroll = (direction) => {
     const container = optionsRef.current;
     if (!container) return;
-    
+
     const scrollAmount = 100; // Adjust based on your design
-    if (direction === 'left') {
+    if (direction === "left") {
       container.scrollLeft -= scrollAmount;
     } else {
       container.scrollLeft += scrollAmount;
@@ -184,7 +186,10 @@ export default function Collections() {
             // Checkerboard transition
             <>
               {/* Previous image underneath */}
-              <div className={checkerboardStyles.imageWrapper} style={{ zIndex: 1 }}>
+              <div
+                className={checkerboardStyles.imageWrapper}
+                style={{ zIndex: 1 }}
+              >
                 <Image
                   src={collectionsData[previousCollection].heroImage}
                   alt={collectionsData[previousCollection].name}
@@ -194,41 +199,48 @@ export default function Collections() {
                   quality={95}
                 />
               </div>
-              
+
               {/* Checkerboard cells with new image */}
               {cells.map((cell) => {
                 const width = 100 / gridSize;
                 const height = 100 / gridSize;
                 const left = cell.col * width;
                 const top = cell.row * height;
-                
+
                 return (
                   <div
                     key={cell.key}
-                    className={`${checkerboardStyles.checkerCell} ${isTransitioning ? '' : checkerboardStyles.cellHidden}`}
+                    className={`${checkerboardStyles.checkerCell} ${
+                      isTransitioning ? "" : checkerboardStyles.cellHidden
+                    }`}
                     style={{
                       width: `${width}%`,
                       height: `${height}%`,
                       left: `${left}%`,
                       top: `${top}%`,
                       transitionDelay: `${cell.delay}s`,
-                      zIndex: 2
+                      zIndex: 2,
                     }}
                   >
-                    <div 
+                    <div
                       className={checkerboardStyles.cellContent}
                       style={{
                         backgroundImage: `url(${collectionsData[activeCollection].heroImage})`,
                         backgroundSize: `${gridSize * 100}%`,
-                        backgroundPosition: `${-left * gridSize}% ${-top * gridSize}%`,
+                        backgroundPosition: `${-left * gridSize}% ${
+                          -top * gridSize
+                        }%`,
                       }}
                     />
                   </div>
                 );
               })}
-              
+
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent" style={{ zIndex: 3 }}></div>
+              <div
+                className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent"
+                style={{ zIndex: 3 }}
+              ></div>
             </>
           )}
         </div>
@@ -240,32 +252,36 @@ export default function Collections() {
           animate="visible"
           variants={{
             hidden: { opacity: 0 },
-            visible: { 
+            visible: {
               opacity: 1,
-              transition: { 
+              transition: {
                 duration: 0.8,
                 delay: 0.4,
-                staggerChildren: 0.2
-              }
-            }
+                staggerChildren: 0.2,
+              },
+            },
           }}
           className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-white p-6"
         >
           <div className="max-w-4xl mx-auto">
-            <motion.div 
+            <motion.div
               variants={{
                 hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
               }}
             >
               <Heading
                 level={1}
                 className="text-5xl md:text-7xl mb-6 text-white font-light"
               >
-                <motion.span 
+                <motion.span
                   variants={{
                     hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.8 },
+                    },
                   }}
                   className="font-semibold inline-block"
                 >
@@ -274,10 +290,10 @@ export default function Collections() {
               </Heading>
 
               {/* Decorative line */}
-              <motion.div 
+              <motion.div
                 variants={{
                   hidden: { width: 0 },
-                  visible: { width: "6rem", transition: { duration: 0.8 } }
+                  visible: { width: "6rem", transition: { duration: 0.8 } },
                 }}
                 className="h-px bg-white/60 mx-auto my-6"
               ></motion.div>
@@ -286,17 +302,21 @@ export default function Collections() {
             <motion.p
               variants={{
                 hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
               }}
               className="max-w-2xl mx-auto text-xl md:text-2xl text-white/90 leading-relaxed font-light mb-12"
             >
               {collectionsData[activeCollection].description}
             </motion.p>
 
-            <motion.div 
+            <motion.div
               variants={{
                 hidden: { opacity: 0, scale: 0.9 },
-                visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } }
+                visible: {
+                  opacity: 1,
+                  scale: 1,
+                  transition: { duration: 0.6 },
+                },
               }}
             >
               <button
@@ -441,8 +461,9 @@ export default function Collections() {
             {/* Featured Product Showcase */}
             <div className="relative mb-32 border-1 border-[#d4d4d4] rounded-3xl overflow-hidden">
               <div className="absolute -inset-4 bg-[#11296B]/5 rounded-3xl -z-10 transform -rotate-1"></div>
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-2 h-full">{/* Added h-full here */}
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300">
+                <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+                  {/* Added h-full here */}
                   {/* Image Side */}
                   <div className="relative h-80 lg:h-auto lg:min-h-[600px] overflow-hidden">
                     <Image
@@ -485,7 +506,7 @@ export default function Collections() {
                       </span>
                     </p>
 
-                    {/* REPLACED: Product Insights with responsive mobile-first design */}
+                    {/* Product Insights with responsive mobile-first design */}
                     <div className="mb-8">
                       <div className="text-sm text-gray-500 uppercase tracking-wider mb-3">
                         Product Insights
@@ -495,35 +516,54 @@ export default function Collections() {
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
                           {/* Materials */}
                           <div className="bg-gray-50 p-3 rounded-lg">
-                            <div className="text-xs text-gray-500 uppercase mb-1">Materials</div>
+                            <div className="text-xs text-gray-500 uppercase mb-1">
+                              Materials
+                            </div>
                             <div className="text-sm font-medium">
-                              {collectionsData[activeCollection].products[0].material || "Premium Materials"}
+                              {collectionsData[activeCollection].products[0]
+                                .material || "Premium Materials"}
                             </div>
                           </div>
-                          
+
                           {/* Creation Time */}
                           <div className="bg-gray-50 p-3 rounded-lg">
-                            <div className="text-xs text-gray-500 uppercase mb-1">Crafting Time</div>
+                            <div className="text-xs text-gray-500 uppercase mb-1">
+                              Crafting Time
+                            </div>
                             <div className="text-sm font-medium">48 Hours</div>
                           </div>
-                          
+
                           {/* Sustainability */}
                           <div className="bg-gray-50 p-3 rounded-lg">
-                            <div className="text-xs text-gray-500 uppercase mb-1">Sustainability</div>
-                            <div className="text-sm font-medium">Eco-Friendly</div>
+                            <div className="text-xs text-gray-500 uppercase mb-1">
+                              Sustainability
+                            </div>
+                            <div className="text-sm font-medium">
+                              Eco-Friendly
+                            </div>
                           </div>
                         </div>
-                        
+
                         {/* Second row - Full width Rating */}
                         <div className="bg-gray-50 p-3 rounded-lg">
-                          <div className="text-xs text-gray-500 uppercase mb-1">Rating</div>
+                          <div className="text-xs text-gray-500 uppercase mb-1">
+                            Rating
+                          </div>
                           <div className="flex items-center">
                             <div className="flex text-yellow-400 mr-2">
                               {[...Array(5)].map((_, i) => (
                                 <svg
                                   key={i}
                                   className="w-4 h-4"
-                                  fill={i < Math.round(collectionsData[activeCollection].products[0].rating || 4.5) ? "currentColor" : "none"}
+                                  fill={
+                                    i <
+                                    Math.round(
+                                      collectionsData[activeCollection]
+                                        .products[0].rating || 4.5
+                                    )
+                                      ? "currentColor"
+                                      : "none"
+                                  }
                                   stroke="currentColor"
                                   viewBox="0 0 24 24"
                                 >
@@ -537,20 +577,21 @@ export default function Collections() {
                               ))}
                             </div>
                             <span className="text-sm font-medium">
-                              {collectionsData[activeCollection].products[0].rating || "4.8"} / 5
+                              {collectionsData[activeCollection].products[0]
+                                .rating || "4.8"}{" "}
+                              / 5
                             </span>
                             <span className="text-xs text-gray-500 ml-2">
-                              ({collectionsData[activeCollection].products[0].reviews || "124"} reviews)
+                              (
+                              {collectionsData[activeCollection].products[0]
+                                .reviews || "124"}{" "}
+                              reviews)
                             </span>
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* REMOVED: Price and CTA */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-auto">
-                      {/* Price and View Details button removed */}
-                    </div>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-auto"></div>
                   </div>
                 </div>
               </div>
@@ -579,20 +620,18 @@ export default function Collections() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {collectionsData[activeCollection].products.map((product) => (
-                  <motion.div
-                    key={product.id}
-                    whileHover={{ y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex justify-center"
-                  >
-                    <ProductCard product={product} />
-                  </motion.div>
-                ))}
+              {/* Plain grid with no motion effects, just basic centering */}
+              <div className="mx-auto flex justify-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center max-w-7xl">
+                  {collectionsData[activeCollection].products.map((product) => (
+                    <div key={product.id}>
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="text-center mt-16">
+              <div className="text-center mt-12">
                 <Link
                   href={`/collections/${activeCollection}`}
                   className="inline-block border border-[#11296B] text-[#11296B] hover:bg-[#11296B] hover:text-white px-8 py-3 rounded-full transition-colors duration-300"

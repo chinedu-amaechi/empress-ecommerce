@@ -79,7 +79,7 @@ const Navbar = () => {
             <a href="#" className="flex items-center">
               <img
                 className={`w-auto transition-all duration-300 ${
-                  isScrolled ? "h-11" : "h-13"
+                  isScrolled ? "h-16" : "h-12"
                 }`}
                 src="/empress_logo.png"
                 alt="Empress Logo"
