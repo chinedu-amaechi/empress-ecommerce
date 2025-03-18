@@ -15,10 +15,9 @@ import Footer from "@/components/layout/footer";
 const checkerboardStyles = {
   checkerboardContainer: "relative w-full h-full overflow-hidden",
   imageWrapper: "absolute top-0 left-0 w-full h-full",
-  checkerCell:
-    "absolute overflow-hidden bg-transparent transition-all duration-600",
+  checkerCell: "absolute overflow-hidden bg-transparent transition-all duration-600",
   cellContent: "absolute w-full h-full object-cover",
-  cellHidden: "scale-0 opacity-0",
+  cellHidden: "scale-0 opacity-0"
 };
 
 export default function Collections() {
@@ -32,8 +31,7 @@ export default function Collections() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Checkerboard transition state
-  const [previousCollection, setPreviousCollection] =
-    useState(activeCollection);
+  const [previousCollection, setPreviousCollection] = useState(activeCollection);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [cells, setCells] = useState([]);
   const gridSize = 8; // 8x8 grid for the checkerboard
@@ -67,7 +65,7 @@ export default function Collections() {
     if (previousCollection !== activeCollection) {
       // Setup the transition
       setIsTransitioning(true);
-
+      
       // Create the cells array for the checkerboard
       const newCells = [];
       for (let row = 0; row < gridSize; row++) {
@@ -76,18 +74,18 @@ export default function Collections() {
             row,
             col,
             key: `${row}-${col}`,
-            delay: Math.random() * 0.5, // Random delay for more organic effect
+            delay: Math.random() * 0.5 // Random delay for more organic effect
           });
         }
       }
       setCells(newCells);
-
+      
       // After the transition completes
       const timer = setTimeout(() => {
         setIsTransitioning(false);
         setPreviousCollection(activeCollection);
       }, 1000); // Slightly longer than the transition time
-
+      
       return () => clearTimeout(timer);
     }
   }, [activeCollection, previousCollection]);
@@ -96,9 +94,9 @@ export default function Collections() {
   const handleOptionScroll = (direction) => {
     const container = optionsRef.current;
     if (!container) return;
-
+    
     const scrollAmount = 100; // Adjust based on your design
-    if (direction === "left") {
+    if (direction === 'left') {
       container.scrollLeft -= scrollAmount;
     } else {
       container.scrollLeft += scrollAmount;
@@ -186,10 +184,7 @@ export default function Collections() {
             // Checkerboard transition
             <>
               {/* Previous image underneath */}
-              <div
-                className={checkerboardStyles.imageWrapper}
-                style={{ zIndex: 1 }}
-              >
+              <div className={checkerboardStyles.imageWrapper} style={{ zIndex: 1 }}>
                 <Image
                   src={collectionsData[previousCollection].heroImage}
                   alt={collectionsData[previousCollection].name}
@@ -199,48 +194,41 @@ export default function Collections() {
                   quality={95}
                 />
               </div>
-
+              
               {/* Checkerboard cells with new image */}
               {cells.map((cell) => {
                 const width = 100 / gridSize;
                 const height = 100 / gridSize;
                 const left = cell.col * width;
                 const top = cell.row * height;
-
+                
                 return (
                   <div
                     key={cell.key}
-                    className={`${checkerboardStyles.checkerCell} ${
-                      isTransitioning ? "" : checkerboardStyles.cellHidden
-                    }`}
+                    className={`${checkerboardStyles.checkerCell} ${isTransitioning ? '' : checkerboardStyles.cellHidden}`}
                     style={{
                       width: `${width}%`,
                       height: `${height}%`,
                       left: `${left}%`,
                       top: `${top}%`,
                       transitionDelay: `${cell.delay}s`,
-                      zIndex: 2,
+                      zIndex: 2
                     }}
                   >
-                    <div
+                    <div 
                       className={checkerboardStyles.cellContent}
                       style={{
                         backgroundImage: `url(${collectionsData[activeCollection].heroImage})`,
                         backgroundSize: `${gridSize * 100}%`,
-                        backgroundPosition: `${-left * gridSize}% ${
-                          -top * gridSize
-                        }%`,
+                        backgroundPosition: `${-left * gridSize}% ${-top * gridSize}%`,
                       }}
                     />
                   </div>
                 );
               })}
-
+              
               {/* Gradient overlay */}
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent"
-                style={{ zIndex: 3 }}
-              ></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent" style={{ zIndex: 3 }}></div>
             </>
           )}
         </div>
@@ -252,36 +240,32 @@ export default function Collections() {
           animate="visible"
           variants={{
             hidden: { opacity: 0 },
-            visible: {
+            visible: { 
               opacity: 1,
-              transition: {
+              transition: { 
                 duration: 0.8,
                 delay: 0.4,
-                staggerChildren: 0.2,
-              },
-            },
+                staggerChildren: 0.2
+              }
+            }
           }}
           className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-white p-6"
         >
           <div className="max-w-4xl mx-auto">
-            <motion.div
+            <motion.div 
               variants={{
                 hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
               }}
             >
               <Heading
                 level={1}
                 className="text-5xl md:text-7xl mb-6 text-white font-light"
               >
-                <motion.span
+                <motion.span 
                   variants={{
                     hidden: { opacity: 0, y: 20 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: { duration: 0.8 },
-                    },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
                   }}
                   className="font-semibold inline-block"
                 >
@@ -290,10 +274,10 @@ export default function Collections() {
               </Heading>
 
               {/* Decorative line */}
-              <motion.div
+              <motion.div 
                 variants={{
                   hidden: { width: 0 },
-                  visible: { width: "6rem", transition: { duration: 0.8 } },
+                  visible: { width: "6rem", transition: { duration: 0.8 } }
                 }}
                 className="h-px bg-white/60 mx-auto my-6"
               ></motion.div>
@@ -302,21 +286,17 @@ export default function Collections() {
             <motion.p
               variants={{
                 hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
               }}
               className="max-w-2xl mx-auto text-xl md:text-2xl text-white/90 leading-relaxed font-light mb-12"
             >
               {collectionsData[activeCollection].description}
             </motion.p>
 
-            <motion.div
+            <motion.div 
               variants={{
                 hidden: { opacity: 0, scale: 0.9 },
-                visible: {
-                  opacity: 1,
-                  scale: 1,
-                  transition: { duration: 0.6 },
-                },
+                visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } }
               }}
             >
               <button
@@ -459,12 +439,12 @@ export default function Collections() {
             </div>
 
             {/* Featured Product Showcase */}
-            <div className="relative mb-32">
+            <div className="relative mb-32 border-1 border-[#d4d4d4] rounded-3xl overflow-hidden">
               <div className="absolute -inset-4 bg-[#11296B]/5 rounded-3xl -z-10 transform -rotate-1"></div>
               <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-2">
+                <div className="grid grid-cols-1 lg:grid-cols-2 h-full">{/* Added h-full here */}
                   {/* Image Side */}
-                  <div className="relative h-80 lg:h-[600px] overflow-hidden">
+                  <div className="relative h-80 lg:h-auto lg:min-h-[600px] overflow-hidden">
                     <Image
                       src={
                         collectionsData[activeCollection].products[0].images[0]
@@ -472,6 +452,7 @@ export default function Collections() {
                       alt={collectionsData[activeCollection].products[0].name}
                       fill
                       className="object-cover"
+                      priority
                     />
                     <div className="absolute top-6 left-6 bg-white/80 backdrop-blur-sm px-4 py-1 rounded-full">
                       <span className="text-sm text-[#11296B] font-medium">
@@ -504,65 +485,65 @@ export default function Collections() {
                       </span>
                     </p>
 
-                    {/* REPLACED: Color Options with Horizontal Scroll Buttons */}
+                    {/* REPLACED: Product Insights with responsive mobile-first design */}
                     <div className="mb-8">
                       <div className="text-sm text-gray-500 uppercase tracking-wider mb-3">
-                        Available Options
+                        Product Insights
                       </div>
-                      <div className="flex items-center">
-                        <button
-                          className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
-                          onClick={() => handleOptionScroll("left")}
-                        >
-                          <svg
-                            className="w-4 h-4 text-gray-700"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M15 19l-7-7 7-7"
-                            />
-                          </svg>
-                        </button>
-                        <div className="mx-4 flex-1 overflow-hidden">
-                          <div
-                            className="flex space-x-4 transition-transform duration-300"
-                            ref={optionsRef}
-                          >
-                            {collectionsData[
-                              activeCollection
-                            ].products[0].colors.map((color) => (
-                              <div
-                                key={color}
-                                className="flex-shrink-0 text-sm px-3 py-1 rounded-md bg-gray-100"
-                              >
-                                {color}
-                              </div>
-                            ))}
+                      <div className="grid grid-cols-1 gap-3">
+                        {/* First row - 3 columns on tablet and up, stacked on mobile */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+                          {/* Materials */}
+                          <div className="bg-gray-50 p-3 rounded-lg">
+                            <div className="text-xs text-gray-500 uppercase mb-1">Materials</div>
+                            <div className="text-sm font-medium">
+                              {collectionsData[activeCollection].products[0].material || "Premium Materials"}
+                            </div>
+                          </div>
+                          
+                          {/* Creation Time */}
+                          <div className="bg-gray-50 p-3 rounded-lg">
+                            <div className="text-xs text-gray-500 uppercase mb-1">Crafting Time</div>
+                            <div className="text-sm font-medium">48 Hours</div>
+                          </div>
+                          
+                          {/* Sustainability */}
+                          <div className="bg-gray-50 p-3 rounded-lg">
+                            <div className="text-xs text-gray-500 uppercase mb-1">Sustainability</div>
+                            <div className="text-sm font-medium">Eco-Friendly</div>
                           </div>
                         </div>
-                        <button
-                          className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
-                          onClick={() => handleOptionScroll("right")}
-                        >
-                          <svg
-                            className="w-4 h-4 text-gray-700"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </button>
+                        
+                        {/* Second row - Full width Rating */}
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <div className="text-xs text-gray-500 uppercase mb-1">Rating</div>
+                          <div className="flex items-center">
+                            <div className="flex text-yellow-400 mr-2">
+                              {[...Array(5)].map((_, i) => (
+                                <svg
+                                  key={i}
+                                  className="w-4 h-4"
+                                  fill={i < Math.round(collectionsData[activeCollection].products[0].rating || 4.5) ? "currentColor" : "none"}
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                  />
+                                </svg>
+                              ))}
+                            </div>
+                            <span className="text-sm font-medium">
+                              {collectionsData[activeCollection].products[0].rating || "4.8"} / 5
+                            </span>
+                            <span className="text-xs text-gray-500 ml-2">
+                              ({collectionsData[activeCollection].products[0].reviews || "124"} reviews)
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -618,156 +599,6 @@ export default function Collections() {
                 >
                   View All {collectionsData[activeCollection].name} Pieces
                 </Link>
-              </div>
-            </section>
-
-            {/* Craftsmanship Feature */}
-            <section className="mb-32">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div className="order-2 lg:order-1">
-                  <div className="inline-block bg-[#11296B]/10 px-4 py-1 rounded-full mb-6">
-                    <span className="text-sm text-[#11296B] font-medium">
-                      Our Craftsmanship
-                    </span>
-                  </div>
-
-                  <Heading
-                    level={3}
-                    className="text-2xl md:text-3xl text-gray-900 font-light tracking-tight mb-6"
-                  >
-                    The Art of{" "}
-                    <span className="font-semibold">Creating Beauty</span>
-                  </Heading>
-
-                  <div className="w-12 h-px bg-[#11296B]/30 my-6"></div>
-
-                  <p className="text-gray-700 leading-relaxed mb-6">
-                    Every piece in the {collectionsData[activeCollection].name}{" "}
-                    collection begins as a sketch, inspired by the world around
-                    us. Our master artisans then bring these visions to life
-                    through a meticulous process that combines traditional
-                    techniques with modern innovation.
-                  </p>
-
-                  <p className="text-gray-600 mb-8">
-                    We source only the finest materials, ensuring that each
-                    component meets our exacting standards for quality and
-                    sustainability. From the initial concept to the final
-                    polish, each step is conducted with precision and care.
-                  </p>
-
-                  <Link
-                    href="/our-process"
-                    className="inline-flex items-center text-[#11296B] font-medium hover:text-[#1E96FC] transition-colors"
-                  >
-                    Discover our process
-                    <svg
-                      className="w-5 h-5 ml-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
-                  </Link>
-                </div>
-
-                <div className="order-1 lg:order-2 grid grid-cols-2 gap-4">
-                  <div className="relative h-64 rounded-lg overflow-hidden shadow-lg">
-                    <Image
-                      src="/craftsmanship-1.jpg"
-                      alt="Craftsmanship"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="relative h-64 rounded-lg overflow-hidden shadow-lg mt-8">
-                    <Image
-                      src="/craftsmanship-2.jpg"
-                      alt="Craftsmanship"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Customer Testimonials - Elegant Slider */}
-            <section className="mb-32">
-              <div className="text-center mb-16">
-                <Heading
-                  level={3}
-                  className="text-2xl md:text-3xl text-gray-900 font-light tracking-tight mb-4"
-                >
-                  Words from Our <span className="font-semibold">Clients</span>
-                </Heading>
-
-                <div className="w-16 h-px bg-[#11296B]/30 mx-auto my-6"></div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg p-10 md:p-16 relative">
-                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-                  <div className="h-12 w-12 rounded-full bg-[#11296B] flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                  {[1, 2, 3].map((index) => (
-                    <div key={index} className="flex flex-col">
-                      <div className="flex mb-4 text-yellow-400">
-                        {[...Array(5)].map((_, i) => (
-                          <svg
-                            key={i}
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
-                      </div>
-
-                      <div className="text-3xl text-[#11296B]/20 font-serif italic">
-                        "
-                      </div>
-
-                      <p className="text-gray-700 italic my-4">
-                        The {collectionsData[activeCollection].name} bracelet is
-                        simply stunning. The craftsmanship is exceptional, and
-                        it's become my favorite piece to wear for both special
-                        occasions and everyday elegance.
-                      </p>
-
-                      <div className="mt-auto pt-4 border-t border-gray-100">
-                        <div className="font-medium text-gray-900">
-                          Emily W.
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          Verified Customer
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </section>
 
