@@ -33,8 +33,8 @@ const Header = () => {
             </p>
             <div className="mt-8">
               <a
-                href="#collections"
-                className="bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium px-6 py-3 rounded-sm shadow-sm hover:shadow-md transition-all duration-300"
+                href="/collections"
+                className="bg-white text-gray-900 hover:bg-amber-300 text-sm font-medium px-6 py-3 rounded-sm shadow-sm hover:shadow-md transition-all duration-300"
               >
                 Explore Collection
               </a>
