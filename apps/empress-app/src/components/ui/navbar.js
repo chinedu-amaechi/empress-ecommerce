@@ -109,25 +109,25 @@ const Navbar = () => {
                 <div className="absolute left-0 w-64 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                   <div className="py-1">
                     <a
-                      href="#ethereal"
+                      href="/collections/ethereal"
                       className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                     >
                       Ethereal
                     </a>
                     <a
-                      href="#divine"
+                      href="/collections/divine"
                       className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                     >
                       Divine
                     </a>
                     <a
-                      href="#heritage"
+                      href="/collections/heritage"
                       className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                     >
                       Heritage
                     </a>
                     <a
-                      href="#celestial"
+                      href="/collections/celestial-bloom"
                       className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                     >
                       Celestial Bloom
@@ -202,7 +202,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-6">
             {/* Search Button */}
             <button
-              className="hidden md:block p-2 text-gray-900 hover:bg-[#11296B]/10 rounded-full transition-all duration-300"
+              className="hidden md:block p-2 text-gray-900 hover:bg-amber-300/40 rounded-full transition-all duration-300"
               aria-label="Search"
               onClick={handleSearchClick}
             >
@@ -227,7 +227,7 @@ const Navbar = () => {
               ref={(el) => (dropdownRefs.current["account"] = el)}
             >
               <button
-                className="p-2 text-gray-900 hover:bg-[#11296B]/10 rounded-full transition-all duration-300"
+                className="p-2 text-gray-900 hover:bg-amber-300/40 rounded-full transition-all duration-300"
                 aria-label="Account"
                 onClick={() => toggleDropdown("account")}
               >
@@ -277,7 +277,7 @@ const Navbar = () => {
               ref={(el) => (dropdownRefs.current["cart"] = el)}
             >
               <button
-                className="flex items-center p-2 text-gray-900 hover:bg-[#11296B]/10 rounded-full transition-all duration-300"
+                className="flex items-center p-2 text-gray-900 hover:bg-amber-300/40 rounded-full transition-all duration-300"
                 aria-label="Shopping Cart"
                 onClick={() => toggleDropdown("cart")}
               >
@@ -437,25 +437,25 @@ const Navbar = () => {
             {activeDropdown === "mobile-collections" && (
               <div className="pl-4 py-2 space-y-1 border-l-2 border-[#11296B]/20 ml-3">
                 <a
-                  href="#ethereal"
+                  href="/collections/ethereal"
                   className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
                 >
                   Ethereal
                 </a>
                 <a
-                  href="#divine"
+                  href="/collections/divine"
                   className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
                 >
                   Divine
                 </a>
                 <a
-                  href="#heritage"
+                  href="/collections/heritage"
                   className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
                 >
                   Heritage
                 </a>
                 <a
-                  href="#celestial"
+                  href="/collections/celestial-bloom"
                   className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
                 >
                   Celestial Bloom

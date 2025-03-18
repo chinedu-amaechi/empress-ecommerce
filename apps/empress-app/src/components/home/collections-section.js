@@ -8,25 +8,25 @@ const collections = [
   {
     name: "Ethereal",
     description: "Delicate designs that whisper elegance",
-    image: "/collections/ethereal.jpg",
+    image: "/collections/ethereal-full.jpg",
     href: "/collections/ethereal",
   },
   {
     name: "Divine",
     description: "Bold statements of inner strength",
-    image: "/collections/divine.jpg",
+    image: "/collections/divine-full.jpg",
     href: "/collections/divine",
   },
   {
     name: "Heritage",
     description: "Timeless craftsmanship passed down",
-    image: "/collections/heritage.jpg",
+    image: "/collections/heritage-full.jpg",
     href: "/collections/heritage",
   },
   {
     name: "Celestial Bloom",
     description: "Inspired by the cosmic dance of stars",
-    image: "/collections/celestial.jpg",
+    image: "/collections/celestial-full.jpg",
     href: "/collections/celestial-bloom",
   },
 ];
