@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Heading from "@/components/ui/heading";
@@ -61,12 +62,12 @@ const AboutHero = () => {
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <a
+            <Link
               href="#our-philosophy"
-              className="inline-block px-8 py-3 border border-white/30 backdrop-blur-sm text-white hover:bg-white hover:text-[#11296B] transition-all duration-300 rounded-sm"
+              className="inline-block px-8 py-3 border border-white/30 backdrop-blur-sm text-white hover:bg-amber-400 hover:text-[#11296B] transition-all duration-300 rounded-sm"
             >
               Discover Our Philosophy
-            </a>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

@@ -27,7 +27,7 @@ const OurPhilosophy = () => {
 
   return (
     <section id="our-philosophy" ref={sectionRef} className="py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <motion.div
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
