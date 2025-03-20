@@ -9,28 +9,28 @@ const collections = [
     name: "Ethereal",
     description: "Delicate designs that whisper elegance",
     image: "/collections/ethereal-full.jpg",
-    href: "/collections/ethereal",
+    href: "#",
     accentColor: "bg-blue-400",
   },
   {
     name: "Divine",
     description: "Bold statements of inner strength",
     image: "/collections/divine-full.jpg",
-    href: "/collections/divine",
+    href: "#",
     accentColor: "bg-amber-400",
   },
   {
     name: "Heritage",
     description: "Timeless craftsmanship passed down",
     image: "/collections/heritage-full.jpg",
-    href: "/collections/heritage",
+    href: "#",
     accentColor: "bg-emerald-400",
   },
   {
     name: "Celestial Bloom",
     description: "Inspired by the cosmic dance of stars",
     image: "/collections/celestial-full.jpg",
-    href: "/collections/celestial-bloom",
+    href: "#",
     accentColor: "bg-purple-400",
   },
 ];
@@ -40,8 +40,6 @@ const CollectionsSection = () => {
     <section className="bg-[#F8F9FC] py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-4">
-          
-
           <Heading
             level={2}
             className="text-center mb-4 text-3xl md:text-5xl text-[#11296B] font-light tracking-tight"
@@ -61,7 +59,10 @@ const CollectionsSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {collections.map((collection) => (
             <Link
-              href={collection.href}
+              href={`/collections?collection=${collection.href.replace(
+                "/collections/",
+                ""
+              )}`}
               key={collection.name}
               className="group block"
             >
