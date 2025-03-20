@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 
 const Navbar = () => {
@@ -76,7 +76,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="#" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <img
                 className={`w-auto transition-all duration-300 ${
                   isScrolled ? "h-16" : "h-12"
@@ -84,7 +84,7 @@ const Navbar = () => {
                 src="/empress_logo.png"
                 alt="Empress Logo"
               />
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -181,7 +181,7 @@ const Navbar = () => {
 
             {/* About Us - simple link */}
             <a
-              href="#about"
+              href="/about-us"
               className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300 group"
             >
               About
