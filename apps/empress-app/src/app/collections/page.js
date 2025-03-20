@@ -7,11 +7,13 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import CollectionsData from "./collections-data";
 import ProductCard from "@/components/product/product-card";
+import CollectionNavigator from "./collection-navigator";
+import Breadcrumb from "@/components/ui/breadcrumb";
+import ScrollProgress from "./scroll-progress";
 import Heading from "@/components/ui/heading";
 import Footer from "@/components/layout/footer";
 
-// Add these styles directly in the component for now
-// In a real application, you would move this to a separate CSS module
+// Add these styles directly in the component
 const checkerboardStyles = {
   checkerboardContainer: "relative w-full h-full overflow-hidden",
   imageWrapper: "absolute top-0 left-0 w-full h-full",
@@ -106,20 +108,48 @@ export default function Collections() {
   };
 
   // Handle collection change without scrolling to top
-  const handleCollectionChange = (collection) => {
-    setActiveCollection(collection);
-    // Removed scrollTo to prevent page reset to top
+  const handleCollectionChange = (collection, shouldScroll = true) => {
+    // Only scroll if we're changing to a different collection
+    if (activeCollection !== collection) {
+      setActiveCollection(collection);
+
+      // Add smooth scrolling if shouldScroll is true
+      if (shouldScroll) {
+        // Scroll to the top of the products section with smooth behavior
+        const productsSection = document.getElementById("products-section");
+        if (productsSection) {
+          // Using a slight delay to ensure the new content renders first
+          setTimeout(() => {
+            productsSection.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }, 100);
+        }
+      }
+
+      // Update URL query parameter without full page reload
+      const url = new URL(window.location);
+      url.searchParams.set("collection", collection);
+      window.history.pushState({}, "", url);
+    }
   };
 
   return (
     <main ref={mainRef} className="min-h-screen overflow-hidden bg-[#f9f9f9]">
+      {/* Scroll Progress Bar */}
+      <ScrollProgress />
       {/* Fixed navigation bar */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled ? "bg-white shadow-md py-3" : "bg-transparent py-5"
         }`}
       >
+        <div className="max-w-7xl mx-auto pt-20 px-4 sm:px-6 lg:px-8"></div>
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
+          {/* Breadcrumb Navigation */}
+          <Breadcrumb currentCollection={activeCollection} />
+
           {/* Logo */}
           <div className="mb-4 md:mb-0">
             <Link href="/">
@@ -147,14 +177,14 @@ export default function Collections() {
               {Object.entries(collectionsData).map(([slug, collection]) => (
                 <button
                   key={slug}
-                  onClick={() => handleCollectionChange(slug)}
+                  onClick={() => handleCollectionChange(slug, true)} // Pass true to enable smooth scrolling
                   className={`relative px-4 py-2 mx-1 rounded-full whitespace-nowrap transition-all duration-300 text-sm ${
                     activeCollection === slug
                       ? isScrolled
-                        ? "text-[#11296B] bg-amber-300 font-medium shadow-sm" // Amber background when scrolled
-                        : "text-white bg-gray-500/50 font-medium" // Gray background when not scrolled
+                        ? "text-[#11296B] bg-amber-300 font-medium shadow-sm"
+                        : "text-white bg-gray-500/50 font-medium"
                       : isScrolled
-                      ? "text-gray-800 hover:text-[#11296B] hover:bg-gray-200" // Darker text for better visibility
+                      ? "text-gray-800 hover:text-[#11296B] hover:bg-gray-200"
                       : "text-white/80 hover:text-white hover:bg-white/10"
                   }`}
                 >
@@ -642,7 +672,7 @@ export default function Collections() {
             </section>
 
             {/* Other Collections */}
-            <section>
+            <section id="products-section">
               <div className="text-center mb-16">
                 <Heading
                   level={3}
@@ -698,6 +728,16 @@ export default function Collections() {
                       </div>
                     </div>
                   ))}
+              </div>
+              {/* Collection Navigator */}
+              <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <CollectionNavigator
+                  collections={collectionsData}
+                  currentCollection={activeCollection}
+                  onNavigate={(collection) =>
+                    handleCollectionChange(collection, true)
+                  }
+                />
               </div>
             </section>
           </div>
