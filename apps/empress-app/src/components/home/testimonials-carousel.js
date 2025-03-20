@@ -13,7 +13,7 @@ const testimonials = [
     location: "New York, NY",
     quote:
       "The Moonlight Elegance bracelet is absolutely stunning. It's become my go-to piece for both casual and formal events.",
-    image: "/testimonials/emily.jpg",
+    image: "/testimonials/emily.jpeg",
     rating: 5,
   },
   {
@@ -22,7 +22,7 @@ const testimonials = [
     location: "San Francisco, CA",
     quote:
       "I love how each piece tells a story. The craftsmanship is exceptional, and the design is truly unique.",
-    image: "/testimonials/alexandra.jpg",
+    image: "/testimonials/alexandra.jpeg",
     rating: 5,
   },
   {
@@ -49,7 +49,7 @@ const testimonials = [
     location: "Toronto, ON",
     quote:
       "The Cosmic Whisper bracelet is simply breathtaking. It's a beautiful statement piece that I wear with pride.",
-    image: "/testimonials/isabella.jpg",
+    image: "/testimonials/isabella.jpeg",
     rating: 5,
   },
 ];

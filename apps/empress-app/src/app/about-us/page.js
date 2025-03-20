@@ -1,12 +1,33 @@
-// src/app/about-us/page.js
+// apps/empress-app/src/app/about-us/page.js
+import React from "react";
+import Navbar from "@/components/ui/navbar";
+import Footer from "@/components/layout/footer";
+import {
+  AboutHero,
+  OurPhilosophy,
+  OurStory,
+  OurArtisans,
+  OurValues,
+  CtaSection,
+} from "./index";
 
-function AboutUsPage() {
+export const metadata = {
+  title: "About Empress | Luxury Handcrafted Bracelets",
+  description:
+    "Discover the story, philosophy, and artisans behind Empress's elegant handcrafted jewelry collections.",
+};
+
+export default function AboutUs() {
   return (
-    <div>
-      <h1>About Us</h1>
-      <p>Empress is a modern CMS for Node.js</p>
-    </div>
+    <main className="min-h-screen bg-white">
+      <Navbar />
+      <AboutHero />
+      <OurPhilosophy />
+      <OurStory />
+      <OurArtisans />
+      <OurValues />
+      <CtaSection />
+      <Footer />
+    </main>
   );
 }
-
-export default AboutUsPage;
