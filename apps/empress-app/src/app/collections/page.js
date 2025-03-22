@@ -145,8 +145,8 @@ export default function Collections() {
           isScrolled ? "bg-white shadow-md py-3" : "bg-transparent py-5"
         }`}
       >
-        <div className="max-w-7xl mx-auto pt-20 px-4 sm:px-6 lg:px-8"></div>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8"></div>
+        <div className="max-w-screen-2xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
           {/* Breadcrumb Navigation */}
           <Breadcrumb currentCollection={activeCollection} />
 
