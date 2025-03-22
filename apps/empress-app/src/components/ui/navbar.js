@@ -14,6 +14,10 @@ const Navbar = () => {
 
   // Handle scroll effect
   useEffect(() => {
+    // Check initial scroll position immediately
+    setIsScrolled(window.scrollY > 10);
+
+    // Add scroll event listener for future scrolling
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
