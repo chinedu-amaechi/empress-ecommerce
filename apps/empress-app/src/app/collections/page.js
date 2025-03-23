@@ -55,7 +55,10 @@ export default function Collections() {
       setActiveCollection(highlightCollection);
     }
 
-    // Add scroll event listener
+    // Check initial scroll position immediately
+    setIsScrolled(window.scrollY > 100);
+
+    // Add scroll event listener for future scrolling
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 100);
     };
