@@ -1,4 +1,4 @@
-// src/components/product/product-search.js
+// src/app/products/product-search.js
 "use client";
 
 import { useState, useEffect, useRef } from "react";

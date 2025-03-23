@@ -10,7 +10,7 @@ import Link from "next/link";
 import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/layout/footer";
 import Heading from "@/components/ui/heading";
-import ProductSearch from "@/components/product/product-search";
+import ProductSearch from "@/app/products/product-search";
 import ProductCard from "@/components/product/product-card";
 
 // Data fetching

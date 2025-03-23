@@ -1,4 +1,4 @@
-// src/components/product/product-gallery.js
+// src/app/products/product-gallery.js
 "use client";
 
 import { useState } from "react";

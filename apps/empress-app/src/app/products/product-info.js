@@ -1,4 +1,4 @@
-// src/components/product/product-info.js
+// src/app/products/product-info.js
 "use client";
 
 import { useState } from "react";

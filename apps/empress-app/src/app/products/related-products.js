@@ -1,4 +1,4 @@
-// src/components/product/related-products.js
+// src/app/products/related-products.js
 "use client";
 
 import { useEffect, useState } from "react";

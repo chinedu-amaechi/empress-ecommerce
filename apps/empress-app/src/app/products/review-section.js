@@ -1,4 +1,4 @@
-// src/components/product/review-section.js
+// src/app/products/review-section.js
 "use client";
 
 import { useState } from "react";

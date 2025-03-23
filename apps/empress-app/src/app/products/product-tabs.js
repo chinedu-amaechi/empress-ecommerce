@@ -1,4 +1,4 @@
-// src/components/product/product-tabs.js
+// src/app/products/product-tabs.js
 "use client";
 
 import { useState } from "react";
