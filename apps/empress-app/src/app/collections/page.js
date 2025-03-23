@@ -111,32 +111,23 @@ export default function Collections() {
   };
 
   // Handle collection change without scrolling to top
-  const handleCollectionChange = (collection, shouldScroll = true) => {
-    // Only scroll if we're changing to a different collection
+  const handleCollectionChange = (collection) => {
+    // Only proceed if we're changing to a different collection
     if (activeCollection !== collection) {
       setActiveCollection(collection);
 
-      // Add smooth scrolling if shouldScroll is true
-      if (shouldScroll) {
-        // Scroll to the top of the products section with smooth behavior
-        const productsSection = document.getElementById("products-section");
-        if (productsSection) {
-          // Using a slight delay to ensure the new content renders first
-          setTimeout(() => {
-            productsSection.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }, 100);
-        }
-      }
+      // Always scroll to top of the page when changing collections
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
 
       // Update URL query parameter without full page reload
       const url = new URL(window.location);
       url.searchParams.set("collection", collection);
       window.history.pushState({}, "", url);
     }
-  };
+  }; 
 
   return (
     <main ref={mainRef} className="min-h-screen overflow-hidden bg-[#f9f9f9]">
@@ -180,7 +171,7 @@ export default function Collections() {
               {Object.entries(collectionsData).map(([slug, collection]) => (
                 <button
                   key={slug}
-                  onClick={() => handleCollectionChange(slug, true)} // Pass true to enable smooth scrolling
+                  onClick={() => handleCollectionChange(slug)} // Pass true to enable smooth scrolling
                   className={`relative px-4 py-2 mx-1 rounded-full whitespace-nowrap transition-all duration-300 text-sm ${
                     activeCollection === slug
                       ? isScrolled
