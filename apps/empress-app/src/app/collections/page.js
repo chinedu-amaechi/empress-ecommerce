@@ -140,12 +140,14 @@ export default function Collections() {
         }`}
       >
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8"></div>
-        <div className="max-w-screen-2xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
+        <div className="max-w-screen-2xl mx-auto px-6 flex flex-col md:flex-row items-center">
           {/* Breadcrumb Navigation */}
-          <Breadcrumb currentCollection={activeCollection} />
+          <div className="md:w-1/3">
+            <Breadcrumb currentCollection={activeCollection} />
+          </div>
 
-          {/* Logo */}
-          <div className="mb-4 md:mb-0">
+          {/* Logo - centered with width constraints */}
+          <div className="md:w-1/3 flex justify-center mb-4 md:mb-0">
             <Link href="/">
               <Image
                 src="/empress_logo.png"
@@ -159,19 +161,19 @@ export default function Collections() {
             </Link>
           </div>
 
-          {/* Collection Navigation - IMPROVED VISIBILITY */}
-          <div className="flex justify-center">
+          {/* Collection Navigation */}
+          <div className="md:w-1/3 flex justify-end">
             <div
               className={`backdrop-blur-md rounded-full px-2 py-1 inline-flex transition-all duration-500 ${
                 isScrolled
-                  ? "bg-gray-100 border border-gray-300 shadow-sm" // Enhanced contrast when scrolled
+                  ? "bg-gray-100 border border-gray-300 shadow-sm"
                   : "bg-white/10 border border-white/20"
               }`}
             >
               {Object.entries(collectionsData).map(([slug, collection]) => (
                 <button
                   key={slug}
-                  onClick={() => handleCollectionChange(slug)} // Pass true to enable smooth scrolling
+                  onClick={() => handleCollectionChange(slug)}
                   className={`relative px-4 py-2 mx-1 rounded-full whitespace-nowrap transition-all duration-300 text-sm ${
                     activeCollection === slug
                       ? isScrolled
