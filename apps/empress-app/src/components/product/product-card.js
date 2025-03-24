@@ -48,7 +48,7 @@ export default function ProductCard({
     colors: ["Silver", "Rose Gold", "Gold"],
     description:
       "A delicate bracelet featuring authentic moonstone beads. The soft luminescence of the stones creates an ethereal effect, perfect for both day and evening wear.",
-    images: [
+    imagesUrl: [
       "/bracelet-01.jpg",
       "/bracelet-02.jpg",
       "/bracelet-03.jpg",
@@ -61,9 +61,13 @@ export default function ProductCard({
 }) {
   // Ensure product images are valid
   const safeImages =
-    Array.isArray(product.images) && product.images.length > 0
-      ? product.images
-      : ["/product-placeholder.jpg"];
+    Array.isArray(product.imagesUrl) && product.imagesUrl.length > 0
+      ? product.imagesUrl
+      : [
+          {
+            optimizeUrl: "/bracelet-01.jpg",
+          },
+        ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -123,6 +127,7 @@ export default function ProductCard({
   const decreaseQuantity = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   };
+  console.log(safeImages);
 
   return (
     <>
@@ -140,7 +145,7 @@ export default function ProductCard({
             aria-label="Open product details"
           ></div>
           <Image
-            src={safeImages[currentImageIndex]}
+            src={safeImages[currentImageIndex].optimizeUrl}
             alt={product.name}
             className="object-cover w-full h-full transition-transform duration-500 ease-out group-hover:scale-110"
             fill
