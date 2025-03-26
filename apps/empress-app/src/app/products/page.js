@@ -15,6 +15,7 @@ import ProductCard from "@/components/product/product-card";
 
 // Data fetching
 import { getAllProducts, getProductsByCollection } from "@/lib/product-service";
+import useCollections from "@/hooks/use-collections";
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
@@ -29,7 +30,8 @@ export default function ProductsPage() {
     priceRange: "all",
     sortBy: "featured",
   });
-  const [loading, setLoading] = useState(true);
+  const [productLoading, setProductLoading] = useState(true);
+  const { data, isLoading, error } = useCollections();
 
   // Price ranges for filtering
   const priceRanges = [
@@ -50,10 +52,16 @@ export default function ProductsPage() {
     { id: "name-desc", label: "Name: Z to A" },
   ];
 
+  useEffect(() => {
+    if (data) {
+      setCollections(data);
+    }
+  }, [data]);
+
   // Fetch products and collections on component mount
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      setProductLoading(true);
       try {
         // Fetch all products
         const allProducts = await getAllProducts();
@@ -73,7 +81,7 @@ export default function ProductsPage() {
             name: product?.collectionName || collectionId,
           };
         });
-        setCollections(uniqueCollections);
+        // setCollections(uniqueCollections);
 
         // Initialize active collection filter if provided in URL
         if (collectionFilter) {
@@ -85,7 +93,7 @@ export default function ProductsPage() {
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
-        setLoading(false);
+        setProductLoading(false);
       }
     };
 
@@ -298,7 +306,7 @@ export default function ProductsPage() {
         </div>
 
         {/* Product Grid */}
-        {loading ? (
+        {productLoading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
