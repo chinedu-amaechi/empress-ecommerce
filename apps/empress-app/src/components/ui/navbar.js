@@ -192,12 +192,12 @@ const Navbar = () => {
               <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#11296B]"></span>
             </a>
 
-            {/* Care */}
+            {/* FAQs */}
             <a
-              href="#care"
+              href="#faq"
               className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300 group"
             >
-              Care
+              FAQ
               <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#11296B]"></span>
             </a>
           </div>
@@ -517,10 +517,10 @@ const Navbar = () => {
             </a>
 
             <a
-              href="#care"
+              href="#faq"
               className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-[#11296B]/10 rounded transition-colors duration-200"
             >
-              Care
+              FAQ
             </a>
 
             <div className="flex items-center justify-between px-3 py-4 border-t border-gray-100 mt-2">
