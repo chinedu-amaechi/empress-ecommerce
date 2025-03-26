@@ -13,6 +13,10 @@ import ScrollProgress from "./scroll-progress";
 import Heading from "@/components/ui/heading";
 import Footer from "@/components/layout/footer";
 import { getAllCollections } from "@/lib/collection-service";
+import CollectionNavigationHeader from "./collection-navigation-header";
+import CollectionIntroduction from "./collection-introduction";
+import CollectionFeaturedProduct from "./collection-featured-product";
+import CollectionProduct from "./collection-products";
 
 // Add these styles directly in the component
 const checkerboardStyles = {
@@ -172,33 +176,12 @@ export default function Collections() {
           </div>
 
           {/* Collection Navigation */}
-          <div className="md:w-1/3 flex justify-end">
-            <div
-              className={`backdrop-blur-md rounded-full px-2 py-1 inline-flex transition-all duration-500 ${
-                isScrolled
-                  ? "bg-gray-100 border border-gray-300 shadow-sm"
-                  : "bg-white/10 border border-white/20"
-              }`}
-            >
-              {Object.entries(collectionsData).map(([slug, collection]) => (
-                <button
-                  key={slug}
-                  onClick={() => handleCollectionChange(slug)}
-                  className={`relative px-4 py-2 mx-1 rounded-full whitespace-nowrap transition-all duration-300 text-sm ${
-                    activeCollection === slug
-                      ? isScrolled
-                        ? "text-[#11296B] bg-amber-300 font-medium shadow-sm"
-                        : "text-white bg-gray-500/50 font-medium"
-                      : isScrolled
-                      ? "text-gray-800 hover:text-[#11296B] hover:bg-gray-200"
-                      : "text-white/80 hover:text-white hover:bg-white/10"
-                  }`}
-                >
-                  {collection.name}
-                </button>
-              ))}
-            </div>
-          </div>
+          <CollectionNavigationHeader
+            collectionsData={collectionsData}
+            activeCollection={activeCollection}
+            isScrolled={isScrolled}
+            onHandleCollectionChange={handleCollectionChange}
+          />
         </div>
       </div>
 
@@ -407,275 +390,18 @@ export default function Collections() {
         >
           <div className="max-w-7xl mx-auto">
             {/* Collection Introduction */}
-            <div className="flex flex-col items-center text-center mb-24">
-              <div className="w-16 h-16 rounded-full bg-[#11296B]/10 flex items-center justify-center mb-8">
-                <svg
-                  className="w-8 h-8 text-[#11296B]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                  />
-                </svg>
-              </div>
-
-              <Heading
-                level={2}
-                className="text-3xl md:text-4xl text-gray-900 font-light tracking-tight mb-6"
-              >
-                The Essence of{" "}
-                <span className="font-semibold">
-                  {collectionsData[activeCollection].name}
-                </span>
-              </Heading>
-
-              <div className="w-16 h-px bg-[#11296B]/30 my-6"></div>
-
-              <p className="max-w-3xl mx-auto text-lg text-gray-700 leading-relaxed mb-8">
-                Each piece in the {collectionsData[activeCollection].name}{" "}
-                collection tells a unique story, crafted with meticulous
-                attention to detail and using only the finest materials. Our
-                artisans blend traditional techniques with contemporary design
-                to create timeless pieces that resonate with the modern empress.
-              </p>
-
-              {/* Collection Stats in Elegant Layout */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-16 mt-12">
-                <div className="text-center">
-                  <div className="text-4xl font-light text-[#11296B] mb-2">
-                    {collectionsData[activeCollection].products.length}
-                  </div>
-                  <div className="text-xs text-gray-500 uppercase tracking-widest">
-                    Unique Pieces
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-light text-[#11296B] mb-2">
-                    {
-                      collectionsData[activeCollection].products.reduce(
-                        (acc, product) => [
-                          ...acc,
-                          ...product.colors.filter(
-                            (color) => !acc.includes(color)
-                          ),
-                        ],
-                        []
-                      ).length
-                    }
-                  </div>
-                  <div className="text-xs text-gray-500 uppercase tracking-widest">
-                    Color Variants
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-light text-[#11296B] mb-2">
-                    {collectionsData[activeCollection].products.reduce(
-                      (acc, product) => acc + product.reviews,
-                      0
-                    )}
-                  </div>
-                  <div className="text-xs text-gray-500 uppercase tracking-widest">
-                    Customer Reviews
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-light text-[#11296B] mb-2">
-                    100%
-                  </div>
-                  <div className="text-xs text-gray-500 uppercase tracking-widest">
-                    Handcrafted
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CollectionIntroduction
+              collection={{ name: "Ethereal", itemsCount: 6 }}
+            />
 
             {/* Featured Product Showcase */}
-            <div className="relative mb-32 border-1 border-[#d4d4d4] rounded-3xl overflow-hidden">
-              <div className="absolute -inset-4 bg-[#11296B]/5 rounded-3xl -z-10 transform -rotate-1"></div>
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300">
-                <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-                  {/* Added h-full here */}
-                  {/* Image Side */}
-                  <div className="relative h-80 lg:h-auto lg:min-h-[600px] overflow-hidden">
-                    <Image
-                      src={
-                        collectionsData[activeCollection].products[0].images[0]
-                      }
-                      alt={collectionsData[activeCollection].products[0].name}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                    <div className="absolute top-6 left-6 bg-white/80 backdrop-blur-sm px-4 py-1 rounded-full">
-                      <span className="text-sm text-[#11296B] font-medium">
-                        Featured Piece
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content Side */}
-                  <div className="flex flex-col justify-center p-10 lg:p-16">
-                    <h3 className="text-3xl font-light text-gray-900 mb-4">
-                      {collectionsData[activeCollection].products[0].name}
-                    </h3>
-
-                    <div className="w-12 h-px bg-[#11296B]/30 my-6"></div>
-
-                    <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                      {
-                        collectionsData[activeCollection].products[0]
-                          .description
-                      }
-                      {/* Extended description */}
-                      <span className="block mt-4">
-                        Crafted with{" "}
-                        {collectionsData[activeCollection].products[0].material}{" "}
-                        and designed to embody the essence of the{" "}
-                        {collectionsData[activeCollection].name} collection,
-                        this piece stands as a testament to our commitment to
-                        exceptional craftsmanship.
-                      </span>
-                    </p>
-
-                    {/* Product Insights with responsive mobile-first design */}
-                    <div className="mb-8">
-                      <div className="text-sm text-gray-500 uppercase tracking-wider mb-3">
-                        Product Insights
-                      </div>
-                      <div className="grid grid-cols-1 gap-3">
-                        {/* First row - 3 columns on tablet and up, stacked on mobile */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-                          {/* Materials */}
-                          <div className="bg-gray-50 p-3 rounded-lg">
-                            <div className="text-xs text-gray-500 uppercase mb-1">
-                              Materials
-                            </div>
-                            <div className="text-sm font-medium">
-                              {collectionsData[activeCollection].products[0]
-                                .material || "Premium Materials"}
-                            </div>
-                          </div>
-
-                          {/* Creation Time */}
-                          <div className="bg-gray-50 p-3 rounded-lg">
-                            <div className="text-xs text-gray-500 uppercase mb-1">
-                              Crafting Time
-                            </div>
-                            <div className="text-sm font-medium">48 Hours</div>
-                          </div>
-
-                          {/* Sustainability */}
-                          <div className="bg-gray-50 p-3 rounded-lg">
-                            <div className="text-xs text-gray-500 uppercase mb-1">
-                              Sustainability
-                            </div>
-                            <div className="text-sm font-medium">
-                              Eco-Friendly
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Second row - Full width Rating */}
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                          <div className="text-xs text-gray-500 uppercase mb-1">
-                            Rating
-                          </div>
-                          <div className="flex items-center">
-                            <div className="flex text-yellow-400 mr-2">
-                              {[...Array(5)].map((_, i) => (
-                                <svg
-                                  key={i}
-                                  className="w-4 h-4"
-                                  fill={
-                                    i <
-                                    Math.round(
-                                      collectionsData[activeCollection]
-                                        .products[0].rating || 4.5
-                                    )
-                                      ? "currentColor"
-                                      : "none"
-                                  }
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                                  />
-                                </svg>
-                              ))}
-                            </div>
-                            <span className="text-sm font-medium">
-                              {collectionsData[activeCollection].products[0]
-                                .rating || "4.8"}{" "}
-                              / 5
-                            </span>
-                            <span className="text-xs text-gray-500 ml-2">
-                              (
-                              {collectionsData[activeCollection].products[0]
-                                .reviews || "124"}{" "}
-                              reviews)
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-auto"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CollectionFeaturedProduct
+              product={collectionsData[activeCollection].products[0]}
+              collection={collectionsData[activeCollection]}
+            />
 
             {/* Collection Products Grid Section */}
-            <section id="products-section" className="mb-32">
-              <div className="text-center mb-16">
-                <Heading
-                  level={3}
-                  className="text-2xl md:text-3xl text-gray-900 font-light tracking-tight mb-4"
-                >
-                  Explore the{" "}
-                  <span className="font-semibold">
-                    {collectionsData[activeCollection].name}
-                  </span>{" "}
-                  Collection
-                </Heading>
-
-                <div className="w-16 h-px bg-[#11296B]/30 mx-auto my-6"></div>
-
-                <p className="max-w-2xl mx-auto text-gray-600">
-                  Each piece in this collection has been meticulously crafted to
-                  embody the essence of timeless elegance and contemporary
-                  sophistication.
-                </p>
-              </div>
-
-              {/* Plain grid with no motion effects, just basic centering */}
-              <div className="mx-auto flex justify-center">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center max-w-7xl">
-                  {collectionsData[activeCollection].products.map((product) => (
-                    <div key={product.id}>
-                      <ProductCard product={product} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="text-center mt-12">
-                <Link
-                  href={`/collections/${activeCollection}`}
-                  className="inline-block border border-[#11296B] text-[#11296B] hover:bg-[#11296B] hover:text-white px-8 py-3 rounded-full transition-colors duration-300"
-                >
-                  View All {collectionsData[activeCollection].name} Pieces
-                </Link>
-              </div>
-            </section>
+            <CollectionProduct collection={collectionsData[activeCollection]} />
 
             {/* Other Collections */}
             <section id="products-section">
