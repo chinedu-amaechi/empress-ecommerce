@@ -12,6 +12,7 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 import ScrollProgress from "./scroll-progress";
 import Heading from "@/components/ui/heading";
 import Footer from "@/components/layout/footer";
+import { getAllCollections } from "@/lib/collection-service";
 
 // Add these styles directly in the component
 const checkerboardStyles = {
@@ -26,7 +27,7 @@ const checkerboardStyles = {
 export default function Collections() {
   const searchParams = useSearchParams();
   const highlightCollection = searchParams.get("collection");
-  const collectionsData = CollectionsData();
+  const [collectionsData, setCollectionsData] = useState(CollectionsData);
   const [activeCollection, setActiveCollection] = useState(
     highlightCollection || Object.keys(collectionsData)[0]
   );
@@ -43,6 +44,15 @@ export default function Collections() {
   // References to collection sections
   const mainRef = useRef(null);
   const optionsRef = useRef(null);
+
+  useEffect(() => {
+    async function fetchCollections() {
+      const res = await getAllCollections();
+      console.log(res);
+    }
+
+    fetchCollections();
+  }, []);
 
   // Handle initial load and collection change
   useEffect(() => {
