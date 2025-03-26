@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useCartContext } from "@/app/contexts/cart-context";
 
 // Utility function to generate star ratings
 const generateStars = (rating) => {
@@ -90,6 +91,7 @@ export default function ProductCard({
       prev === 0 ? safeImages.length - 1 : prev - 1
     );
   };
+  const { cart, setCart } = useCartContext();
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -123,6 +125,21 @@ export default function ProductCard({
   const increaseQuantity = () => {
     setQuantity((prev) => prev + 1);
   };
+
+  function handleAddToCart() {
+    console.log("Adding to cart");
+    setCart((prev) => {
+      const existingProduct = prev.find((item) => item._id === product._id);
+      if (existingProduct) {
+        return prev.map((item) =>
+          item._id === product._id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  }
 
   const decreaseQuantity = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -267,7 +284,10 @@ export default function ProductCard({
           </div>
 
           {/* Add to cart button - elegant hover effect */}
-          <button className="w-full mt-4 py-2.5 bg-[#11296B] text-white text-sm font-medium rounded-md hover:bg-[#1E96FC] transition-all duration-300 transform group-hover:translate-y-0 group-hover:shadow-md">
+          <button
+            className="w-full mt-4 py-2.5 bg-[#11296B] text-white text-sm font-medium rounded-md hover:bg-[#1E96FC] transition-all duration-300 transform group-hover:translate-y-0 group-hover:shadow-md"
+            onClick={handleAddToCart}
+          >
             Add to Cart
           </button>
         </div>

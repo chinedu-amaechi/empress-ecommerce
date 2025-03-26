@@ -1,4 +1,5 @@
 "use client";
+import { useCartContext } from "@/app/contexts/cart-context";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 
@@ -7,6 +8,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const { cart } = useCartContext();
 
   // Refs for dropdown containers
   const dropdownRefs = useRef({});
@@ -299,7 +301,7 @@ const Navbar = () => {
                   />
                 </svg>
                 <span className="flex items-center justify-center ml-1 text-xs font-semibold bg-[#11296B] text-white rounded-full w-5 h-5">
-                  0
+                  {cart.reduce((acc, item) => acc + item.quantity, 0)}
                 </span>
               </button>
               {activeDropdown === "cart" && (
@@ -314,9 +316,11 @@ const Navbar = () => {
                     <div className="text-base text-gray-500 text-center py-5">
                       Your cart is empty
                     </div>
-                    <button className="w-full py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
-                      View Cart
-                    </button>
+                    <Link href="/cart">
+                      <button className="w-full py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
+                        View Cart
+                      </button>
+                    </Link>
                   </div>
                 </div>
               )}
