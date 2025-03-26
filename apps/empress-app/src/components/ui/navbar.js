@@ -172,12 +172,12 @@ const Navbar = () => {
                     >
                       Bestsellers
                     </a>
-                    <a
-                      href="#all"
+                    <Link
+                      href="/products"
                       className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                     >
                       All Bracelets
-                    </a>
+                    </Link>
                   </div>
                 </div>
               )}
