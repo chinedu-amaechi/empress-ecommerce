@@ -16,9 +16,9 @@ function CollectionNavigationHeader({
         {Object.entries(collectionsData).map(([slug, collection]) => (
           <button
             key={slug}
-            onClick={() => onHandleCollectionChange(slug)}
+            onClick={() => onHandleCollectionChange(collection.name)}
             className={`relative px-4 py-2 mx-1 rounded-full whitespace-nowrap transition-all duration-300 text-sm ${
-              activeCollection === slug
+              activeCollection.name === collection.name
                 ? isScrolled
                   ? "text-[#11296B] bg-amber-300 font-medium shadow-sm"
                   : "text-white bg-gray-500/50 font-medium"

@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import CollectionsData from "./collections-data";
 import ProductCard from "@/components/product/product-card";
 import CollectionNavigator from "./collection-navigator";
 import Breadcrumb from "@/components/ui/breadcrumb";
@@ -17,6 +16,7 @@ import CollectionNavigationHeader from "./collection-navigation-header";
 import CollectionIntroduction from "./collection-introduction";
 import CollectionFeaturedProduct from "./collection-featured-product";
 import CollectionProduct from "./collection-products";
+import { useQuery } from "@tanstack/react-query";
 
 // Add these styles directly in the component
 const checkerboardStyles = {
@@ -31,10 +31,8 @@ const checkerboardStyles = {
 export default function Collections() {
   const searchParams = useSearchParams();
   const highlightCollection = searchParams.get("collection");
-  const [collectionsData, setCollectionsData] = useState(CollectionsData);
-  const [activeCollection, setActiveCollection] = useState(
-    highlightCollection || Object.keys(collectionsData)[0]
-  );
+  const [collectionsData, setCollectionsData] = useState([]);
+  const [activeCollection, setActiveCollection] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -49,14 +47,30 @@ export default function Collections() {
   const mainRef = useRef(null);
   const optionsRef = useRef(null);
 
+  const { data, isLoading, error } = useQuery({
+    queryFn: getAllCollections,
+    queryKey: ["collections"],
+    refetchOnWindowFocus: true,
+  });
+
   useEffect(() => {
     async function fetchCollections() {
-      const res = await getAllCollections();
-      console.log(res);
+      if (data) {
+        setCollectionsData(data);
+        console.log("All collections:", data);
+        console.log(collectionsData);
+        setActiveCollection(
+          data.filter(
+            (collection) => collection.name === highlightCollection
+          )[0]
+        );
+      } else {
+        return;
+      }
     }
 
     fetchCollections();
-  }, []);
+  }, [data, collectionsData]);
 
   // Handle initial load and collection change
   useEffect(() => {
@@ -125,10 +139,16 @@ export default function Collections() {
   };
 
   // Handle collection change without scrolling to top
-  const handleCollectionChange = (collection) => {
+  const handleCollectionChange = (collectionName) => {
+    console.log(collectionName);
+
     // Only proceed if we're changing to a different collection
-    if (activeCollection !== collection) {
-      setActiveCollection(collection);
+    if (activeCollection.name !== collectionName) {
+      setActiveCollection(
+        collectionsData.filter(
+          (collection) => collection.name === collectionName
+        )[0]
+      );
 
       // Always scroll to top of the page when changing collections
       window.scrollTo({
@@ -138,10 +158,36 @@ export default function Collections() {
 
       // Update URL query parameter without full page reload
       const url = new URL(window.location);
-      url.searchParams.set("collection", collection);
+      url.searchParams.set("collection", collectionName);
       window.history.pushState({}, "", url);
     }
   };
+
+  if (isLoading || !collectionsData || !activeCollection) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-gray-600">Loading collections...</p>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-red-600">Error loading collections</p>
+      </main>
+    );
+  }
+  console.log(activeCollection);
+  console.log(collectionsData);
+
+  // return (
+  //   <div>
+  //     <h1>Collections</h1>
+  //     <h1>{activeCollection.name}</h1>
+  //     <img src={activeCollection.imageUrl.optimizeUrl } />
+  //   </div>
+  // );
 
   return (
     <main ref={mainRef} className="min-h-screen overflow-hidden bg-[#f9f9f9]">
@@ -157,7 +203,7 @@ export default function Collections() {
         <div className="max-w-screen-2xl mx-auto px-6 flex flex-col md:flex-row items-center">
           {/* Breadcrumb Navigation */}
           <div className="md:w-1/3">
-            <Breadcrumb currentCollection={activeCollection} />
+            {/* <Breadcrumb currentCollection={activeCollection} /> */}
           </div>
 
           {/* Logo - centered with width constraints */}
@@ -192,8 +238,8 @@ export default function Collections() {
             // Regular image when not transitioning
             <div className={checkerboardStyles.imageWrapper}>
               <Image
-                src={collectionsData[activeCollection].heroImage}
-                alt={collectionsData[activeCollection].name}
+                src={activeCollection.imageUrl.optimizeUrl}
+                alt={activeCollection.name}
                 fill
                 className="object-cover"
                 priority
@@ -210,8 +256,8 @@ export default function Collections() {
                 style={{ zIndex: 1 }}
               >
                 <Image
-                  src={collectionsData[previousCollection].heroImage}
-                  alt={collectionsData[previousCollection].name}
+                  src={activeCollection.imageUrl.optimizeUrl}
+                  alt={activeCollection.name}
                   fill
                   className="object-cover"
                   priority
@@ -244,7 +290,7 @@ export default function Collections() {
                     <div
                       className={checkerboardStyles.cellContent}
                       style={{
-                        backgroundImage: `url(${collectionsData[activeCollection].heroImage})`,
+                        backgroundImage: `url(${activeCollection.imageUrl.optimizeUrl})`,
                         backgroundSize: `${gridSize * 100}%`,
                         backgroundPosition: `${-left * gridSize}% ${
                           -top * gridSize
@@ -304,7 +350,7 @@ export default function Collections() {
                   }}
                   className="font-semibold inline-block"
                 >
-                  {collectionsData[activeCollection].name}
+                  {activeCollection.name}
                 </motion.span>
               </Heading>
 
@@ -325,7 +371,7 @@ export default function Collections() {
               }}
               className="max-w-2xl mx-auto text-xl md:text-2xl text-white/90 leading-relaxed font-light mb-12"
             >
-              {collectionsData[activeCollection].description}
+              {activeCollection.description}
             </motion.p>
 
             <motion.div
@@ -395,13 +441,13 @@ export default function Collections() {
             />
 
             {/* Featured Product Showcase */}
-            <CollectionFeaturedProduct
+            {/* <CollectionFeaturedProduct
               product={collectionsData[activeCollection].products[0]}
               collection={collectionsData[activeCollection]}
-            />
+            /> */}
 
             {/* Collection Products Grid Section */}
-            <CollectionProduct collection={collectionsData[activeCollection]} />
+            {/* <CollectionProduct collection={collectionsData[activeCollection]} /> */}
 
             {/* Other Collections */}
             <section id="products-section">
@@ -425,10 +471,10 @@ export default function Collections() {
                     <div
                       key={slug}
                       className="relative h-80 rounded-lg overflow-hidden shadow-lg group cursor-pointer"
-                      onClick={() => handleCollectionChange(slug)}
+                      onClick={() => handleCollectionChange(collection.name)}
                     >
                       <Image
-                        src={collection.heroImage}
+                        src={collection.imageUrl.optimizeUrl}
                         alt={collection.name}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-110"

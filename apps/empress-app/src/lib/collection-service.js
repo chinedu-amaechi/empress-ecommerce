@@ -23,7 +23,7 @@ export async function getAllCollections() {
     //   allProducts = [...allProducts, ...productsWithCollection];
     // });
 
-    console.log("All collections:", result.data);
+    // console.log("All collections:", result.data);
     
 
     return result.data;
