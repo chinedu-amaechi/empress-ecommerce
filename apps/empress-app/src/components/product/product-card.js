@@ -128,6 +128,7 @@ export default function ProductCard({
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   };
   console.log(safeImages);
+  console.log(product);
 
   return (
     <>
@@ -274,7 +275,7 @@ export default function ProductCard({
 
       {/* Modal Window */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 animate-fadeIn">
+        <div className="fixed inset-0 bg-black/80 bg-opacity-60 flex items-center justify-center z-50 p-4 animate-fadeIn">
           <div
             ref={modalRef}
             className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-scaleIn"
@@ -284,7 +285,7 @@ export default function ProductCard({
               <div className="relative h-80 md:h-full p-6">
                 <div className="relative h-full w-full">
                   <Image
-                    src={safeImages[currentImageIndex]}
+                    src={safeImages[currentImageIndex].optimizeUrl}
                     alt={product.name}
                     className="object-contain rounded-md"
                     fill
