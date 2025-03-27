@@ -64,7 +64,7 @@ const OurPhilosophy = () => {
             className="relative h-96 md:h-[500px] rounded-sm overflow-hidden"
           >
             <Image
-              src="/about/philosophy.jpg"
+              src="/Empress/Ethereal/Sorelle/IMG_1904.JPG"
               alt="Handcrafting jewelry"
               fill
               className="object-cover"

@@ -93,7 +93,7 @@ const OurStory = () => {
           >
             <div className="relative h-96 md:h-[600px] rounded-sm overflow-hidden">
               <Image
-                src="/public/Empress/Celestial Bloom/Aluna/Aluna.jpg"
+                src="/Empress/Heritage/Suyan/IMG_2079.JPG"
                 alt="Empress founder"
                 fill
                 className="object-cover"
