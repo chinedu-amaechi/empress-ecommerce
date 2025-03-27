@@ -15,7 +15,7 @@ const Footer = () => {
           <div className="md:col-span-1 pr-4 relative">
             <div className="relative h-16 w-auto">
               <Image
-                src="/icons/empress_logo.png"
+                src="/Icons/empress_logo_white.png"
                 href="/"
                 alt="Empress Logo"
                 fill
@@ -24,7 +24,6 @@ const Footer = () => {
               />
             </div>
             <div className="absolute w-24 h-24 bg-white/5 rounded-full -top-5 -left-5 blur-xl"></div>
-
 
             {/* Social media icons */}
             <div className="flex mt-6 space-x-5">
@@ -53,7 +52,15 @@ const Footer = () => {
                   alt="Instagram"
                   className="w-6 h-6"
                 />
-
+              </a>
+              {/* Etsy*/}
+              <a
+                href="https://empresscanada.etsy.com"
+                target="_blank"
+                className="text-white hover:text-gray-200 transition-colors"
+              >
+                <span className="sr-only">Instagram</span>
+                <img src="/Icons/Etsy.png" alt="Etsy" className="w-6 h-6" />
               </a>
             </div>
           </div>
@@ -220,7 +227,6 @@ const Footer = () => {
         {/* Copyright and policies */}
         <div className="flex flex-col items-center pt-10 mt-16 border-t border-white/20 md:flex-row md:justify-between">
           <div className="flex space-x-6 text-sm text-white/70">
-
             {/* <Link
 
               href="/privacy-policy"
