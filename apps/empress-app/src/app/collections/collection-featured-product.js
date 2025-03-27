@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-function CollectionFeaturedProduct({product, collection}) {
+function CollectionFeaturedProduct({ collection }) {
   return (
     <div className="relative mb-32 border-1 border-[#d4d4d4] rounded-3xl overflow-hidden">
       <div className="absolute -inset-4 bg-[#11296B]/5 rounded-3xl -z-10 transform -rotate-1"></div>
@@ -10,8 +10,8 @@ function CollectionFeaturedProduct({product, collection}) {
           {/* Image Side */}
           <div className="relative h-80 lg:h-auto lg:min-h-[600px] overflow-hidden">
             <Image
-              src={product.image}
-              alt={product.name}
+              src={collection.featuredProduct?.imagesUrl[0].optimizeUrl}
+              alt={collection.featuredProduct?.name}
               fill
               className="object-cover"
               priority
@@ -26,21 +26,18 @@ function CollectionFeaturedProduct({product, collection}) {
           {/* Content Side */}
           <div className="flex flex-col justify-center p-10 lg:p-16">
             <h3 className="text-3xl font-light text-gray-900 mb-4">
-              {product.name}
+              {collection.featuredProduct?.name}
             </h3>
 
             <div className="w-12 h-px bg-[#11296B]/30 my-6"></div>
 
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              {product.description}
+              {collection.featuredProduct?.description}
               {/* Extended description */}
               <span className="block mt-4">
-                Crafted with{" "}
-                {product.material} and
-                designed to embody the essence of the{" "}
-                {collection.name} collection, this piece
-                stands as a testament to our commitment to exceptional
-                craftsmanship.
+                Designed to embody the essence of the {collection.name}{" "}
+                collection, this piece stands as a testament to our commitment
+                to exceptional craftsmanship.
               </span>
             </p>
 
@@ -57,10 +54,19 @@ function CollectionFeaturedProduct({product, collection}) {
                     <div className="text-xs text-gray-500 uppercase mb-1">
                       Materials
                     </div>
-                    <div className="text-sm font-medium">
-                      {product.material ||
-                        "Premium Materials"}
-                    </div>
+                    <ul>
+                      {collection.featuredProduct?.materials &&
+                        collection.featuredProduct.materials?.map(
+                          (material, index) => (
+                            <li
+                              key={index}
+                              className="flex items-center mb-1 font-semibold text-sm "
+                            >
+                              {material}
+                            </li>
+                          )
+                        )}
+                    </ul>
                   </div>
 
                   {/* Creation Time */}
@@ -81,7 +87,7 @@ function CollectionFeaturedProduct({product, collection}) {
                 </div>
 
                 {/* Second row - Full width Rating */}
-                <div className="bg-gray-50 p-3 rounded-lg">
+                {/* <div className="bg-gray-50 p-3 rounded-lg">
                   <div className="text-xs text-gray-500 uppercase mb-1">
                     Rating
                   </div>
@@ -92,11 +98,7 @@ function CollectionFeaturedProduct({product, collection}) {
                           key={i}
                           className="w-4 h-4"
                           fill={
-                            i <
-                            Math.round(
-                              product
-                                .rating || 4.5
-                            )
+                            i < Math.round(product.rating || 4.5)
                               ? "currentColor"
                               : "none"
                           }
@@ -113,18 +115,13 @@ function CollectionFeaturedProduct({product, collection}) {
                       ))}
                     </div>
                     <span className="text-sm font-medium">
-                      {product.rating ||
-                        "4.8"}{" "}
-                      / 5
+                      {product.rating || "4.8"} / 5
                     </span>
                     <span className="text-xs text-gray-500 ml-2">
-                      (
-                      {product.reviews ||
-                        "124"}{" "}
-                      reviews)
+                      ({product.reviews || "124"} reviews)
                     </span>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-auto"></div>

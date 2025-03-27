@@ -18,6 +18,7 @@ import CollectionFeaturedProduct from "./collection-featured-product";
 import CollectionProduct from "./collection-products";
 import { useQuery } from "@tanstack/react-query";
 import useCollections from "@/hooks/use-collections";
+import useProducts from "@/hooks/use-products";
 
 // Add these styles directly in the component
 const checkerboardStyles = {
@@ -32,7 +33,7 @@ const checkerboardStyles = {
 export default function Collections() {
   const searchParams = useSearchParams();
   const highlightCollection = searchParams.get("collection");
-  const [collectionsData, setCollectionsData] = useState([]);
+  const [collections, setCollections] = useState([]);
   const [activeCollection, setActiveCollection] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -47,18 +48,37 @@ export default function Collections() {
   // References to collection sections
   const mainRef = useRef(null);
   const optionsRef = useRef(null);
-  const { data, isLoading, error } = useCollections();
+  const {
+    data: collectionsData,
+    isLoading: collectionsIsLoading,
+    error: collectionsError,
+  } = useCollections();
+
+  const {
+    data: productsData,
+    isLoading: productsIsLoading,
+    error: productsError,
+  } = useProducts();
 
   useEffect(() => {
     async function fetchCollections() {
-      if (data) {
-        setCollectionsData(data);
-        console.log("All collections:", data);
-        console.log(collectionsData);
+      if (collectionsData && productsData) {
+        setCollections(collectionsData);
+        console.log("All collections:", collectionsData);
+        console.log(collections);
         setActiveCollection(
-          data.filter(
+          collectionsData.filter(
             (collection) => collection.name === highlightCollection
           )[0]
+        );
+        // setting featured product to the first product in the collection
+        const featuredProductId =
+          activeCollection.products[
+            Math.floor(Math.random() * activeCollection.products.length)
+          ];
+
+        activeCollection.featuredProduct = productsData.find(
+          (product) => product._id === featuredProductId
         );
       } else {
         return;
@@ -66,7 +86,13 @@ export default function Collections() {
     }
 
     fetchCollections();
-  }, [data, collectionsData]);
+  }, [
+    collectionsData,
+    collections,
+    highlightCollection,
+    productsData,
+    activeCollection,
+  ]);
 
   // Handle initial load and collection change
   useEffect(() => {
@@ -74,7 +100,7 @@ export default function Collections() {
 
     if (
       highlightCollection &&
-      Object.keys(collectionsData).includes(highlightCollection)
+      Object.keys(collections).includes(highlightCollection)
     ) {
       setActiveCollection(highlightCollection);
     }
@@ -141,7 +167,7 @@ export default function Collections() {
     // Only proceed if we're changing to a different collection
     if (activeCollection.name !== collectionName) {
       setActiveCollection(
-        collectionsData.filter(
+        collections.filter(
           (collection) => collection.name === collectionName
         )[0]
       );
@@ -159,7 +185,7 @@ export default function Collections() {
     }
   };
 
-  if (isLoading || !collectionsData || !activeCollection) {
+  if (collectionsIsLoading || !collections || !activeCollection) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <p className="text-lg text-gray-600">Loading collections...</p>
@@ -167,7 +193,7 @@ export default function Collections() {
     );
   }
 
-  if (error) {
+  if (collectionsError || productsError) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <p className="text-lg text-red-600">Error loading collections</p>
@@ -175,7 +201,7 @@ export default function Collections() {
     );
   }
   console.log(activeCollection);
-  console.log(collectionsData);
+  console.log(collections);
 
   // return (
   //   <div>
@@ -219,7 +245,7 @@ export default function Collections() {
 
           {/* Collection Navigation */}
           <CollectionNavigationHeader
-            collectionsData={collectionsData}
+            collectionsData={collections}
             activeCollection={activeCollection}
             isScrolled={isScrolled}
             onHandleCollectionChange={handleCollectionChange}
@@ -432,18 +458,18 @@ export default function Collections() {
         >
           <div className="max-w-7xl mx-auto">
             {/* Collection Introduction */}
-            <CollectionIntroduction
-              collection={{ name: "Ethereal", itemsCount: 6 }}
-            />
+            <CollectionIntroduction collection={activeCollection} />
 
             {/* Featured Product Showcase */}
-            {/* <CollectionFeaturedProduct
-              product={collectionsData[activeCollection].products[0]}
-              collection={collectionsData[activeCollection]}
-            /> */}
+            <CollectionFeaturedProduct collection={activeCollection} />
 
             {/* Collection Products Grid Section */}
-            {/* <CollectionProduct collection={collectionsData[activeCollection]} /> */}
+            <CollectionProduct
+              products={productsData.filter(
+                (product) => product.collectionId === activeCollection._id
+              )}
+              collection={activeCollection}
+            />
 
             {/* Other Collections */}
             <section id="products-section">
@@ -460,7 +486,7 @@ export default function Collections() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {Object.entries(collectionsData)
+                {Object.entries(collections)
                   .filter(([slug]) => slug !== activeCollection)
                   .slice(0, 3)
                   .map(([slug, collection]) => (
@@ -506,7 +532,7 @@ export default function Collections() {
               {/* Collection Navigator */}
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <CollectionNavigator
-                  collections={collectionsData}
+                  collections={collections}
                   currentCollection={activeCollection}
                   onNavigate={(collection) =>
                     handleCollectionChange(collection, true)

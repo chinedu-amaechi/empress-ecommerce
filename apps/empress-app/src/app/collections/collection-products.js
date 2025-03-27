@@ -1,7 +1,7 @@
 import ProductCard from "@/components/product/product-card";
 import Heading from "@/components/ui/heading";
 
-function CollectionProduct({collection,}) {
+function CollectionProduct({collection, products}) {
     return (
       <section id="products-section" className="mb-32">
         <div className="text-center mb-16">
@@ -28,7 +28,7 @@ function CollectionProduct({collection,}) {
         {/* Plain grid with no motion effects, just basic centering */}
         <div className="mx-auto flex justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center max-w-7xl">
-            {collection.products.map((product) => (
+            {products.map((product) => (
               <div key={product.id}>
                 <ProductCard product={product} />
               </div>
