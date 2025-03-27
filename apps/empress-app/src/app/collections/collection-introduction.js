@@ -1,6 +1,6 @@
 import Heading from "@/components/ui/heading";
 
-function CollectionIntroduction({collection}) {
+function CollectionIntroduction({ collection }) {
   return (
     <div className="flex flex-col items-center text-center mb-24">
       <div className="w-16 h-16 rounded-full bg-[#11296B]/10 flex items-center justify-center mb-8">
@@ -39,24 +39,20 @@ function CollectionIntroduction({collection}) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-16 mt-12">
         <div className="text-center">
           <div className="text-4xl font-light text-[#11296B] mb-2">
-            {collection.itemsCount}
+            {collection.products.length}
           </div>
           <div className="text-xs text-gray-500 uppercase tracking-widest">
             Unique Pieces
           </div>
         </div>
         <div className="text-center">
-          <div className="text-4xl font-light text-[#11296B] mb-2">
-            6
-          </div>
+          <div className="text-4xl font-light text-[#11296B] mb-2">6</div>
           <div className="text-xs text-gray-500 uppercase tracking-widest">
             Color Variants
           </div>
         </div>
         <div className="text-center">
-          <div className="text-4xl font-light text-[#11296B] mb-2">
-            5
-          </div>
+          <div className="text-4xl font-light text-[#11296B] mb-2">5</div>
           <div className="text-xs text-gray-500 uppercase tracking-widest">
             Customer Reviews
           </div>
