@@ -91,7 +91,7 @@ const Navbar = () => {
                 className={`w-auto transition-all duration-300 ${
                   isScrolled ? "h-16" : "h-12"
                 }`}
-                src="/empress_logo.png"
+                src="/icons/empress_logo.png"
                 alt="Empress Logo"
               />
             </Link>
