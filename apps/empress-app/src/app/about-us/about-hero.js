@@ -19,7 +19,7 @@ const AboutHero = () => {
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/Empress/Heritage/Jinhua/IMG_1808.JPG"
+          src="/public/Empress/Heritage/Jinhua/IMG_1808.JPG"
           alt="Jinhua"
           fill
           className="object-cover"
