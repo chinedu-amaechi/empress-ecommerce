@@ -15,7 +15,7 @@ const Header = () => {
         <div
           className="absolute top-0 w-full h-full bg-center bg-cover"
           style={{
-            backgroundImage: "url('/hero-bracelet.jpg')",
+            backgroundImage: "url('/landing_page_bg.jpg')",
           }}
         >
           <span className="w-full h-full absolute opacity-30 bg-black"></span>
