@@ -4,7 +4,6 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Heading from "@/components/ui/heading";
-import Image from "next/image";
 
 const OurArtisans = () => {
   const sectionRef = useRef(null);
@@ -21,13 +20,13 @@ const OurArtisans = () => {
       name: "Eddie Yang",
       role: "CEO",
       description:
-        "Bringing an exceptional attention to detail to every aspect of the company, Eddie ensures the perfect balance between vision and execution. His leadership ensures that every decision aligns with the company's values and goals, creating a seamless harmony between innovation and quality.",
+        "Eddie's leadership ensures that every decision aligns with the company's values and goals, creating a seamless harmony between innovation and quality.",
     },
     {
       name: "Isabelle Helbig",
       role: "CTO",
       description:
-        "Isabelle brings a keen eye for innovation and precision to every technological aspect of the company, ensuring seamless integration between cutting-edge solutions and our core operations. Her expertise drives the company's technological advancements, ensuring we remain at the forefront of industry standards and continue to deliver excellence.",
+        "With a keen eye for innovation and precision to every technological aspect of the company, Isabelle ensures seamless integration between cutting-edge solutions and our core operations.",
     },
   ];
 
@@ -69,7 +68,7 @@ const OurArtisans = () => {
               transition={{ duration: 0.8, delay: index * 0.2 }}
               className="group"
             >
-              <div className="relative h-80 rounded-sm overflow-hidden mb-6">
+              {/* <div className="relative h-80 rounded-sm overflow-hidden mb-6">
                 <Image
                   src={artisan.image}
                   alt={artisan.name}
@@ -77,7 +76,7 @@ const OurArtisans = () => {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </div>
+              </div> */}
 
               <Heading
                 level={3}

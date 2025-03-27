@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Heading from "@/components/ui/heading";
@@ -19,7 +18,7 @@ const AboutHero = () => {
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/Empress/Heritage/Jinhua/IMG_1808.JPG"
+          src="/Empress/Heritage/Jinhua/IMG_1810.JPG"
           alt="Jinhua"
           fill
           className="object-cover"
@@ -56,19 +55,6 @@ const AboutHero = () => {
             small workshop with a vision to create jewelry that transcends
             trends and becomes a treasured part of your story.
           </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <Link
-              href="#our-philosophy"
-              className="inline-block px-8 py-3 border border-white/30 backdrop-blur-sm text-white hover:bg-amber-400 hover:text-[#11296B] transition-all duration-300 rounded-sm"
-            >
-              Discover Our Philosophy
-            </Link>
-          </motion.div>
         </motion.div>
       </div>
     </section>
