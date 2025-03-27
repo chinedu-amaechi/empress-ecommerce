@@ -1,7 +1,7 @@
-import Footer from "@/components/layout/footer";
-import Header from "@/components/layout/header";
+import EmpressChatbot from "@/components/chatbot/empress-chatbot";
 import "./globals.css";
-
+import QueryProvider from "./query-provider";
+import { CartContextProvider } from "./contexts/cart-context";
 
 export const metadata = {
   title: "Empress App",
@@ -13,12 +13,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Header /> 
-        
-        {children}
-        <Footer />
-        
+        <QueryProvider>
+          <CartContextProvider>{children}</CartContextProvider>
+        </QueryProvider>
       </body>
+      <EmpressChatbot />
     </html>
   );
 }
