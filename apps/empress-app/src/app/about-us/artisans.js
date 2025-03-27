@@ -12,25 +12,22 @@ const OurArtisans = () => {
 
   const artisans = [
     {
-      name: "Elena Rodriguez",
-      role: "Master Metalsmith",
-      image: "/about/artisan-1.jpg",
+      name: "Ting Ting Yan",
+      role: "Founder",
       description:
-        "With over 20 years of experience in fine jewelry craftsmanship, Elena leads our metal workshop with precision and artistic vision.",
+        "With over 20 years of experience in fine jewelry craftsmanship, TT leads Empress with precision and artistic vision.",
     },
     {
-      name: "Marcus Wei",
-      role: "Stone Setting Specialist",
-      image: "/about/artisan-2.jpg",
+      name: "Eddie Yang",
+      role: "CEO",
       description:
-        "Marcus brings exceptional attention to detail to each stone setting, ensuring the perfect harmony between metal and gemstone.",
+        "Bringing an exceptional attention to detail to every aspect of the company, Eddie ensures the perfect balance between vision and execution. His leadership ensures that every decision aligns with the company's values and goals, creating a seamless harmony between innovation and quality.",
     },
     {
-      name: "Amara Johnson",
-      role: "Design Innovator",
-      image: "/about/artisan-3.jpg",
+      name: "Isabelle Helbig",
+      role: "CTO",
       description:
-        "Blending traditional techniques with contemporary vision, Amara breathes life into each new collection's creative direction.",
+        "Isabelle brings a keen eye for innovation and precision to every technological aspect of the company, ensuring seamless integration between cutting-edge solutions and our core operations. Her expertise drives the company's technological advancements, ensuring we remain at the forefront of industry standards and continue to deliver excellence.",
     },
   ];
 
@@ -47,16 +44,19 @@ const OurArtisans = () => {
             level={1}
             className="text-3xl sm:text-4xl text-[#11296B] font-light tracking-tight mb-4"
           >
-            The <span className="font-semibold">Artisans</span>
+            Our <span className="font-semibold">People</span>
           </Heading>
 
           <div className="w-16 h-0.5 bg-amber-300 mx-auto my-6"></div>
 
           <p className="text-lg text-gray-600 leading-relaxed">
-            Behind each Empress piece is a team of skilled artisans who breathe
-            life into our designs. Their dedication to excellence and passion
-            for their craft ensure that every bracelet meets our exacting
-            standards.
+            Behind every Empress piece is a dedicated team of individuals, from
+            skilled artisans to business experts, all working together to bring
+            our designs to life. Each person's passion, expertise, and
+            commitment to excellence contribute to the creation of every
+            bracelet, ensuring that we consistently meet the highest standards.
+            It's the collective effort of our people that drives our success and
+            makes each piece truly exceptional.
           </p>
         </motion.div>
 

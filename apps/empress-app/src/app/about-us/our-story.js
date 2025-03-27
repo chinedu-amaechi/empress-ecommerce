@@ -36,11 +36,13 @@ const OurStory = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="leading-relaxed"
               >
-                Founded in 2015 by master jeweler Sophia Chen, Empress began as
-                a pursuit of perfection in the art of bracelet making. What
-                started as a small studio in Sophia's home has grown into an
-                atelier celebrated for its distinctive designs and
-                uncompromising quality.
+                Empress Canada has launched! We have been in business for 10+
+                years over seas and we now aim to bring our designs to jewelry
+                fans across the world. In collaboration with a highly
+                experienced jewelry artisan based in China — who has already
+                achieved significant success in the local market — we are now
+                expanding our reach into North America, introducing our elegant
+                designs to a new audience.
               </motion.p>
 
               <motion.p
@@ -49,11 +51,23 @@ const OurStory = () => {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="leading-relaxed"
               >
-                Each collection tells a unique story, inspired by Sophia's
-                travels around the world and her deep appreciation for diverse
-                cultural heritages. From the ethereal delicacy of our Moonlight
-                series to the bold statements of our Heritage line, every piece
-                carries the unmistakable Empress signature.
+                Founded in 2015 by Ting Ting Yan, Empress began as a pursuit of
+                perfection in the art of bracelet making. What started as a
+                small studio in TT's home has grown into an atelier celebrated
+                for its distinctive designs and uncompromising quality.
+              </motion.p>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="leading-relaxed"
+              >
+                Each collection tells a unique story, inspired by TT's deep
+                appreciation for diverse cultural heritages. From the ethereal
+                delicacy of our Celestial Bloom series to the bold statements of
+                our Heritage line, every piece carries the unmistakable Empress
+                signature.
               </motion.p>
 
               <motion.p
@@ -87,7 +101,9 @@ const OurStory = () => {
             </div>
 
             <div className="absolute -bottom-6 -left-6 bg-white p-6 shadow-lg max-w-xs">
-              <p className="text-[#11296B] font-medium text-lg">Sophia Chen</p>
+              <p className="text-[#11296B] font-medium text-lg">
+                Ting Ting Yan
+              </p>
               <p className="text-gray-600">Founder & Creative Director</p>
             </div>
           </motion.div>
