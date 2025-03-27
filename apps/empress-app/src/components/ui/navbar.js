@@ -1,5 +1,7 @@
 "use client";
-
+import { useCartContext } from "@/app/contexts/cart-context";
+import useCollections from "@/hooks/use-collections";
+import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 
 const Navbar = () => {
@@ -7,13 +9,21 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const { cart } = useCartContext();
 
   // Refs for dropdown containers
   const dropdownRefs = useRef({});
   const navbarRef = useRef(null);
 
+  // use collections data
+  const { data, isLoading, error } = useCollections();
+
   // Handle scroll effect
   useEffect(() => {
+    // Check initial scroll position immediately
+    setIsScrolled(window.scrollY > 10);
+
+    // Add scroll event listener for future scrolling
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -76,15 +86,15 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="#" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <img
                 className={`w-auto transition-all duration-300 ${
-                  isScrolled ? "h-11" : "h-13"
+                  isScrolled ? "h-16" : "h-12"
                 }`}
                 src="/empress_logo.png"
                 alt="Empress Logo"
               />
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -108,30 +118,25 @@ const Navbar = () => {
               {activeDropdown === "collections" && (
                 <div className="absolute left-0 w-64 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                   <div className="py-1">
-                    <a
-                      href="#ethereal"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      Ethereal
-                    </a>
-                    <a
-                      href="#divine"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      Divine
-                    </a>
-                    <a
-                      href="#heritage"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      Heritage
-                    </a>
-                    <a
-                      href="#celestial"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      Celestial Bloom
-                    </a>
+                    {isLoading ? (
+                      <div className="px-4 py-2.5 text-base text-gray-700">
+                        Loading...
+                      </div>
+                    ) : error ? (
+                      <div className="px-4 py-2.5 text-base text-red-500">
+                        Error loading collections
+                      </div>
+                    ) : (
+                      data.map((collection) => (
+                        <Link
+                          href={`/collections?collection=${collection.name}`}
+                          key={collection._id}
+                          className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                        >
+                          {collection.name}
+                        </Link>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
@@ -168,12 +173,12 @@ const Navbar = () => {
                     >
                       Bestsellers
                     </a>
-                    <a
-                      href="#all"
+                    <Link
+                      href="/products"
                       className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                     >
                       All Bracelets
-                    </a>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -181,19 +186,19 @@ const Navbar = () => {
 
             {/* About Us - simple link */}
             <a
-              href="#about"
+              href="/about-us"
               className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300 group"
             >
               About
               <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#11296B]"></span>
             </a>
 
-            {/* Care */}
+            {/* FAQs */}
             <a
-              href="#care"
+              href="#faq"
               className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300 group"
             >
-              Care
+              FAQ
               <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#11296B]"></span>
             </a>
           </div>
@@ -202,7 +207,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-6">
             {/* Search Button */}
             <button
-              className="hidden md:block p-2 text-gray-900 hover:bg-[#11296B]/10 rounded-full transition-all duration-300"
+              className="hidden md:block p-2 text-gray-900 hover:bg-amber-300/40 rounded-full transition-all duration-300"
               aria-label="Search"
               onClick={handleSearchClick}
             >
@@ -227,7 +232,7 @@ const Navbar = () => {
               ref={(el) => (dropdownRefs.current["account"] = el)}
             >
               <button
-                className="p-2 text-gray-900 hover:bg-[#11296B]/10 rounded-full transition-all duration-300"
+                className="p-2 text-gray-900 hover:bg-amber-300/40 rounded-full transition-all duration-300"
                 aria-label="Account"
                 onClick={() => toggleDropdown("account")}
               >
@@ -277,7 +282,7 @@ const Navbar = () => {
               ref={(el) => (dropdownRefs.current["cart"] = el)}
             >
               <button
-                className="flex items-center p-2 text-gray-900 hover:bg-[#11296B]/10 rounded-full transition-all duration-300"
+                className="flex items-center p-2 text-gray-900 hover:bg-amber-300/40 rounded-full transition-all duration-300"
                 aria-label="Shopping Cart"
                 onClick={() => toggleDropdown("cart")}
               >
@@ -295,7 +300,7 @@ const Navbar = () => {
                   />
                 </svg>
                 <span className="flex items-center justify-center ml-1 text-xs font-semibold bg-[#11296B] text-white rounded-full w-5 h-5">
-                  0
+                  {cart.reduce((acc, item) => acc + item.quantity, 0)}
                 </span>
               </button>
               {activeDropdown === "cart" && (
@@ -310,9 +315,11 @@ const Navbar = () => {
                     <div className="text-base text-gray-500 text-center py-5">
                       Your cart is empty
                     </div>
-                    <button className="w-full py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
-                      View Cart
-                    </button>
+                    <Link href="/cart">
+                      <button className="w-full py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
+                        View Cart
+                      </button>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -436,30 +443,25 @@ const Navbar = () => {
             </button>
             {activeDropdown === "mobile-collections" && (
               <div className="pl-4 py-2 space-y-1 border-l-2 border-[#11296B]/20 ml-3">
-                <a
-                  href="#ethereal"
-                  className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
-                >
-                  Ethereal
-                </a>
-                <a
-                  href="#divine"
-                  className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
-                >
-                  Divine
-                </a>
-                <a
-                  href="#heritage"
-                  className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
-                >
-                  Heritage
-                </a>
-                <a
-                  href="#celestial"
-                  className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
-                >
-                  Celestial Bloom
-                </a>
+                {isLoading ? (
+                  <div className="px-4 py-2.5 text-base text-gray-700">
+                    Loading...
+                  </div>
+                ) : error ? (
+                  <div className="px-4 py-2.5 text-base text-red-500">
+                    Error loading collections
+                  </div>
+                ) : (
+                  data.map((collection) => (
+                    <Link
+                      href={`/collections?collection=${collection.name}`}
+                      key={collection._id}
+                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                    >
+                      {collection.name}
+                    </Link>
+                  ))
+                )}
               </div>
             )}
 
@@ -513,10 +515,10 @@ const Navbar = () => {
             </a>
 
             <a
-              href="#care"
+              href="#faq"
               className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-[#11296B]/10 rounded transition-colors duration-200"
             >
-              Care
+              FAQ
             </a>
 
             <div className="flex items-center justify-between px-3 py-4 border-t border-gray-100 mt-2">

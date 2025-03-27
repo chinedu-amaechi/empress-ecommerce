@@ -1,8 +1,10 @@
+// src/components/product/product-card.js
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useCartContext } from "@/app/contexts/cart-context";
 
 // Utility function to generate star ratings
 const generateStars = (rating) => {
@@ -47,7 +49,7 @@ export default function ProductCard({
     colors: ["Silver", "Rose Gold", "Gold"],
     description:
       "A delicate bracelet featuring authentic moonstone beads. The soft luminescence of the stones creates an ethereal effect, perfect for both day and evening wear.",
-    images: [
+    imagesUrl: [
       "/bracelet-01.jpg",
       "/bracelet-02.jpg",
       "/bracelet-03.jpg",
@@ -58,27 +60,38 @@ export default function ProductCard({
     isBestseller: true,
   },
 }) {
+  // Ensure product images are valid
+  const safeImages =
+    Array.isArray(product.imagesUrl) && product.imagesUrl.length > 0
+      ? product.imagesUrl
+      : [
+          {
+            optimizeUrl: "/bracelet-01.jpg",
+          },
+        ];
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState(
-    product.colors ? product.colors[0] : null
+    product.colors && product.colors.length > 0 ? product.colors[0] : null
   );
   const [quantity, setQuantity] = useState(1);
   const modalRef = useRef(null);
 
-  // Navigation for image carousel
+  // Navigation for image carousel - now with safe array access
   const nextImage = (e) => {
     e?.stopPropagation();
-    setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % safeImages.length);
   };
 
   const prevImage = (e) => {
     e?.stopPropagation();
     setCurrentImageIndex((prev) =>
-      prev === 0 ? product.images.length - 1 : prev - 1
+      prev === 0 ? safeImages.length - 1 : prev - 1
     );
   };
+  const { cart, setCart } = useCartContext();
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -113,9 +126,26 @@ export default function ProductCard({
     setQuantity((prev) => prev + 1);
   };
 
+  function handleAddToCart() {
+    console.log("Adding to cart");
+    setCart((prev) => {
+      const existingProduct = prev.find((item) => item._id === product._id);
+      if (existingProduct) {
+        return prev.map((item) =>
+          item._id === product._id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  }
+
   const decreaseQuantity = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   };
+  console.log(safeImages);
+  console.log(product);
 
   return (
     <>
@@ -124,8 +154,6 @@ export default function ProductCard({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Product badges removed as requested */}
-
         {/* Product image with carousel */}
         <div className="relative h-64 overflow-hidden">
           {/* Make the entire image area clickable to open modal, except when interacting with other elements */}
@@ -135,7 +163,7 @@ export default function ProductCard({
             aria-label="Open product details"
           ></div>
           <Image
-            src={product.images[currentImageIndex]}
+            src={safeImages[currentImageIndex].optimizeUrl}
             alt={product.name}
             className="object-cover w-full h-full transition-transform duration-500 ease-out group-hover:scale-110"
             fill
@@ -196,7 +224,7 @@ export default function ProductCard({
 
           {/* Dot indicators for image position */}
           <div className="absolute bottom-2 inset-x-0 flex justify-center gap-1.5 z-10">
-            {product.images.map((_, idx) => (
+            {safeImages.map((_, idx) => (
               <button
                 key={idx}
                 onClick={(e) => {
@@ -237,16 +265,16 @@ export default function ProductCard({
 
           {/* Rating - with subtle animation on hover */}
           <div className="flex items-center gap-1 mb-3 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
-            {generateStars(product.rating)}
+            {generateStars(product.rating || 0)}
             <span className="text-xs text-gray-500 ml-1">
-              ({product.reviews})
+              ({product.reviews || 0})
             </span>
           </div>
 
           {/* Price - with elegant styling */}
           <div className="flex items-baseline gap-2 mt-1">
             <span className="text-base sm:text-lg font-semibold text-[#11296B]">
-              ${product.price.toFixed(2)}
+              ${(product.price || 0).toFixed(2)}
             </span>
             {product.originalPrice && (
               <span className="text-xs text-gray-500 line-through">
@@ -257,8 +285,8 @@ export default function ProductCard({
 
           {/* Add to cart button - elegant hover effect */}
           <button
-            onClick={openModal}
             className="w-full mt-4 py-2.5 bg-[#11296B] text-white text-sm font-medium rounded-md hover:bg-[#1E96FC] transition-all duration-300 transform group-hover:translate-y-0 group-hover:shadow-md"
+            onClick={handleAddToCart}
           >
             Add to Cart
           </button>
@@ -267,7 +295,7 @@ export default function ProductCard({
 
       {/* Modal Window */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 animate-fadeIn">
+        <div className="fixed inset-0 bg-black/80 bg-opacity-60 flex items-center justify-center z-50 p-4 animate-fadeIn">
           <div
             ref={modalRef}
             className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-scaleIn"
@@ -277,7 +305,7 @@ export default function ProductCard({
               <div className="relative h-80 md:h-full p-6">
                 <div className="relative h-full w-full">
                   <Image
-                    src={product.images[currentImageIndex]}
+                    src={safeImages[currentImageIndex].optimizeUrl}
                     alt={product.name}
                     className="object-contain rounded-md"
                     fill
@@ -331,7 +359,7 @@ export default function ProductCard({
 
                   {/* Thumbnail Navigation */}
                   <div className="absolute bottom-0 inset-x-0 flex justify-center gap-2 pb-2">
-                    {product.images.map((_, idx) => (
+                    {safeImages.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentImageIndex(idx)}
@@ -355,9 +383,9 @@ export default function ProductCard({
                       {product.name}
                     </h2>
                     <div className="flex items-center gap-2 mb-4">
-                      {generateStars(product.rating)}
+                      {generateStars(product.rating || 0)}
                       <span className="text-sm text-gray-500">
-                        ({product.reviews} reviews)
+                        ({product.reviews || 0} reviews)
                       </span>
                     </div>
                   </div>
@@ -388,7 +416,7 @@ export default function ProductCard({
                 {/* Price */}
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-xl font-semibold text-[#11296B]">
-                    ${product.price.toFixed(2)}
+                    ${(product.price || 0).toFixed(2)}
                   </span>
                   {product.originalPrice && (
                     <span className="text-sm text-gray-500 line-through">
@@ -398,7 +426,9 @@ export default function ProductCard({
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600 mb-6">{product.description}</p>
+                <p className="text-gray-600 mb-6">
+                  {product.description || ""}
+                </p>
 
                 {/* Material */}
                 {product.material && (

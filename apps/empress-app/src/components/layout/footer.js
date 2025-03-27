@@ -16,6 +16,7 @@ const Footer = () => {
             <div className="relative h-16 w-auto">
               <Image
                 src="/empress_logo.png"
+                href="/"
                 alt="Empress Logo"
                 fill
                 className="object-contain object-left"
@@ -23,6 +24,7 @@ const Footer = () => {
               />
             </div>
             <div className="absolute w-24 h-24 bg-white/5 rounded-full -top-5 -left-5 blur-xl"></div>
+
 
             {/* Social media icons */}
             <div className="flex mt-6 space-x-5">
@@ -51,6 +53,7 @@ const Footer = () => {
                   alt="Instagram"
                   className="w-6 h-6"
                 />
+
               </a>
             </div>
           </div>
@@ -112,7 +115,7 @@ const Footer = () => {
             <ul className="mt-4 space-y-3">
               <li>
                 <Link
-                  href="/about"
+                  href="/about-us"
                   className="text-base text-white/80 hover:text-white transition-colors duration-200 group flex items-center"
                 >
                   <span className="group-hover:translate-x-1 transition-transform duration-200">
@@ -166,15 +169,21 @@ const Footer = () => {
                   Join
                 </button>
               </div>
+
             </form> */}
 
             {/* <div className="mt-6">
+
               <h4 className="text-sm font-medium text-white mb-3">
                 Payment Methods
               </h4>
               <div className="flex space-x-3">
                 <div className="bg-white/10 p-2 rounded">
-                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
                     <path d="M2 4h20v16H2V4zm18 14V6H4v12h16z" />
                     <path d="M6 10h4v2H6z" />
                     <path d="M12 10h6v2h-6z" />
@@ -182,7 +191,11 @@ const Footer = () => {
                   </svg>
                 </div>
                 <div className="bg-white/10 p-2 rounded">
-                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
                     <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z" />
                     <circle cx="7" cy="13" r="2" />
                     <circle cx="17" cy="13" r="2" />
@@ -190,7 +203,11 @@ const Footer = () => {
                   </svg>
                 </div>
                 <div className="bg-white/10 p-2 rounded">
-                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
                     <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z" />
                     <path d="M4 6h16v4H4z" />
                   </svg>
@@ -203,16 +220,24 @@ const Footer = () => {
         {/* Copyright and policies */}
         <div className="flex flex-col items-center pt-10 mt-16 border-t border-white/20 md:flex-row md:justify-between">
           <div className="flex space-x-6 text-sm text-white/70">
+
             {/* <Link
+
               href="/privacy-policy"
               className="hover:text-white transition-colors"
             >
               Privacy Policy
             </Link>
-            <Link href="/terms-conditions" className="hover:text-white transition-colors">
+            <Link
+              href="/terms-conditions"
+              className="hover:text-white transition-colors"
+            >
               Terms & Conditions
             </Link>
-            <Link href="/shipping" className="hover:text-white transition-colors">
+            <Link
+              href="/shipping"
+              className="hover:text-white transition-colors"
+            >
               Shipping
             </Link> */}
           </div>
