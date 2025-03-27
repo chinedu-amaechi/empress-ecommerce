@@ -15,7 +15,7 @@ const Footer = () => {
           <div className="md:col-span-1 pr-4 relative">
             <div className="relative h-16 w-auto">
               <Image
-                src="/empress_logo.png"
+                src="/icons/empress_logo.png"
                 href="/"
                 alt="Empress Logo"
                 fill
