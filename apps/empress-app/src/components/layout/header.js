@@ -13,9 +13,9 @@ const Header = () => {
       <div className="relative pt-16 flex items-center min-h-[50vh]">
         {/* Background Image with Subtle Overlay */}
         <div
-          className="absolute top-0 w-full h-full bg-center bg-cover"
+          className="absolute top-0 w-full h-full  bg-cover bg-no-repeat bg-center"
           style={{
-            backgroundImage: "url('/hero-bracelet.jpg')",
+            backgroundImage: "url('/Empress/Heritage/Suyan/IMG_1801.JPG')",
           }}
         >
           <span className="w-full h-full absolute opacity-30 bg-black"></span>
@@ -36,7 +36,7 @@ const Header = () => {
                 href="#collections"
                 className="bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium px-6 py-3 rounded-sm shadow-sm hover:shadow-md transition-all duration-300"
               >
-                Explore Collection
+                Explore Collections
               </a>
             </div>
           </div>
