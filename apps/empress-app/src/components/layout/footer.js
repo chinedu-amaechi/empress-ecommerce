@@ -15,7 +15,8 @@ const Footer = () => {
           <div className="md:col-span-1 pr-4 relative">
             <div className="relative h-16 w-auto">
               <Image
-                src="/empress_logo.png"
+                src="/empress_logo_white.png"
+                href="/"
                 alt="Empress Logo"
                 fill
                 className="object-contain object-left"
@@ -204,15 +205,22 @@ const Footer = () => {
         <div className="flex flex-col items-center pt-10 mt-16 border-t border-white/20 md:flex-row md:justify-between">
           <div className="flex space-x-6 text-sm text-white/70">
             {/* <Link
+
               href="/privacy-policy"
               className="hover:text-white transition-colors"
             >
               Privacy Policy
             </Link>
-            <Link href="/terms-conditions" className="hover:text-white transition-colors">
+            <Link
+              href="/terms-conditions"
+              className="hover:text-white transition-colors"
+            >
               Terms & Conditions
             </Link>
-            <Link href="/shipping" className="hover:text-white transition-colors">
+            <Link
+              href="/shipping"
+              className="hover:text-white transition-colors"
+            >
               Shipping
             </Link> */}
           </div>
