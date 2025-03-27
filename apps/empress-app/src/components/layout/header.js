@@ -26,8 +26,8 @@ const Header = () => {
         <div className="container relative p-12 md:py-16">
           <div className="max-w-lg">
             <h1 className="text-white font-light text-4xl md:text-5xl mb-4 leading-tight">
-              Elegance for the{" "}
-              <span className="font-semibold">Modern Empress</span>
+              Rule with{" "}
+              <span className="font-semibold">Elegance</span>
             </h1>
             <p className="mt-4 text-lg text-white font-light">
               Handcrafted bracelets designed for timeless sophistication.
