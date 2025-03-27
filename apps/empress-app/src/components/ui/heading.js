@@ -1,7 +1,5 @@
-
-import { Josefin_Sans } from "next/font/google";
-
-const josefinSans = Josefin_Sans({ subsets: ["latin"] });
+// src/components/ui/heading.js
+import { activeFont } from "@/components/ui/fonts";
 
 const headingSizes = {
   1: "text-2xl md:text-4xl font-bold",
@@ -14,10 +12,11 @@ const headingSizes = {
 
 function Heading({ level = 1, children, className = "" }) {
   const HeadingTag = `h${level}`;
+
   return (
     <HeadingTag
       className={`${headingSizes[level] || headingSizes[6]} ${
-        josefinSans.className
+        activeFont.className
       } ${className}`}
     >
       {children}
