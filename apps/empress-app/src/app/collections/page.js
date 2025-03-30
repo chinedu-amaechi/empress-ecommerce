@@ -19,6 +19,7 @@ import CollectionProduct from "./collection-products";
 import { useQuery } from "@tanstack/react-query";
 import useCollections from "@/hooks/use-collections";
 import useProducts from "@/hooks/use-products";
+import Navbar from "@/components/ui/navbar";
 
 // Add these styles directly in the component
 const checkerboardStyles = {
@@ -215,42 +216,24 @@ export default function Collections() {
     <main ref={mainRef} className="min-h-screen overflow-hidden bg-[#f9f9f9]">
       {/* Scroll Progress Bar */}
       <ScrollProgress />
-      {/* Fixed navigation bar */}
-      <div
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled ? "bg-white shadow-md py-3" : "bg-transparent py-5"
-        }`}
-      >
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8"></div>
-        <div className="max-w-screen-2xl mx-auto px-6 flex flex-col md:flex-row items-center">
-          {/* Breadcrumb Navigation */}
-          <div className="md:w-1/3">
-            {/* <Breadcrumb currentCollection={activeCollection} /> */}
-          </div>
+      {/* Navigation bar */}
+      <Navbar />
 
-          {/* Logo - centered with width constraints */}
-          <div className="md:w-1/3 flex justify-center mb-4 md:mb-0">
-            <Link href="/">
-              <Image
-                src="/empress_logo.png"
-                alt="Empress Logo"
-                width={240}
-                height={80}
-                className={`h-16 w-auto transition-all duration-500 ${
-                  isScrolled ? "filter-none" : "brightness-0 invert"
-                }`}
-              />
-            </Link>
-          </div>
-
-          {/* Collection Navigation */}
-          <CollectionNavigationHeader
-            collectionsData={collections}
-            activeCollection={activeCollection}
-            isScrolled={isScrolled}
-            onHandleCollectionChange={handleCollectionChange}
-          />
-        </div>
+      {/* Collection Navigation */}
+      <div className="fixed top-[95px] left-4 sm:left-6 lg:left-[calc((100%-1280px)/2+32px)] z-50">
+        
+        <CollectionNavigationHeader
+          collectionsData={collections}
+          activeCollection={activeCollection}
+          isScrolled={isScrolled}
+          onHandleCollectionChange={handleCollectionChange}
+          className={
+            isScrolled ? "bg-white shadow-md py-3 px-6 rounded-full" : ""
+          }
+          style={{
+            display: "inline-block",
+          }}
+        />
       </div>
 
       {/* Elegant Header with Dynamic Background and Checkerboard Transition */}
@@ -445,7 +428,6 @@ export default function Collections() {
           </motion.div>
         </div>
       </header>
-
       {/* Collection Detail Section */}
       <AnimatePresence mode="wait">
         <motion.section
@@ -543,7 +525,6 @@ export default function Collections() {
           </div>
         </motion.section>
       </AnimatePresence>
-
       <Footer />
     </main>
   );
