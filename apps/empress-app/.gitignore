@@ -12,6 +12,20 @@
 
 # testing
 /coverage
+**/__test__/
+
+## cypress
+cypress/videos
+cypress/screenshots
+cypress/fixtures
+cypress/downloads
+cypress/coverage
+cypress/coverage-final.json
+cypress/coverage-istanbul.json
+cypress/coverage-*.json
+cypress/Logs/*
+
+
 
 # next.js
 /.next/
@@ -39,3 +53,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
