@@ -5,6 +5,7 @@ import { CartContextProvider } from "./contexts/cart-context";
 import { Toaster } from "react-hot-toast";
 import { AuthContextProvider } from "./contexts/auth-context";
 import AutoSignIn from "./auto-sign-in";
+import Navbar from "@/components/ui/navbar";
 
 export const metadata = {
   title: "Empress App",
@@ -19,7 +20,10 @@ export default function RootLayout({ children }) {
         <QueryProvider>
           <AuthContextProvider>
             <AutoSignIn>
-              <CartContextProvider>{children}</CartContextProvider>
+              <CartContextProvider>
+                <Navbar />
+                {children}
+              </CartContextProvider>
             </AutoSignIn>
           </AuthContextProvider>
         </QueryProvider>
