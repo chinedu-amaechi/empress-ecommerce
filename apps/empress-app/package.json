@@ -25,6 +25,10 @@
     "perf:all": "npm run perf:summary && npm run perf:journey && npm run perf:api"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.0.1",
+    "@mui/material": "^7.0.1",
     "@supabase/supabase-js": "^2.49.1",
     "@tanstack/react-query": "^5.69.0",
     "@tanstack/react-query-devtools": "^5.69.0",

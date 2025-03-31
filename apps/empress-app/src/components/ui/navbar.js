@@ -1,6 +1,9 @@
 "use client";
+import { useAuthContext } from "@/app/contexts/auth-context";
 import { useCartContext } from "@/app/contexts/cart-context";
 import useCollections from "@/hooks/use-collections";
+import { PersonOutline } from "@mui/icons-material";
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 
@@ -10,6 +13,7 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const { cart } = useCartContext();
+  const { user, setUser } = useAuthContext();
 
   // Refs for dropdown containers
   const dropdownRefs = useRef({});
@@ -234,41 +238,61 @@ const Navbar = () => {
                 aria-label="Account"
                 onClick={() => toggleDropdown("account")}
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
+                {user === null ? (
+                  <PersonOutline />
+                ) : (
+                  <>
+                    <p className="bg-blue-950 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">
+                      {user.firstName.split("")[0]}
+                      {user.lastName.split("")[0]}
+                    </p>
+                  </>
+                )}
               </button>
               {activeDropdown === "account" && (
                 <div className="absolute right-0 w-52 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                   <div className="py-1">
-                    <a
-                      href="#login"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      Sign In
-                    </a>
-                    <a
-                      href="#register"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      Create Account
-                    </a>
-                    <a
-                      href="#orders"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      Order History
-                    </a>
+                    {user === null ? (
+                      <>
+                        {" "}
+                        <Link
+                          href="/auth/sign-in"
+                          className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                        >
+                          Sign In
+                        </Link>
+                        <Link
+                          href="/auth/sign-up"
+                          className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                        >
+                          Create Account
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          href="/account"
+                          className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                        >
+                          My Account
+                        </Link>
+                        <a
+                          href="#orders"
+                          className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                        >
+                          Order History
+                        </a>
+                        <button
+                          onClick={() => {
+                            setUser(null);
+                            localStorage.removeItem("user");
+                          }}
+                          className="block w-full text-left px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                        >
+                          Sign Out
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
@@ -284,19 +308,7 @@ const Navbar = () => {
                 aria-label="Shopping Cart"
                 onClick={() => toggleDropdown("cart")}
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                  />
-                </svg>
+                <ShoppingCart />
                 <span className="flex items-center justify-center ml-1 text-xs font-semibold bg-[#11296B] text-white rounded-full w-5 h-5">
                   {cart.reduce((acc, item) => acc + item.quantity, 0)}
                 </span>
@@ -558,12 +570,18 @@ const Navbar = () => {
                   </svg>
                 </button>
               </div>
-              <a
+              {/* <a
                 href="#login"
                 className="px-4 py-2 text-base font-medium text-white bg-[#11296B] rounded-md hover:bg-opacity-90 transition-all duration-300"
               >
                 Sign In
-              </a>
+              </a> */}
+              <Link
+                href="/auth/sign-in"
+                className="px-4 py-2 text-base font-medium text-white bg-[#11296B] rounded-md hover:bg-opacity-90 transition-all duration-300"
+              >
+                Sign In
+              </Link>
             </div>
           </div>
         </div>

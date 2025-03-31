@@ -74,10 +74,32 @@ export async function loginAdmin(req, res, next) {
 
 export async function checkAuth(req, res, next) {
   try {
+    console.log(req.user);
+
     if (req.user.role === "admin") {
       return serverResponse(res, 200, "Authenticated", {
         user: {
           email: req.user.email,
+        },
+      });
+    } else if (req.user.role === "customer") {
+      const customer = await Customer.findById(req.user.id);
+
+      if (!customer) {
+        return serverResponse(res, 404, "Customer not found", null);
+      }
+
+      return serverResponse(res, 200, "Authenticated", {
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        email: customer.email,
+        phone: customer.phone,
+        address: {
+          street: customer.address.street,
+          city: customer.address.city,
+          province: customer.address.province,
+          country: customer.address.country,
+          postalCode: customer.address.postalCode,
         },
       });
     }
