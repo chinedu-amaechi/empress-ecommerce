@@ -74,8 +74,6 @@ export async function loginAdmin(req, res, next) {
 
 export async function checkAuth(req, res, next) {
   try {
-    console.log(req.user);
-
     if (req.user?.role === "admin") {
       return serverResponse(res, 200, "Authenticated", {
         user: {
