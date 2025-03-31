@@ -13,7 +13,7 @@ const SignUp = () => {
     confirmPassword: "",
     firstName: "",
     lastName: "",
-    username: "",
+    phone: "",
     address: "",
     city: "",
     province: "",
@@ -98,11 +98,12 @@ const SignUp = () => {
             />
           </div>
           <input
-            type="text"
-            name="username"
-            value={formData.username}
+            type="tel"
+            name="phone"
+            required
+            value={formData.phone}
             onChange={handleChange}
-            placeholder="Username"
+            placeholder="Phone Number"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all"
           />
           <input

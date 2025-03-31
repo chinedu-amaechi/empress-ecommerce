@@ -13,7 +13,7 @@ import product from "../models/product.js";
 // This function is used to add a new product to the database
 export async function postNewProduct(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -92,7 +92,7 @@ export async function getSingleProduct(req, res, next) {
 // This function is used to update a product in the database
 export async function updateProduct(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -142,7 +142,7 @@ export async function updateProduct(req, res, next) {
 // This function is used to delete a product from the database
 export async function deleteProduct(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -177,7 +177,9 @@ export async function deleteProduct(req, res, next) {
 
 export async function changeVisibility(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    console.log(req.user);
+
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -213,7 +215,7 @@ export async function changeVisibility(req, res, next) {
 
 export async function addMaterial(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -260,7 +262,7 @@ export async function addMaterial(req, res, next) {
 
 export async function removeMaterial(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
     console.log(req.body);
@@ -308,7 +310,7 @@ export async function removeMaterial(req, res, next) {
 
 export async function putProductImage(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -381,7 +383,7 @@ export async function putProductImage(req, res, next) {
 
 export async function removeProductImage(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -435,7 +437,7 @@ export async function removeProductImage(req, res, next) {
 
 export async function addToCollection(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -490,7 +492,7 @@ export async function addToCollection(req, res, next) {
 
 export async function postNewCollection(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       // Delete any files that were uploaded
       if (req.files.image) {
         deleteFile(req.files.image[0].filepath);
@@ -600,7 +602,7 @@ export async function getSingleCollection(req, res, next) {
 // This function is used to update a collection in the database
 export async function updateCollection(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       // Delete any files that were uploaded
       if (req.files.image) {
         deleteFile(req.files.image[0].filepath);
@@ -684,7 +686,7 @@ export async function updateCollection(req, res, next) {
 // This function is used to delete a collection from the database
 export async function deleteCollection(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -718,7 +720,7 @@ export async function deleteCollection(req, res, next) {
 // This function is used to add a product to a collection
 export async function addProductToCollection(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -781,7 +783,7 @@ export async function addProductToCollection(req, res, next) {
 // This function is used to remove a product from a collection
 export async function removeProductFromCollection(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
@@ -843,7 +845,7 @@ export async function removeProductFromCollection(req, res, next) {
 
 export async function getNotifications(req, res, next) {
   try {
-    if (!req.isAuthenticated) {
+    if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 

@@ -6,12 +6,13 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/admin.js";
 import { validationResult } from "express-validator";
 import serverResponse from "../utils/serverResponse.js";
+import Customer from "../models/customer.js";
 
 export async function createAdmin(req, res, next) {
   try {
     const { email, password } = req.body;
 
-    const { errors } = validationResult(req.body);
+    const { errors } = validationResult(req);
 
     if (errors.length > 0) {
       return res.status(400).json({
@@ -73,7 +74,7 @@ export async function loginAdmin(req, res, next) {
 
 export async function checkAuth(req, res, next) {
   try {
-    if (req.isAuthenticated) {
+    if (req.user.role === "admin") {
       return serverResponse(res, 200, "Authenticated", {
         user: {
           email: req.user.email,
@@ -81,6 +82,109 @@ export async function checkAuth(req, res, next) {
       });
     }
     return serverResponse(res, 401, "Unauthorized", null);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// handler to create a customer
+export async function createCustomer(req, res, next) {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      street,
+      city,
+      province,
+      country,
+      postalCode,
+      password,
+      confirmPassword,
+    } = req.body;
+
+    const { errors } = validationResult(req);
+
+    if (password !== confirmPassword) {
+      errors.push({
+        msg: "Passwords do not match",
+      });
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        message: errors[0].msg,
+      });
+    }
+
+    // Check if the customer already exists
+    const customerExists = await Customer.findOne({ email });
+    if (customerExists) {
+      return serverResponse(res, 400, "Customer already exists", null);
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const customer = new Customer({
+      firstName,
+      lastName,
+      email,
+      phone,
+      address: {
+        street,
+        city,
+        province,
+        country,
+        postalCode,
+      },
+      password: hashedPassword,
+    });
+
+    const savedCustomer = await customer.save();
+
+    return serverResponse(res, 201, "Customer created", savedCustomer);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// handler to login a customer
+export async function loginCustomer(req, res, next) {
+  try {
+    const { email, password } = req.body;
+
+    const customer = await Customer.findOne({ email });
+    if (!customer) {
+      return serverResponse(res, 400, "Invalid email or password", null);
+    }
+
+    const validPassword = await bcrypt.compare(password, customer.password);
+    if (!validPassword) {
+      return serverResponse(res, 400, "Invalid email or password", null);
+    }
+
+    // Create and assign a token
+    const token = jwt.sign({ _id: customer._id }, process.env.JWT_SECRET, {
+      expiresIn: 60 * 60,
+    });
+
+    return serverResponse(res, 200, "Login successful", {
+      token: `Bearer ${token}`,
+      user: {
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        email: customer.email,
+        phone: customer.phone,
+        address: {
+          street: customer.address.street,
+          city: customer.address.city,
+          province: customer.address.province,
+          country: customer.address.country,
+          postalCode: customer.address.postalCode,
+        },
+      },
+    });
   } catch (error) {
     next(error);
   }

@@ -1,7 +1,7 @@
 // 3rd party modules
 import jwt from "jsonwebtoken";
 
-export async function checkAuthMiddleware(request, model) {
+export async function checkAuthMiddleware(request, model, secretKey) {
   try {
     const reqAuthHeader = request.header("Authorization");
     if (!reqAuthHeader) {
@@ -15,16 +15,19 @@ export async function checkAuthMiddleware(request, model) {
     }
 
     // verify the token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, secretKey);
 
     if (!decoded) {
       throw new Error("Unauthorized");
     }
 
-    request.isAuthenticated = true;
-    const admin = await model.findById(decoded._id);
-    request.user = admin;
+    const user = await model.findById(decoded._id);
+
+    return {
+      id: decoded._id,
+      email: user.email,
+    };
   } catch (error) {
-    request.isAuthenticated = false;
+    return null;
   }
 }

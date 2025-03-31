@@ -13,6 +13,7 @@ import Admin from "./models/admin.js";
 import adminRoutes from "./routes/admin.js";
 import authRoutes from "./routes/auth.js";
 import { checkAuthMiddleware } from "./utils/middleware.js";
+import Customer from "./models/customer.js";
 
 /**
  * Initializes and configures the Express application.
@@ -35,7 +36,29 @@ app.use(cors());
 // custom middleware
 // route to check if the request is authenticated
 app.use(async (req, res, next) => {
-  await checkAuthMiddleware(req, Admin);
+  const adminIsAuthenticated = await checkAuthMiddleware(
+    req,
+    Admin,
+    process.env.JWT_SECRET
+  );
+  const customerIsAuthenticated = await checkAuthMiddleware(
+    req,
+    Customer,
+    process.env.JWT_SECRET
+  );
+
+  console.log("Admin is authenticated:", adminIsAuthenticated);
+  console.log("Customer is authenticated:", customerIsAuthenticated);
+
+  if (adminIsAuthenticated) {
+    req.user = { ...adminIsAuthenticated, role: "admin" };
+
+    return next();
+  }
+
+  if (customerIsAuthenticated) {
+    req.user = { ...customerIsAuthenticated, role: "customer" };
+  }
   next();
 });
 
