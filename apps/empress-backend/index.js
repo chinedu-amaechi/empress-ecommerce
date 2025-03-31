@@ -47,9 +47,6 @@ app.use(async (req, res, next) => {
     process.env.JWT_SECRET
   );
 
-  console.log("Admin is authenticated:", adminIsAuthenticated);
-  console.log("Customer is authenticated:", customerIsAuthenticated);
-
   if (adminIsAuthenticated) {
     req.user = { ...adminIsAuthenticated, role: "admin" };
 
