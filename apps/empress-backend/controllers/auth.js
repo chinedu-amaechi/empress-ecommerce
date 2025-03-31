@@ -76,13 +76,13 @@ export async function checkAuth(req, res, next) {
   try {
     console.log(req.user);
 
-    if (req.user.role === "admin") {
+    if (req.user?.role === "admin") {
       return serverResponse(res, 200, "Authenticated", {
         user: {
           email: req.user.email,
         },
       });
-    } else if (req.user.role === "customer") {
+    } else if (req.user?.role === "customer") {
       const customer = await Customer.findById(req.user.id);
 
       if (!customer) {

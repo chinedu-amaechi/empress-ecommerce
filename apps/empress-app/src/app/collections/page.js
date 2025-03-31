@@ -216,8 +216,6 @@ export default function Collections() {
     <main ref={mainRef} className="min-h-screen overflow-hidden bg-[#f9f9f9]">
       {/* Scroll Progress Bar */}
       <ScrollProgress />
-      {/* Navigation bar */}
-      <Navbar />
 
       {/* Collection Navigation */}
       <div className="fixed top-[95px] left-4 sm:left-6 lg:left-[calc((100%-1280px)/2+32px)] z-50">

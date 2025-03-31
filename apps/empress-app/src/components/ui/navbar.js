@@ -83,7 +83,7 @@ const Navbar = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "py-3 bg-white/95 backdrop-blur-sm shadow-md"
-          : "py-3 bg-transparent"
+          : "py-3 bg-gradient-to-b from-white/25 to-transparent"
       }`}
     >
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-screen-2xl">
@@ -285,7 +285,7 @@ const Navbar = () => {
                         <button
                           onClick={() => {
                             setUser(null);
-                            localStorage.removeItem("user");
+                            localStorage.removeItem("token");
                           }}
                           className="block w-full text-left px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                         >

@@ -7,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 // UI Components
-import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/layout/footer";
 import Heading from "@/components/ui/heading";
 import ProductSearch from "@/app/products/product-search";
@@ -173,7 +172,6 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="mb-8">
           <Heading level="h1" className="text-3xl font-bold mb-2">

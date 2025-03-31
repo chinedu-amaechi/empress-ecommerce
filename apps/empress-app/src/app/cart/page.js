@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/ui/navbar";
 import { useCartContext } from "../contexts/cart-context";
 import CartItem from "./cart-item";
 
@@ -11,7 +10,6 @@ function CartPage() {
 
   return (
     <>
-      <Navbar />
       <div className="">
         <h1>Cart Page</h1>
 
