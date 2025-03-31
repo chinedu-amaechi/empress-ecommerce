@@ -10,10 +10,44 @@ export async function postSignUp(data) {
       body: JSON.stringify(data),
     });
 
-    console.log("Response:", response);
     const result = await response.json();
     return result;
   } catch (error) {
     console.error("Error during sign-up:", error);
+  }
+}
+
+export async function postSignIn(data) {
+  try {
+    const response = await fetch(`${backendUrl}/api/auth/login/customer`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error during sign-in:", error);
+  }
+}
+
+export async function checkAuth(token) {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${backendUrl}/api/auth/check/auth`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token,
+      },
+    });
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error during auth check:", error);
   }
 }

@@ -3,6 +3,8 @@ import "./globals.css";
 import QueryProvider from "./query-provider";
 import { CartContextProvider } from "./contexts/cart-context";
 import { Toaster } from "react-hot-toast";
+import { AuthContextProvider } from "./contexts/auth-context";
+import AutoSignIn from "./auto-sign-in";
 
 export const metadata = {
   title: "Empress App",
@@ -15,7 +17,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <QueryProvider>
-          <CartContextProvider>{children}</CartContextProvider>
+          <AuthContextProvider>
+            <AutoSignIn>
+              <CartContextProvider>{children}</CartContextProvider>
+            </AutoSignIn>
+          </AuthContextProvider>
         </QueryProvider>
         <Toaster position="top-center" reverseOrder={false} />
       </body>
