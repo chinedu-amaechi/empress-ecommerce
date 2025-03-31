@@ -15,10 +15,8 @@ function AutoSignIn({ children }) {
     async function checkUser() {
       const token = localStorage.getItem("token");
       if (token) {
-        router.push("/products");
         const response = await checkAuth(token);
         console.log("Response:", response);
-
         if (response.status === 200) {
           setUser(response.data);
         }
