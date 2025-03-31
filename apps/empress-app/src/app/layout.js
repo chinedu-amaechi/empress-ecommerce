@@ -2,6 +2,7 @@ import EmpressChatbot from "@/components/chatbot/empress-chatbot";
 import "./globals.css";
 import QueryProvider from "./query-provider";
 import { CartContextProvider } from "./contexts/cart-context";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "Empress App",
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
         <QueryProvider>
           <CartContextProvider>{children}</CartContextProvider>
         </QueryProvider>
+        <Toaster position="top-center" reverseOrder={false} />
       </body>
       <EmpressChatbot />
     </html>
