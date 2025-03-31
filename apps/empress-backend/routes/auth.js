@@ -4,6 +4,7 @@ import express from "express";
 // Custom modules
 import * as authControllers from "../controllers/auth.js";
 import adminValidationRules from "../utils/rules/adminRules.js";
+import customerValidationRules from "../utils/rules/customerRules.js";
 
 /*
  * The express.Router class can be used to create modular, mountable route handlers.
@@ -19,5 +20,15 @@ router.post("/login/admin", authControllers.loginAdmin);
 
 // Route to check if the request is authenticated
 router.get("/check/auth", authControllers.checkAuth);
+
+// Route to create a customer
+router.post(
+  "/create/customer",
+  customerValidationRules,
+  authControllers.createCustomer
+);
+
+// Route to login a customer
+router.post("/login/customer", authControllers.loginCustomer);
 
 export default router;

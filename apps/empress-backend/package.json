@@ -7,7 +7,6 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "vitest",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build": "echo 'No build step required'"
@@ -23,9 +22,5 @@
     "formidable": "^3.5.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1"
-  },
-  "devDependencies": {
-    "supertest": "^7.0.0",
-    "vitest": "^3.0.9"
   }
 }
