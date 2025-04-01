@@ -126,7 +126,7 @@ export default function FAQ() {
       category: "Product Information",
       question: "What materials are used in Empress bracelets?",
       answer:
-        "Our bracelets are crafted using ethically sourced precious metals including sterling silver, 18K gold, and rose gold plating. Select pieces feature genuine gemstones such as moonstone, amethyst, and jade. We prioritize hypoallergenic materials and each piece undergoes rigorous quality testing.",
+        "Our bracelets are crafted using ethically sourced precious metals including sterling silver, 18K gold, and rose gold plating. Select pieces feature genuine gemstones such as moonstone, amethyst, jade, opal, pearl, blue topaz, amazonite, and mother of pearl. We prioritize hypoallergenic materials and each piece undergoes rigorous quality testing.",
     },
     {
       category: "Product Care",
@@ -163,6 +163,54 @@ export default function FAQ() {
       question: "What is the warranty period for Empress bracelets?",
       answer:
         "All Empress bracelets come with a one-year limited warranty against manufacturing defects. This covers issues with clasps, chain integrity, and stone settings under normal wear. The warranty does not cover damage resulting from accidents, improper use, or natural wear over time. Extended warranty options are available for purchase.",
+    },
+    {
+      category: "Collections",
+      question: "What collections does Empress offer?",
+      answer:
+        "Empress offers four distinct collections, each with its own unique character and aesthetic: Ethereal, Divine, Heritage, and Celestial Bloom. Each collection features carefully curated pieces that reflect different aspects of elegance and sophistication.",
+    },
+    {
+      category: "Collections",
+      question: "Can you tell me about the Ethereal Collection?",
+      answer:
+        "The Ethereal Collection embodies whispers of grace and serenity, featuring soft hues and luminous stones that reflect inner beauty. Notable pieces include Aurelia (with Opal, Pearl, Jade Thread, representing golden light and timeless grace), Aluna (featuring Opal, Blue Topaz, Amazonite, Pearl, symbolizing moonlit calm and gentle renewal), Sorelle (with Amethyst and Mother of Pearl, representing sisterhood, protection, and wisdom), and Selene (featuring Pink Conch and Pearl, named after the goddess of the moon, representing feminine beauty).",
+    },
+    {
+      category: "Product Information",
+      question: "What do the stones and materials in your bracelets symbolize?",
+      answer:
+        "Each material in our bracelets carries special meaning: Opal represents hope and purity, Pearl symbolizes wisdom and integrity, Jade stands for harmony and balance, Blue Topaz enhances communication and self-expression, Amazonite represents courage and truth, Amethyst offers protection and spiritual awareness, and Mother of Pearl symbolizes prosperity and intuition. We carefully select these materials to create pieces that are not only beautiful but also meaningful.",
+    },
+    {
+      category: "Orders & Shipping",
+      question: "How can I track my order?",
+      answer:
+        "Once your order ships, you'll receive a confirmation email with your tracking information. You can also track your order by logging into your account on our website and navigating to the 'Order History' section. If you have any issues accessing your tracking information, please contact our customer support team.",
+    },
+    {
+      category: "Customer Service",
+      question: "How can I contact customer support?",
+      answer:
+        "Our customer support team is available Monday through Friday, 9am to 6pm EST. You can reach us via email at support@empressbracelets.com, by phone at 1-800-EMPRESS, or through the live chat feature on our website. For after-hours inquiries, please leave a message and we'll respond within one business day.",
+    },
+    {
+      category: "Account & Privacy",
+      question: "How is my personal information protected?",
+      answer:
+        "We take your privacy seriously. All personal information is encrypted and securely stored following industry-standard protocols. We never share your information with third parties without your explicit consent. For more details, please review our Privacy Policy on our website.",
+    },
+    {
+      category: "Product Information",
+      question: "Are your materials ethically sourced?",
+      answer:
+        "Yes, we are committed to ethical sourcing practices. All our gemstones and precious metals come from suppliers who adhere to responsible mining and production standards. We regularly audit our supply chain to ensure compliance with ethical guidelines and environmental regulations.",
+    },
+    {
+      category: "Account & Privacy",
+      question: "How do I create or manage my account?",
+      answer:
+        "To create an account, click on the 'Account' icon in the top right corner of our website and select 'Create Account.' For existing customers, log in using your email and password to access your account dashboard. From there, you can manage your profile information, view order history, track shipments, and update payment methods.",
     },
   ];
 
@@ -228,12 +276,15 @@ export default function FAQ() {
 
       {/* Elegant Hero Header with Parallax Effect */}
       <section className="relative h-[40vh] overflow-hidden mt-16">
-        {/* Subtle Background Pattern - using CSS gradient */}
+        {/* Watermark Background */}
         <div
           className="absolute inset-0 bg-[#f8f9fa]"
           style={{
-            backgroundImage: `linear-gradient(135deg, rgba(17, 41, 107, 0.02) 25%, transparent 25%, transparent 50%, rgba(17, 41, 107, 0.02) 50%, rgba(17, 41, 107, 0.02) 75%, transparent 75%, transparent)`,
-            backgroundSize: "20px 20px",
+            backgroundImage: `url("/faq.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            opacity: 0.15,
           }}
         ></div>
 
@@ -265,6 +316,20 @@ export default function FAQ() {
         {/* Subtle Decorative Elements */}
         <div className="absolute top-12 left-0 w-24 h-24 rounded-full bg-amber-100 opacity-20 blur-xl -z-10"></div>
         <div className="absolute bottom-36 right-0 w-40 h-40 rounded-full bg-[#11296B] opacity-5 blur-xl -z-10"></div>
+
+        {/* Watermark logo in background */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.015] pointer-events-none -z-5">
+          <svg
+            width="500"
+            height="500"
+            viewBox="0 0 120 120"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g fill="#11296B">
+              <path d="M36,10.5c-14.1-1.3-27.7,4.9-35.4,12.6L0,24l0.3,0.9c7.7,7.7,21.3,13.9,35.4,12.6c14.1,1.3,27.7-4.9,35.4-12.6l0.6-0.9 l-0.3-0.9C64.7,15.4,51.1,9.2,36,10.5z M37.1,15.8C28.7,14.4,19.7,18,15,22L37.1,15.8z M64.7,28.2c-4.7,4-13.7,7.6-22.1,6.2 L64.7,28.2z M61.5,23.5C51.9,28.7,39.8,32,22.7,32C5.6,32,0,32,0,32s3-2,8-4c5-2,17-6,24-12C39,10,54,5,54,5s-7,5.4-7,8.6 C47,16.8,55.1,21.3,61.5,23.5z" />
+            </g>
+          </svg>
+        </div>
 
         {/* Search Bar */}
         <SearchBar
