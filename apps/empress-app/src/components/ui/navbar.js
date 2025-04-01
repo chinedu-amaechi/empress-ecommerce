@@ -197,7 +197,7 @@ const Navbar = () => {
 
             {/* FAQs */}
             <a
-              href="#faq"
+              href="/faq"
               className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300 group"
             >
               FAQ
