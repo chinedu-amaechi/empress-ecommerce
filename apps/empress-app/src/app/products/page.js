@@ -1,4 +1,3 @@
-// src/app/products/page.js
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -9,47 +8,25 @@ import Link from "next/link";
 // UI Components
 import Footer from "@/components/layout/footer";
 import Heading from "@/components/ui/heading";
-import ProductSearch from "@/app/products/product-search";
 import ProductCard from "@/components/product/product-card";
 
 // Data fetching
-import { getAllProducts, getProductsByCollection } from "@/lib/product-service";
+import { getAllProducts } from "@/lib/product-service";
 import useCollections from "@/hooks/use-collections";
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
-  const collectionFilter = searchParams.get("collection");
-  const searchQuery = searchParams.get("q");
+  const collectionFilter = searchParams.get("collection") || "all";
+  const searchQuery = searchParams.get("q") || "";
+  const sortBy = searchParams.get("sort") || "featured";
+  const minPrice = searchParams.get("minPrice") || "0";
+  const maxPrice = searchParams.get("maxPrice") || "1000"; // Set a default max price
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [collections, setCollections] = useState([]);
-  const [activeFilters, setActiveFilters] = useState({
-    collection: collectionFilter || "all",
-    priceRange: "all",
-    sortBy: "featured",
-  });
   const [productLoading, setProductLoading] = useState(true);
-  const { data, isLoading, error } = useCollections();
-
-  // Price ranges for filtering
-  const priceRanges = [
-    { id: "all", label: "All Prices" },
-    { id: "under-100", label: "Under $100", min: 0, max: 100 },
-    { id: "100-200", label: "$100 - $200", min: 100, max: 200 },
-    { id: "200-300", label: "$200 - $300", min: 200, max: 300 },
-    { id: "over-300", label: "Over $300", min: 300, max: Infinity },
-  ];
-
-  // Sort options
-  const sortOptions = [
-    { id: "featured", label: "Featured" },
-    { id: "newest", label: "Newest" },
-    { id: "price-low", label: "Price: Low to High" },
-    { id: "price-high", label: "Price: High to Low" },
-    { id: "name-asc", label: "Name: A to Z" },
-    { id: "name-desc", label: "Name: Z to A" },
-  ];
+  const { data } = useCollections();
 
   useEffect(() => {
     if (data) {
@@ -57,38 +34,12 @@ export default function ProductsPage() {
     }
   }, [data]);
 
-  // Fetch products and collections on component mount
   useEffect(() => {
     const fetchData = async () => {
       setProductLoading(true);
       try {
-        // Fetch all products
         const allProducts = await getAllProducts();
-        console.log("All products:", allProducts);
-
         setProducts(allProducts);
-
-        // Extract unique collections from products
-        const uniqueCollections = [
-          ...new Set(allProducts.map((product) => product.collectionId)),
-        ].map((collectionId) => {
-          const product = allProducts.find(
-            (p) => p.collectionId === collectionId
-          );
-          return {
-            id: collectionId,
-            name: product?.collectionName || collectionId,
-          };
-        });
-        // setCollections(uniqueCollections);
-
-        // Initialize active collection filter if provided in URL
-        if (collectionFilter) {
-          setActiveFilters((prev) => ({
-            ...prev,
-            collection: collectionFilter,
-          }));
-        }
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -97,35 +48,20 @@ export default function ProductsPage() {
     };
 
     fetchData();
-  }, [collectionFilter]);
+  }, []);
 
-  // Apply filters whenever active filters change
+  // Apply filters, search, price range, and sorting
   useEffect(() => {
-    if (products.length === 0) return;
-
-    // Start with all products
     let filtered = [...products];
 
-    // Apply collection filter
-    if (activeFilters.collection !== "all") {
+    // Filter by collection
+    if (collectionFilter !== "all") {
       filtered = filtered.filter(
-        (product) => product.collectionId === activeFilters.collection
+        (product) => product.collectionId === collectionFilter
       );
     }
 
-    // Apply price range filter
-    if (activeFilters.priceRange !== "all") {
-      const range = priceRanges.find(
-        (range) => range.id === activeFilters.priceRange
-      );
-      if (range) {
-        filtered = filtered.filter(
-          (product) => product.price >= range.min && product.price <= range.max
-        );
-      }
-    }
-
-    // Apply search filter if query exists
+    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -135,8 +71,15 @@ export default function ProductsPage() {
       );
     }
 
+    // Apply price range filter
+    filtered = filtered.filter(
+      (product) =>
+        product.price >= parseFloat(minPrice) &&
+        product.price <= parseFloat(maxPrice)
+    );
+
     // Apply sorting
-    switch (activeFilters.sortBy) {
+    switch (sortBy) {
       case "newest":
         filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         break;
@@ -152,41 +95,59 @@ export default function ProductsPage() {
       case "name-desc":
         filtered.sort((a, b) => b.name.localeCompare(a.name));
         break;
-      case "featured":
       default:
-        // Assuming featured products have a 'featured' boolean or numeric priority
+        // Default sorting (Featured)
         filtered.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
         break;
     }
 
     setFilteredProducts(filtered);
-  }, [products, activeFilters, searchQuery]);
+  }, [products, collectionFilter, searchQuery, sortBy, minPrice, maxPrice]);
 
-  // Handle filter changes
-  const handleFilterChange = (filterType, value) => {
-    setActiveFilters((prev) => ({
-      ...prev,
-      [filterType]: value,
-    }));
+  // Update URL dynamically
+  const updateSearchParams = (key, value) => {
+    const params = new URLSearchParams(window.location.search);
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    window.history.replaceState(null, "", `?${params.toString()}`);
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Heading level="h1" className="text-3xl font-bold mb-2">
-            Products
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <main className="flex-grow container mx-auto px-6 py-12">
+        <div className="mb-12 text-center">
+          <Heading level="h1" className="text-4xl font-bold text-gray-900 mb-4">
+            Explore Our Products
           </Heading>
-          <p className="text-gray-600">
-            Discover our collection of high-quality products
+          <p className="text-lg text-gray-600">
+            Find high-quality products that you'll love.
           </p>
         </div>
 
         {/* Search and Filters */}
-        <div className="mb-8">
-          <ProductSearch initialQuery={searchQuery || ""} />
+        <div className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-4">
+          {/* Search Input */}
+          <div className="lg:col-span-2">
+            <label
+              htmlFor="product-search"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Search Products
+            </label>
+            <input
+              id="product-search"
+              type="text"
+              placeholder="Search by name or description..."
+              className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+              value={searchQuery}
+              onChange={(e) => updateSearchParams("q", e.target.value)}
+            />
+          </div>
 
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="lg:col-span-2 grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Collection Filter */}
             <div>
               <label
@@ -197,40 +158,16 @@ export default function ProductsPage() {
               </label>
               <select
                 id="collection-filter"
-                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-primary focus:outline-none focus:ring-primary"
-                value={activeFilters.collection}
+                className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                value={collectionFilter}
                 onChange={(e) =>
-                  handleFilterChange("collection", e.target.value)
+                  updateSearchParams("collection", e.target.value)
                 }
               >
                 <option value="all">All Collections</option>
                 {collections.map((collection) => (
                   <option key={collection.id} value={collection.id}>
                     {collection.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Price Range Filter */}
-            <div>
-              <label
-                htmlFor="price-filter"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Price Range
-              </label>
-              <select
-                id="price-filter"
-                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-primary focus:outline-none focus:ring-primary"
-                value={activeFilters.priceRange}
-                onChange={(e) =>
-                  handleFilterChange("priceRange", e.target.value)
-                }
-              >
-                {priceRanges.map((range) => (
-                  <option key={range.id} value={range.id}>
-                    {range.label}
                   </option>
                 ))}
               </select>
@@ -246,89 +183,76 @@ export default function ProductsPage() {
               </label>
               <select
                 id="sort-by"
-                className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-primary focus:outline-none focus:ring-primary"
-                value={activeFilters.sortBy}
-                onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+                className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                value={sortBy}
+                onChange={(e) => updateSearchParams("sort", e.target.value)}
               >
-                {sortOptions.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
+                <option value="featured">Featured</option>
+                <option value="newest">Newest</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name-asc">Name: A to Z</option>
+                <option value="name-desc">Name: Z to A</option>
               </select>
             </div>
-          </div>
-        </div>
 
-        {/* Active Filters Display */}
-        <div className="mb-6 flex flex-wrap gap-2">
-          {activeFilters.collection !== "all" && (
-            <div className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm">
-              Collection:{" "}
-              {collections.find((c) => c.id === activeFilters.collection)
-                ?.name || activeFilters.collection}
-              <button
-                className="ml-2 text-gray-500 hover:text-gray-700"
-                onClick={() => handleFilterChange("collection", "all")}
+            {/* Price Filter */}
+            <div>
+              <label
+                htmlFor="price-range"
+                className="block text-sm font-medium text-gray-700"
               >
-                &times;
-              </button>
+                Price Range
+              </label>
+              <div className="flex items-center space-x-4">
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="Min"
+                  className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  value={minPrice}
+                  onChange={(e) =>
+                    updateSearchParams("minPrice", e.target.value)
+                  }
+                />
+                <span className="text-gray-600">-</span>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="Max"
+                  className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  value={maxPrice}
+                  onChange={(e) =>
+                    updateSearchParams("maxPrice", e.target.value)
+                  }
+                />
+              </div>
             </div>
-          )}
-          {activeFilters.priceRange !== "all" && (
-            <div className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm">
-              Price:{" "}
-              {
-                priceRanges.find((r) => r.id === activeFilters.priceRange)
-                  ?.label
-              }
-              <button
-                className="ml-2 text-gray-500 hover:text-gray-700"
-                onClick={() => handleFilterChange("priceRange", "all")}
-              >
-                &times;
-              </button>
-            </div>
-          )}
-          {searchQuery && (
-            <div className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm">
-              Search: "{searchQuery}"
-              <Link
-                href="/products"
-                className="ml-2 text-gray-500 hover:text-gray-700"
-              >
-                &times;
-              </Link>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* Product Grid */}
         {productLoading ? (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary"></div>
           </div>
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
         ) : (
           <div className="text-center py-12">
-            <h2 className="text-xl font-semibold mb-2">No products found</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              No products found
+            </h2>
+            <p className="text-lg text-gray-500 mb-6">
               Try adjusting your filters or search query
             </p>
             <button
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-              onClick={() => {
-                setActiveFilters({
-                  collection: "all",
-                  priceRange: "all",
-                  sortBy: "featured",
-                });
-              }}
+              className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all"
+              onClick={() => window.history.replaceState(null, "", "/products")}
             >
               Clear all filters
             </button>
