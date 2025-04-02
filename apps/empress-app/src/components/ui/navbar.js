@@ -64,7 +64,7 @@ const Navbar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [ activeDropdown, isMenuOpen]);
+  }, [activeDropdown, isMenuOpen]);
 
   // Toggle dropdown
   const toggleDropdown = (name) => {
@@ -82,7 +82,7 @@ const Navbar = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "py-3 bg-white/95 backdrop-blur-sm shadow-md"
-          : "py-5 bg-transparent"
+          : "py-3 bg-gradient-to-b from-white/25 to-transparent"
       }`}
     >
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-screen-2xl">

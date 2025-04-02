@@ -165,15 +165,16 @@ export default function FAQ() {
       {/* Elegant Luxury Hero Header with Gradient */}
       <section className="relative h-[60vh] overflow-hidden">
         {/* Background Image with Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#11296B]/90 to-[#11296B]/70">
+        <div className="absolute inset-0">
           <Image
             src="/faq-hero.jpg"
             alt="Luxury jewelry background"
             fill
-            className="object-cover mix-blend-overlay opacity-50"
+            className="object-cover"
             quality={100}
             priority
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30"></div>
         </div>
 
         {/* Hero Content with Animation */}
@@ -200,21 +201,6 @@ export default function FAQ() {
             </p>
           </div>
         </motion.div>
-
-        {/* Decorative Elements */}
-        <div className="absolute bottom-0 left-0 w-full">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1440 100"
-            className="w-full"
-          >
-            <path
-              fill="#ffffff"
-              fillOpacity="1"
-              d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,80C672,64,768,64,864,69.3C960,75,1056,85,1152,85.3C1248,85,1344,75,1392,69.3L1440,64L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"
-            ></path>
-          </svg>
-        </div>
       </section>
 
       {/* Content Container */}
