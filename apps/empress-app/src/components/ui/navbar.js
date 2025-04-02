@@ -82,7 +82,7 @@ const Navbar = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "py-3 bg-white/95 backdrop-blur-sm shadow-md"
-          : "py-3 bg-gradient-to-b from-white/25 to-transparent"
+          : "py-5 bg-transparent"
       }`}
     >
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-screen-2xl">
@@ -91,7 +91,9 @@ const Navbar = () => {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <img
-                className="h-12"
+                className={`w-auto transition-all duration-300 ${
+                  isScrolled ? "h-16" : "h-12"
+                }`}
                 src="/icons/empress_logo.png"
                 alt="Empress Logo"
               />
