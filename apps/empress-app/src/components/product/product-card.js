@@ -126,14 +126,19 @@ export default function ProductCard({
     setQuantity((prev) => prev + 1);
   };
 
-  function handleAddToCart() {
+  function handleAddToCart(quantity) {
     console.log("Adding to cart");
     setCart((prev) => {
       const existingProduct = prev.find((item) => item._id === product._id);
       if (existingProduct) {
         return prev.map((item) =>
           item._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? {
+                ...item,
+                quantity: quantity
+                  ? item.quantity + quantity
+                  : item.quantity + 1,
+              }
             : item
         );
       }
@@ -150,7 +155,7 @@ export default function ProductCard({
   return (
     <>
       <div
-        className="group relative bg-white rounded-lg border border-gray-200 hover:shadow-xl transition-all duration-300 w-80 overflow-hidden"
+        className="group relative bg-white rounded-lg border border-gray-200 hover:shadow-xl transition-all duration-300 overflow-hidden w-full md:w-72 lg:w-80"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -517,7 +522,10 @@ export default function ProductCard({
 
                 {/* Call to Action */}
                 <div className="mt-auto flex gap-4">
-                  <button className="flex-1 py-3 bg-[#11296B] text-white font-medium rounded-md hover:bg-[#1E96FC] transition-colors">
+                  <button
+                    className="flex-1 py-3 bg-[#11296B] text-white font-medium rounded-md hover:bg-[#1E96FC] transition-colors"
+                    onClick={() => handleAddToCart(quantity)}
+                  >
                     Add to Cart
                   </button>
                   <button className="px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
