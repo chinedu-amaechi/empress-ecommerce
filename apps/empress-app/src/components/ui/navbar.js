@@ -1,16 +1,18 @@
 "use client";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuthContext } from "@/app/contexts/auth-context";
 import { useCartContext } from "@/app/contexts/cart-context";
 import useCollections from "@/hooks/use-collections";
 import { PersonOutline } from "@mui/icons-material";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   const { cart } = useCartContext();
   const { user, setUser } = useAuthContext();
 
@@ -150,18 +152,18 @@ const Navbar = () => {
               className="relative group"
               ref={(el) => (dropdownRefs.current["shop"] = el)}
             >
-              <a
-                href="#"
+              <Link
+                href="/products"
                 className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300"
-                onClick={(e) => {
-                  e.preventDefault();
-                  toggleDropdown("shop");
-                }}
+                // onClick={(e) => {
+                //   e.preventDefault();
+                //   toggleDropdown("shop");
+                // }}
               >
                 Shop
                 <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#11296B]"></span>
-              </a>
-              {activeDropdown === "shop" && (
+              </Link>
+              {/* {activeDropdown === "shop" && (
                 <div className="absolute left-0 w-64 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                   <div className="py-1">
                     <a
@@ -184,7 +186,7 @@ const Navbar = () => {
                     </Link>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* About Us - simple link */}
