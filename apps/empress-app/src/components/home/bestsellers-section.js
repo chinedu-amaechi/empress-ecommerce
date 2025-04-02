@@ -1,124 +1,127 @@
 // src/components/home/BestsellersSection.js
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Heading from "@/components/ui/heading";
 import ProductCard from "@/components/product/product-card";
+import useProducts from "@/hooks/use-products";
 
 // Expanded bestsellers data with 7 products
-const bestsellers = [
-  {
-    id: "1",
-    name: "Aluna",
-    price: 129.99,
-    originalPrice: 159.99,
-    rating: 4.5,
-    reviews: 24,
-    material: "Sterling Silver",
-    colors: ["Silver", "Rose Gold"],
-    description:
-      "Delicate silver bracelet with lunar inspiration, crafted to capture the ethereal beauty of moonlight.",
-    images: ["/bestsellers/aluna-1.jpg", "/bestsellers/aluna-2.jpg"],
-    isBestseller: true,
-    isNew: false,
-  },
-  {
-    id: "2",
-    name: "Sorelle",
-    price: 149.99,
-    originalPrice: 179.99,
-    rating: 4.7,
-    reviews: 36,
-    material: "Gold-Plated Silver",
-    colors: ["Gold", "Rose Gold"],
-    description:
-      "Warm-toned bracelet with intricate detailing, inspired by the golden rays of a setting sun.",
-    images: [
-      "/bestsellers/sorelle-1.jpg",
-      "/bestsellers/sorelle-2.jpg",
-      "/bestsellers/sorelle-3.jpg",
-    ],
-    isBestseller: true,
-    isNew: false,
-  },
-  {
-    id: "3",
-    name: "Jinhua",
-    price: 159.99,
-    originalPrice: 199.99,
-    rating: 4.8,
-    reviews: 42,
-    material: "Sterling Silver",
-    colors: ["Silver", "Gold"],
-    description:
-      "Elegant bracelet with a celestial design, inspired by the shimmering colors of the Northern Lights.",
-    images: ["/bestsellers/jinhua-1.jpg", "/bestsellers/jinhua-2.jpg"],
-    isBestseller: true,
-    isNew: false,
-  },
-  {
-    id: "4",
-    name: "Nyra",
-    price: 139.99,
-    originalPrice: 169.99,
-    rating: 4.6,
-    reviews: 30,
-    material: "Sterling Silver",
-    colors: ["Silver", "Rose Gold"],
-    description:
-      "Radiant bracelet with a minimalist design, inspired by the brilliance of a starlit sky.",
-    images: ["/bestsellers/nyra-1.jpg", "/bestsellers/nyra-2.jpg"],
-    isBestseller: true,
-    isNew: false,
-  },
-  {
-    id: "5",
-    name: "Azurea",
-    price: 169.99,
-    originalPrice: 209.99,
-    rating: 4.9,
-    reviews: 48,
-    material: "Gold-Plated Silver",
-    colors: ["Gold", "Rose Gold"],
-    description:
-      "Opulent bracelet with a celestial motif, inspired by the changing hues of the sky during the solstice.",
-    images: ["/bestsellers/azurea-1.jpg", "/bestsellers/azurea-2.jpg"],
-    isBestseller: true,
-    isNew: false,
-  },
-  {
-    id: "6",
-    name: "Suya",
-    price: 179.99,
-    originalPrice: 219.99,
-    rating: 5.0,
-    reviews: 54,
-    material: "Sterling Silver",
-    colors: ["Silver", "Gold"],
-    description:
-      "Exquisite bracelet with a celestial design, inspired by the vibrant colors of the Aurora Borealis.",
-    images: ["/bestsellers/suya-1.jpg", "/bestsellers/suya-2.jpg"],
-    isBestseller: true,
-    isNew: false,
-  },
-  {
-    id: "7",
-    name: "Noor",
-    price: 189.99,
-    originalPrice: 229.99,
-    rating: 5.0,
-    reviews: 60,
-    material: "Gold-Plated Silver",
-    colors: ["Gold", "Rose Gold"],
-    description:
-      "Luxurious bracelet with a celestial motif, inspired by the luminous glow of the full moon.",
-    images: ["/bestsellers/noor-1.jpg", "/bestsellers/noor-2.jpg"],
-    isBestseller: true,
-    isNew: false,
-  },
-];
+// const bestsellers = [
+//   {
+//     id: "1",
+//     name: "Aluna",
+//     price: 129.99,
+//     originalPrice: 159.99,
+//     rating: 4.5,
+//     reviews: 24,
+//     material: "Sterling Silver",
+//     colors: ["Silver", "Rose Gold"],
+//     description:
+//       "Delicate silver bracelet with lunar inspiration, crafted to capture the ethereal beauty of moonlight.",
+//     images: ["/bestsellers/aluna-1.jpg", "/bestsellers/aluna-2.jpg"],
+//     isBestseller: true,
+//     isNew: false,
+//   },
+//   {
+//     id: "2",
+//     name: "Sorelle",
+//     price: 149.99,
+//     originalPrice: 179.99,
+//     rating: 4.7,
+//     reviews: 36,
+//     material: "Gold-Plated Silver",
+//     colors: ["Gold", "Rose Gold"],
+//     description:
+//       "Warm-toned bracelet with intricate detailing, inspired by the golden rays of a setting sun.",
+//     images: [
+//       "/bestsellers/sorelle-1.jpg",
+//       "/bestsellers/sorelle-2.jpg",
+//       "/bestsellers/sorelle-3.jpg",
+//     ],
+//     isBestseller: true,
+//     isNew: false,
+//   },
+//   {
+//     id: "3",
+//     name: "Jinhua",
+//     price: 159.99,
+//     originalPrice: 199.99,
+//     rating: 4.8,
+//     reviews: 42,
+//     material: "Sterling Silver",
+//     colors: ["Silver", "Gold"],
+//     description:
+//       "Elegant bracelet with a celestial design, inspired by the shimmering colors of the Northern Lights.",
+//     images: ["/bestsellers/jinhua-1.jpg", "/bestsellers/jinhua-2.jpg"],
+//     isBestseller: true,
+//     isNew: false,
+//   },
+//   {
+//     id: "4",
+//     name: "Nyra",
+//     price: 139.99,
+//     originalPrice: 169.99,
+//     rating: 4.6,
+//     reviews: 30,
+//     material: "Sterling Silver",
+//     colors: ["Silver", "Rose Gold"],
+//     description:
+//       "Radiant bracelet with a minimalist design, inspired by the brilliance of a starlit sky.",
+//     images: ["/bestsellers/nyra-1.jpg", "/bestsellers/nyra-2.jpg"],
+//     isBestseller: true,
+//     isNew: false,
+//   },
+//   {
+//     id: "5",
+//     name: "Azurea",
+//     price: 169.99,
+//     originalPrice: 209.99,
+//     rating: 4.9,
+//     reviews: 48,
+//     material: "Gold-Plated Silver",
+//     colors: ["Gold", "Rose Gold"],
+//     description:
+//       "Opulent bracelet with a celestial motif, inspired by the changing hues of the sky during the solstice.",
+//     images: ["/bestsellers/azurea-1.jpg", "/bestsellers/azurea-2.jpg"],
+//     isBestseller: true,
+//     isNew: false,
+//   },
+//   {
+//     id: "6",
+//     name: "Suya",
+//     price: 179.99,
+//     originalPrice: 219.99,
+//     rating: 5.0,
+//     reviews: 54,
+//     material: "Sterling Silver",
+//     colors: ["Silver", "Gold"],
+//     description:
+//       "Exquisite bracelet with a celestial design, inspired by the vibrant colors of the Aurora Borealis.",
+//     images: ["/bestsellers/suya-1.jpg", "/bestsellers/suya-2.jpg"],
+//     isBestseller: true,
+//     isNew: false,
+//   },
+//   {
+//     id: "7",
+//     name: "Noor",
+//     price: 189.99,
+//     originalPrice: 229.99,
+//     rating: 5.0,
+//     reviews: 60,
+//     material: "Gold-Plated Silver",
+//     colors: ["Gold", "Rose Gold"],
+//     description:
+//       "Luxurious bracelet with a celestial motif, inspired by the luminous glow of the full moon.",
+//     images: ["/bestsellers/noor-1.jpg", "/bestsellers/noor-2.jpg"],
+//     isBestseller: true,
+//     isNew: false,
+//   },
+// ];
 
 const BestsellersSection = () => {
+  const [bestsellers, setBestsellers] = useState([]);
+  const { data, isLoading, error } = useProducts();
   const scrollContainerRef = useRef(null);
 
   const scrollLeft = () => {
@@ -138,6 +141,25 @@ const BestsellersSection = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (data) {
+      // Assuming data is an array of products
+      const bestsellersData = data.sort((a, b) => {
+        return b.itemsSold - a.itemsSold; // Sort by items sold in descending order
+      });
+      setBestsellers(bestsellersData.slice(0, 5));
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error loading bestsellers</div>;
+  }
+
+  console.log(bestsellers);
 
   return (
     <section className="bg-white py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative">

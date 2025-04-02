@@ -1,8 +1,11 @@
+"use client";
+
 // src/components/home/CollectionsSection.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Heading from "@/components/ui/heading";
+import useCollections from "@/hooks/use-collections";
 
 const collections = [
   {
@@ -36,6 +39,29 @@ const collections = [
 ];
 
 const CollectionsSection = () => {
+  const [collections, setCollections] = useState([]);
+  const { data, isLoading, error } = useCollections();
+
+  useEffect(() => {
+    if (data) {
+      // Assuming data is an array of collections
+      const updatedCollections = data.map((collection) => ({
+        ...collection,
+        accentColor: `bg-${collection.accentColor}-400`, // Assuming accentColor is a string like "blue" or "red"
+      }));
+      setCollections(updatedCollections);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error loading collections</div>;
+  }
+
+  console.log(data);
+
   return (
     <section className="bg-[#F8F9FC] py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -59,30 +85,20 @@ const CollectionsSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {collections.map((collection) => (
             <Link
-              href={`/collections?collection=${collection.href.replace(
-                "/collections/",
-                ""
-              )}`}
+              href={`/collections?collection=${collection.name}`}
               key={collection.name}
               className="group block"
             >
               <div className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
                 <div className="relative">
                   <Image
-                    src={collection.image}
+                    src={collection.imageUrl.optimizeUrl}
                     alt={collection.name}
                     width={500}
                     height={500}
                     className="w-full h-[350px] object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
-
-                  {/* Added subtle colored dot in corner */}
-                  <div className="absolute top-4 right-4">
-                    <div
-                      className={`w-2 h-2 rounded-full ${collection.accentColor}`}
-                    ></div>
-                  </div>
                 </div>
 
                 <div className="absolute bottom-0 left-0 right-0 p-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -93,7 +109,7 @@ const CollectionsSection = () => {
                     {collection.name}
                   </Heading>
                   <p className="text-base mb-3 text-white/80">
-                    {collection.description}
+                    {collection.description.slice(0, 100)}...
                   </p>
                   <span className="text-base font-medium flex items-center text-white">
                     Explore Collection

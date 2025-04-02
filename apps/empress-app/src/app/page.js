@@ -1,3 +1,5 @@
+"use client";
+
 // src/app/page.js
 import React from "react";
 import CollectionsSection from "@/components/home/collections-section";
