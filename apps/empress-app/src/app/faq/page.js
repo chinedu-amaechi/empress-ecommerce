@@ -8,11 +8,10 @@ import Footer from "@/components/layout/footer";
 import Heading from "@/components/ui/heading";
 import { allFaqs, getCategories, filterFaqs } from "./faq-data";
 
-// FAQ Item Component with elegant styling
+// FAQItem Component
 const FAQItem = ({ question, answer, isActive, onClick }) => {
   return (
     <div className="border-b border-gray-200 overflow-hidden transition-all duration-300">
-      {/* Question Button */}
       <button
         onClick={onClick}
         className="w-full py-5 text-left flex justify-between items-center"
@@ -41,7 +40,6 @@ const FAQItem = ({ question, answer, isActive, onClick }) => {
         </span>
       </button>
 
-      {/* Answer Panel with smooth animation */}
       <div
         className={`overflow-hidden transition-all duration-500 ease-in-out ${
           isActive ? "max-h-[500px] pb-6" : "max-h-0"
@@ -53,61 +51,111 @@ const FAQItem = ({ question, answer, isActive, onClick }) => {
   );
 };
 
-// FAQ Categories Tab Component with luxury styling
-const CategoryTabs = ({ categories, activeCategory, setActiveCategory }) => {
+// Improved Search Bar Component with more visible styling
+const SearchBar = ({ searchQuery, setSearchQuery, onSearch }) => {
   return (
-    <div className="flex justify-center mb-12">
-      <div className="inline-flex">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setActiveCategory(category)}
-            className={`px-6 py-3 font-light text-sm border-b-2 transition-all duration-200 ${
-              activeCategory === category
-                ? "border-[#11296B] text-[#11296B]"
-                : "border-transparent text-gray-500 hover:text-[#11296B]"
-            }`}
+    <div className="relative max-w-xl mx-auto mb-16 group">
+      <div
+        className="absolute inset-0 
+        bg-gradient-to-r from-[#11296B]/20 to-[#1E96FC]/20 
+        opacity-0 group-hover:opacity-100 
+        transition-opacity duration-300 
+        rounded-2xl blur-2xl z-0"
+      ></div>
+
+      <div
+        className="relative z-10 
+        bg-white 
+        rounded-2xl 
+        border border-[#11296B]/10 
+        shadow-[0_10px_40px_rgba(17,41,107,0.1)] 
+        overflow-hidden"
+      >
+        <div
+          className="absolute left-0 top-0 h-full w-1 
+          bg-gradient-to-b from-[#11296B] to-[#1E96FC] 
+          transition-all duration-300 
+          group-hover:opacity-100 
+          opacity-0"
+        ></div>
+
+        <input
+          type="text"
+          placeholder="Search for answers..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && onSearch()}
+          className="w-full px-6 py-4 
+            bg-transparent 
+            text-gray-800 
+            placeholder-gray-400 
+            focus:outline-none 
+            border-b border-gray-200
+            transition-colors duration-300 
+            focus:border-[#11296B]
+            group-hover:pl-8
+            pr-16"
+        />
+        <button
+          onClick={onSearch}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 
+            text-gray-400 
+            hover:text-[#11296B] 
+            transition-colors duration-300 
+            p-2 
+            hover:bg-[#11296B]/5 
+            rounded-full 
+            group/button"
+          aria-label="Search"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 
+              transition-transform duration-300 
+              group-hover/button:scale-110"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
           >
-            {category}
-          </button>
-        ))}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
 };
 
-// Search Bar Component with luxury styling
-const SearchBar = ({ searchQuery, setSearchQuery, onSearch }) => {
+// Enhanced Category Tabs Component with more interactive styling
+const CategoryTabs = ({ categories, activeCategory, setActiveCategory }) => {
   return (
-    <div className="relative max-w-xl mx-auto mb-16">
-      <input
-        type="text"
-        placeholder="Search for answers..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && onSearch()}
-        className="w-full px-5 py-4 pr-12 bg-white border-b border-gray-300 focus:outline-none focus:border-[#11296B] text-gray-700 transition-all"
-      />
-      <button
-        onClick={onSearch}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#11296B] transition-colors p-4"
-        aria-label="Search"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-      </button>
+    <div className="flex justify-center mb-12">
+      <div className="inline-flex bg-white rounded-full shadow-[0_4px_20px_rgba(17,41,107,0.05)] p-1">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setActiveCategory(category)}
+            className={`
+              px-6 py-2 rounded-full text-sm font-medium 
+              transition-all duration-300 ease-in-out 
+              relative overflow-hidden group
+              ${
+                activeCategory === category
+                  ? "text-white bg-[#11296B] shadow-lg"
+                  : "text-gray-600 hover:bg-[#11296B]/5 hover:text-[#11296B]"
+              }
+            `}
+          >
+            {/* Subtle hover effect */}
+            <span className="absolute inset-0 bg-[#11296B]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            {category}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
@@ -209,21 +257,26 @@ export default function FAQ() {
         <div className="absolute top-0 left-0 -mt-20 w-40 h-40 bg-[#f8f9fc] rounded-full opacity-50 blur-3xl"></div>
         <div className="absolute bottom-40 right-0 w-60 h-60 bg-[#11296B]/5 rounded-full opacity-50 blur-3xl"></div>
 
-        {/* Search Bar with Luxury Styling */}
-        <div className="relative z-10">
-          <div className="text-center mb-12">
+        {/* Search and Heading Section */}
+        <div className="relative z-10 text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <p className="uppercase text-sm tracking-widest text-gray-500 mb-4">
               FIND YOUR ANSWER
             </p>
             <Heading
-              level={2}
-              className="text-2xl md:text-3xl font-light text-[#11296B] mb-6"
+              level={1}
+              className="text-3xl font-light text-[#11296B] mb-6"
             >
               Frequently Asked Questions
             </Heading>
-            <div className="h-px w-16 bg-amber-300 mx-auto"></div>
-          </div>
+            <div className="h-px w-16 bg-amber-300 mx-auto mb-8"></div>
+          </motion.div>
 
+          {/* Improved Search Bar */}
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -231,14 +284,14 @@ export default function FAQ() {
           />
         </div>
 
-        {/* Category Tabs */}
+        {/* Enhanced Category Tabs */}
         <CategoryTabs
           categories={categories}
           activeCategory={activeCategory}
           setActiveCategory={setActiveCategory}
         />
 
-        {/* FAQ Accordion Items with Luxury Styling */}
+        {/* FAQ Accordion Items */}
         <div className="relative z-10">
           {filteredFaqs.length > 0 ? (
             <div className="bg-white p-8 md:p-12 shadow-md">
@@ -268,7 +321,9 @@ export default function FAQ() {
                   setSearchQuery("");
                   setActiveCategory("All");
                 }}
-                className="inline-block px-6 py-2 bg-[#11296B] text-white hover:bg-[#1E96FC] transition-colors duration-300 text-sm"
+                className="inline-block px-6 py-2 bg-[#11296B] text-white 
+                  hover:bg-[#1E96FC] transition-colors duration-300 
+                  text-sm"
               >
                 Reset filters
               </button>
