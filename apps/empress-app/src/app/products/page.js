@@ -2,13 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
 
 // UI Components
 import Footer from "@/components/layout/footer";
-import Heading from "@/components/ui/heading";
 import ProductCard from "@/components/product/product-card";
+import ProductHero from "./product-hero"; // Import the new hero component
 
 // Data fetching
 import { getAllProducts } from "@/lib/product-service";
@@ -20,13 +18,24 @@ export default function ProductsPage() {
   const searchQuery = searchParams.get("q") || "";
   const sortBy = searchParams.get("sort") || "featured";
   const minPrice = searchParams.get("minPrice") || "0";
-  const maxPrice = searchParams.get("maxPrice") || "1000"; // Set a default max price
+  const maxPrice = searchParams.get("maxPrice") || "1000";
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [collections, setCollections] = useState([]);
   const [productLoading, setProductLoading] = useState(true);
   const { data } = useCollections();
+
+  // Update search params function
+  const updateSearchParams = (key, value) => {
+    const params = new URLSearchParams(window.location.search);
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    window.history.replaceState(null, "", `?${params.toString()}`);
+  };
 
   useEffect(() => {
     if (data) {
@@ -50,7 +59,7 @@ export default function ProductsPage() {
     fetchData();
   }, []);
 
-  // Apply filters, search, price range, and sorting
+  // Existing filtering and sorting logic remains the same
   useEffect(() => {
     let filtered = [...products];
 
@@ -96,7 +105,6 @@ export default function ProductsPage() {
         filtered.sort((a, b) => b.name.localeCompare(a.name));
         break;
       default:
-        // Default sorting (Featured)
         filtered.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
         break;
     }
@@ -104,36 +112,22 @@ export default function ProductsPage() {
     setFilteredProducts(filtered);
   }, [products, collectionFilter, searchQuery, sortBy, minPrice, maxPrice]);
 
-  // Update URL dynamically
-  const updateSearchParams = (key, value) => {
-    const params = new URLSearchParams(window.location.search);
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-    window.history.replaceState(null, "", `?${params.toString()}`);
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <main className="flex-grow container mx-auto px-6 py-12">
-        <div className="mb-12 text-center">
-          <Heading level="h1" className="text-4xl font-bold text-gray-900 mb-4">
-            Explore Our Products
-          </Heading>
-          <p className="text-lg text-gray-600">
-            Find high-quality products that you'll love.
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-[#f4f6f9]">
+      {/* Import Hero Component */}
+      <ProductHero />
 
+      <main className="flex-grow container mx-auto px-6 py-12 max-w-screen-2xl">
         {/* Search and Filters */}
-        <div className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-4">
+        <div className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-4 relative">
+          {/* Decorative background elements */}
+          <div className="absolute -top-4 left-0 w-full h-full bg-white/60 rounded-xl shadow-[0_4px_20px_rgba(17,41,107,0.05)] -z-10"></div>
+
           {/* Search Input */}
           <div className="lg:col-span-2">
             <label
               htmlFor="product-search"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 mb-2"
             >
               Search Products
             </label>
@@ -141,7 +135,13 @@ export default function ProductsPage() {
               id="product-search"
               type="text"
               placeholder="Search by name or description..."
-              className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+              className="w-full px-4 py-3 border-2 border-gray-300/50 
+                rounded-xl 
+                focus:border-[#11296B]/50 
+                focus:ring-2 focus:ring-[#11296B]/20 
+                transition-all duration-300 
+                bg-white/80 
+                shadow-sm"
               value={searchQuery}
               onChange={(e) => updateSearchParams("q", e.target.value)}
             />
@@ -152,13 +152,19 @@ export default function ProductsPage() {
             <div>
               <label
                 htmlFor="collection-filter"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Collection
               </label>
               <select
                 id="collection-filter"
-                className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                className="w-full px-4 py-3 border-2 border-gray-300/50 
+                  rounded-xl 
+                  focus:border-[#11296B]/50 
+                  focus:ring-2 focus:ring-[#11296B]/20 
+                  transition-all duration-300 
+                  bg-white/80 
+                  shadow-sm"
                 value={collectionFilter}
                 onChange={(e) =>
                   updateSearchParams("collection", e.target.value)
@@ -166,7 +172,10 @@ export default function ProductsPage() {
               >
                 <option value="all">All Collections</option>
                 {collections.map((collection) => (
-                  <option key={collection.id} value={collection.id}>
+                  <option
+                    key={collection._id || collection.id}
+                    value={collection._id || collection.id}
+                  >
                     {collection.name}
                   </option>
                 ))}
@@ -177,13 +186,19 @@ export default function ProductsPage() {
             <div>
               <label
                 htmlFor="sort-by"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Sort By
               </label>
               <select
                 id="sort-by"
-                className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                className="w-full px-4 py-3 border-2 border-gray-300/50 
+                  rounded-xl 
+                  focus:border-[#11296B]/50 
+                  focus:ring-2 focus:ring-[#11296B]/20 
+                  transition-all duration-300 
+                  bg-white/80 
+                  shadow-sm"
                 value={sortBy}
                 onChange={(e) => updateSearchParams("sort", e.target.value)}
               >
@@ -197,10 +212,10 @@ export default function ProductsPage() {
             </div>
 
             {/* Price Filter */}
-            <div>
+            <div className="col-span-2">
               <label
                 htmlFor="price-range"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Price Range
               </label>
@@ -209,7 +224,13 @@ export default function ProductsPage() {
                   type="number"
                   min="0"
                   placeholder="Min"
-                  className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="flex-1 px-4 py-3 border-2 border-gray-300/50 
+                    rounded-xl 
+                    focus:border-[#11296B]/50 
+                    focus:ring-2 focus:ring-[#11296B]/20 
+                    transition-all duration-300 
+                    bg-white/80 
+                    shadow-sm"
                   value={minPrice}
                   onChange={(e) =>
                     updateSearchParams("minPrice", e.target.value)
@@ -220,7 +241,13 @@ export default function ProductsPage() {
                   type="number"
                   min="0"
                   placeholder="Max"
-                  className="mt-2 block w-full rounded-xl border-2 border-gray-300 py-3 px-4 text-gray-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="flex-1 px-4 py-3 border-2 border-gray-300/50 
+                    rounded-xl 
+                    focus:border-[#11296B]/50 
+                    focus:ring-2 focus:ring-[#11296B]/20 
+                    transition-all duration-300 
+                    bg-white/80 
+                    shadow-sm"
                   value={maxPrice}
                   onChange={(e) =>
                     updateSearchParams("maxPrice", e.target.value)
@@ -234,12 +261,21 @@ export default function ProductsPage() {
         {/* Product Grid */}
         {productLoading ? (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary"></div>
+            <div className="w-16 h-16 border-4 border-[#11296B] border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
-              <ProductCard key={product._id} product={product} />
+              <div
+                key={product._id}
+                className="transition-all duration-300 
+                  hover:scale-105 
+                  hover:shadow-lg 
+                  rounded-xl 
+                  overflow-hidden"
+              >
+                <ProductCard product={product} />
+              </div>
             ))}
           </div>
         ) : (
@@ -251,7 +287,18 @@ export default function ProductsPage() {
               Try adjusting your filters or search query
             </p>
             <button
-              className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all"
+              className="inline-flex items-center px-6 py-2 
+                border border-transparent 
+                text-sm font-medium 
+                rounded-md 
+                text-white 
+                bg-[#11296B] 
+                hover:bg-[#1E96FC] 
+                focus:outline-none 
+                focus:ring-2 
+                focus:ring-offset-2 
+                focus:ring-[#11296B] 
+                transition-all"
               onClick={() => window.history.replaceState(null, "", "/products")}
             >
               Clear all filters

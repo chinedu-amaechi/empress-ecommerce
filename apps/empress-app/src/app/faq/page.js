@@ -1,12 +1,13 @@
 // src/app/faq/page.js
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Footer from "@/components/layout/footer";
 import Heading from "@/components/ui/heading";
 import { allFaqs, getCategories, filterFaqs } from "./faq-data";
+import EmpressChatbot from "@/components/chatbot/empress-chatbot";
 
 // FAQItem Component
 const FAQItem = ({ question, answer, isActive, onClick }) => {
@@ -172,6 +173,9 @@ export default function FAQ() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [heroVisible, setHeroVisible] = useState(false);
 
+  // Ref for chatbot trigger
+  const chatbotTriggerRef = useRef(null);
+
   // Handle scroll for parallax effect
   useEffect(() => {
     const handleScroll = () => {
@@ -208,8 +212,21 @@ export default function FAQ() {
     console.log("Searching for:", searchQuery);
   };
 
+  // Handle Contact Us click to open chatbot
+  const handleContactClick = () => {
+    // Trigger a click on the hidden chatbot trigger
+    if (chatbotTriggerRef.current) {
+      chatbotTriggerRef.current.click();
+    }
+  };
+
   return (
     <main className="min-h-screen bg-white">
+      {/* Hidden button to trigger chatbot */}
+      <div className="hidden">
+        <EmpressChatbot ref={chatbotTriggerRef} />
+      </div>
+
       {/* Elegant Luxury Hero Header with Gradient */}
       <section className="relative h-[60vh] overflow-hidden">
         {/* Background Image with Overlay */}
@@ -268,7 +285,7 @@ export default function FAQ() {
               FIND YOUR ANSWER
             </p>
             <Heading
-              level={1}
+              level={2}
               className="text-3xl font-light text-[#11296B] mb-6"
             >
               Frequently Asked Questions
@@ -344,12 +361,15 @@ export default function FAQ() {
             Our customer care specialists are here to assist you with any
             inquiries about our products or services.
           </p>
-          <a
-            href="/contact"
-            className="inline-block px-8 py-4 border border-[#11296B] text-[#11296B] hover:bg-[#11296B] hover:text-white transition-all duration-300 uppercase tracking-wider text-sm font-light"
+          <button
+            onClick={handleContactClick}
+            className="inline-block px-8 py-4 border border-[#11296B] text-[#11296B] 
+            hover:bg-[#11296B] hover:text-white 
+            transition-all duration-300 
+            uppercase tracking-wider text-sm font-light"
           >
             Contact Us
-          </a>
+          </button>
         </div>
       </section>
 
