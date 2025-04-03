@@ -81,10 +81,12 @@ const Navbar = () => {
   return (
     <nav
       ref={navbarRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "py-3 bg-white/95 backdrop-blur-sm shadow-md"
-          : "py-3 bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 py-3 ${
+        isMenuOpen
+          ? "bg-white shadow-md" 
+          : isScrolled
+          ? "bg-white/95 backdrop-blur-sm shadow-md transition-all duration-300" 
+          : "bg-transparent transition-all duration-300" 
       }`}
     >
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-screen-2xl">
@@ -93,9 +95,7 @@ const Navbar = () => {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <img
-                className={`w-auto transition-all duration-300 ${
-                  isScrolled ? "h-16" : "h-12"
-                }`}
+                className={`w-auto transition-all duration-300 ${"h-12"}`}
                 src="/icons/empress_logo.png"
                 alt="Empress Logo"
               />
@@ -501,12 +501,6 @@ const Navbar = () => {
                   </svg>
                 </button>
               </div>
-              {/* <a
-                href="#login"
-                className="px-4 py-2 text-base font-medium text-white bg-[#11296B] rounded-md hover:bg-opacity-90 transition-all duration-300"
-              >
-                Sign In
-              </a> */}
               <Link
                 href="/auth/sign-in"
                 className="px-4 py-2 text-base font-medium text-white bg-[#11296B] rounded-md hover:bg-opacity-90 transition-all duration-300"
