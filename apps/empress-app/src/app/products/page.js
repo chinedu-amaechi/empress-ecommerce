@@ -509,44 +509,7 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {/* Minimalist Design Banner */}
-        <div className="mt-20 mb-8">
-          <div className="border border-gray-200 rounded-xl overflow-hidden bg-white/80 backdrop-blur-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-              {/* Left side - Image */}
-              <div className="bg-[#f4f6f9] h-48 md:h-auto relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-full h-full bg-gradient-to-r from-[#11296B]/5 to-[#11296B]/20"></div>
-                  <div className="absolute w-64 h-64 rounded-full border border-[#11296B]/20"></div>
-                  <div className="absolute w-48 h-48 rounded-full border border-[#11296B]/30"></div>
-                  <div className="absolute w-32 h-32 rounded-full border border-amber-300/50"></div>
-                  <div className="absolute w-16 h-16 rounded-full bg-amber-300/30"></div>
-                </div>
-              </div>
-
-              {/* Right side - Content */}
-              <div className="p-8 md:p-12 flex flex-col justify-center">
-                <h3 className="text-2xl font-light text-[#11296B] mb-3">
-                  Discover <span className="font-medium">Elegance</span>
-                </h3>
-                <p className="text-gray-600 mb-6 text-sm">
-                  Join our list to receive exclusive updates and offers on our
-                  newest creations.
-                </p>
-                <div className="flex">
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    className="flex-1 px-4 py-2 border-2 border-r-0 border-gray-200 rounded-l-lg focus:outline-none focus:border-[#11296B]"
-                  />
-                  <button className="bg-[#11296B] hover:bg-[#1E96FC] text-white px-4 py-2 rounded-r-lg transition-colors duration-300">
-                    Join
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        
       </main>
       <Footer />
     </div>
