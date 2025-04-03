@@ -35,7 +35,7 @@ const ProductHero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[100vh] flex items-center overflow-hidden">
       {/* Background Images */}
       {heroImages.map((image, index) => (
         <div

@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 // UI Components
 import Footer from "@/components/layout/footer";
 import ProductCard from "@/components/product/product-card";
-import ProductHero from "./product-hero"; // Import the new hero component
+import ProductHero from "./product-hero";
 
 // Data fetching
 import { getAllProducts } from "@/lib/product-service";
@@ -17,8 +17,6 @@ export default function ProductsPage() {
   const collectionFilter = searchParams.get("collection") || "all";
   const searchQuery = searchParams.get("q") || "";
   const sortBy = searchParams.get("sort") || "featured";
-  const minPrice = searchParams.get("minPrice") || "0";
-  const maxPrice = searchParams.get("maxPrice") || "1000";
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -59,7 +57,7 @@ export default function ProductsPage() {
     fetchData();
   }, []);
 
-  // Existing filtering and sorting logic remains the same
+  // Filtering and sorting logic
   useEffect(() => {
     let filtered = [...products];
 
@@ -79,13 +77,6 @@ export default function ProductsPage() {
           product.description.toLowerCase().includes(query)
       );
     }
-
-    // Apply price range filter
-    filtered = filtered.filter(
-      (product) =>
-        product.price >= parseFloat(minPrice) &&
-        product.price <= parseFloat(maxPrice)
-    );
 
     // Apply sorting
     switch (sortBy) {
@@ -110,7 +101,7 @@ export default function ProductsPage() {
     }
 
     setFilteredProducts(filtered);
-  }, [products, collectionFilter, searchQuery, sortBy, minPrice, maxPrice]);
+  }, [products, collectionFilter, searchQuery, sortBy]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f4f6f9]">
@@ -119,7 +110,7 @@ export default function ProductsPage() {
 
       <main className="flex-grow container mx-auto px-6 py-12 max-w-screen-2xl">
         {/* Search and Filters */}
-        <div className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-4 relative">
+        <div className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-3 relative">
           {/* Decorative background elements */}
           <div className="absolute -top-4 left-0 w-full h-full bg-white/60 rounded-xl shadow-[0_4px_20px_rgba(17,41,107,0.05)] -z-10"></div>
 
@@ -147,7 +138,7 @@ export default function ProductsPage() {
             />
           </div>
 
-          <div className="lg:col-span-2 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="grid grid-cols-2 gap-6">
             {/* Collection Filter */}
             <div>
               <label
@@ -172,10 +163,7 @@ export default function ProductsPage() {
               >
                 <option value="all">All Collections</option>
                 {collections.map((collection) => (
-                  <option
-                    key={collection._id || collection.id}
-                    value={collection._id || collection.id}
-                  >
+                  <option key={collection._id} value={collection._id}>
                     {collection.name}
                   </option>
                 ))}
@@ -209,51 +197,6 @@ export default function ProductsPage() {
                 <option value="name-asc">Name: A to Z</option>
                 <option value="name-desc">Name: Z to A</option>
               </select>
-            </div>
-
-            {/* Price Filter */}
-            <div className="col-span-2">
-              <label
-                htmlFor="price-range"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Price Range
-              </label>
-              <div className="flex items-center space-x-4">
-                <input
-                  type="number"
-                  min="0"
-                  placeholder="Min"
-                  className="flex-1 px-4 py-3 border-2 border-gray-300/50 
-                    rounded-xl 
-                    focus:border-[#11296B]/50 
-                    focus:ring-2 focus:ring-[#11296B]/20 
-                    transition-all duration-300 
-                    bg-white/80 
-                    shadow-sm"
-                  value={minPrice}
-                  onChange={(e) =>
-                    updateSearchParams("minPrice", e.target.value)
-                  }
-                />
-                <span className="text-gray-600">-</span>
-                <input
-                  type="number"
-                  min="0"
-                  placeholder="Max"
-                  className="flex-1 px-4 py-3 border-2 border-gray-300/50 
-                    rounded-xl 
-                    focus:border-[#11296B]/50 
-                    focus:ring-2 focus:ring-[#11296B]/20 
-                    transition-all duration-300 
-                    bg-white/80 
-                    shadow-sm"
-                  value={maxPrice}
-                  onChange={(e) =>
-                    updateSearchParams("maxPrice", e.target.value)
-                  }
-                />
-              </div>
             </div>
           </div>
         </div>
