@@ -2,13 +2,14 @@
 
 import { useAuthContext } from "@/app/contexts/auth-context";
 import Button from "@/components/ui/button";
-import Heading from "@/components/ui/heading";
 import { postSignIn } from "@/lib/auth-services";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import Navbar from "@/components/ui/navbar";
+import Footer from "@/components/layout/footer";
 
 function SignIn() {
   const router = useRouter();
@@ -35,74 +36,103 @@ function SignIn() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <Heading level={2} className="text-center">
-          Sign In
-        </Heading>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              {...register("email", { required: "Email is required" })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E96FC] focus:border-transparent outline-none transition-all"
-              placeholder="your@email.com"
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.email.message}
+    <div className="min-h-screen flex flex-col bg-white">
+      <Navbar />
+
+      <main className="flex-grow pt-65 pb-60">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-16">
+            {/* Sign In Section */}
+            <div className="md:border-r md:border-gray-200 md:pr-16 pb-10 md:pb-0">
+              <h2 className="text-2xl mb-2">Sign In</h2>
+              <p className="text-sm text-gray-700 mb-8">
+                Please sign in to your Empress Account.
               </p>
-            )}
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              {...register("password", { required: "Password is required" })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E96FC] focus:border-transparent outline-none transition-all"
-              placeholder="••••••••"
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password.message}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <div>
+                  <label className="block text-gray-700 mb-2">Email</label>
+                  <input
+                    type="email"
+                    {...register("email", { required: "Email is required" })}
+                    className="w-full border-b border-gray-300 pb-2 focus:border-gray-900 outline-none transition-colors"
+                  />
+                  {errors.email && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 mb-2">Password</label>
+                  <input
+                    type="password"
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                    className="w-full border-b border-gray-300 pb-2 focus:border-gray-900 outline-none transition-colors"
+                  />
+                  {errors.password && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <button
+                    type="submit"
+                    className="w-full bg-black text-white px-4 py-3 transition-colors"
+                  >
+                    Sign In
+                  </button>
+                </div>
+
+                <div className="mt-4">
+                  <Link
+                    href="/auth/forget-password"
+                    className="text-sm text-gray-700 hover:text-gray-900 hover:underline inline-flex items-center"
+                  >
+                    Forgot your password?
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 ml-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </Link>
+                </div>
+              </form>
+            </div>
+
+            {/* Create Account Section */}
+            <div className="mt-10 md:mt-0">
+              <h2 className="text-2xl mb-2">Create an Account</h2>
+              <p className="text-sm text-gray-700 mb-8">
+                Save time during checkout, view your shopping bag and saved
+                items from any device and access your order history.
               </p>
-            )}
+
+              <div className="mt-12">
+                <Link href="/auth/sign-up">
+                  <button className="w-full bg-black text-white px-4 py-3 transition-colors">
+                    Register
+                  </button>
+                </Link>
+              </div>
+            </div>
           </div>
-
-          <div className="flex items-center justify-between">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                {...register("rememberMe")}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-[#1E96FC]"
-              />
-              <span className="ml-2 text-sm text-gray-600">Remember me</span>
-            </label>
-            <Link
-              href="/auth/forget-password"
-              className="text-[#11296B] text-sm hover:text-[#1E96FC] font-semibold"
-            >
-              Forgot password?
-            </Link>
-          </div>
-          <Button type="submit">Sign In</Button>
-        </form>
-
-        <div className="mt-10 ml-10 mr-10 border-t border-gray-300"></div>
-
-        <div className="mt-2 text-center text-sm text-gray-600 flex justify-center items-center gap-1">
-          <p>Don't have an account?</p>
-          <span className="text-[#11296B] hover:text-[#1E96FC] font-semibold">
-            <Link href="/auth/sign-up">Create an Account</Link>
-          </span>
         </div>
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }
