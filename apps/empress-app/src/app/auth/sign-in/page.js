@@ -57,10 +57,10 @@ function SignIn() {
       <Navbar />
 
       <main className="flex-grow pt-40 pb-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-20">
             {/* Sign In Section */}
-            <div className="md:border-r md:border-gray-200 md:pr-16 pb-10 md:pb-0">
+            <div className="md:border-r-2 md:border-gray-300 md:pr-16 pb-10 md:pb-0 w-full">
               <h2 className="text-2xl mb-2">Sign In</h2>
               <p className="text-sm text-gray-700 mb-8">
                 Please sign in to your Empress Account.
@@ -130,7 +130,7 @@ function SignIn() {
             </div>
 
             {/* Create Account Section */}
-            <div className="mt-10 md:mt-0">
+            <div className="mt-10 md:mt-0 w-full">
               <h2 className="text-2xl mb-2">Create an Account</h2>
               <p className="text-sm text-gray-700 mb-8">
                 Save time during checkout, view your shopping bag and saved
