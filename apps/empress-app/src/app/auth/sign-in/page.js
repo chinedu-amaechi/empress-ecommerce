@@ -190,7 +190,7 @@ function SignIn() {
                     </label>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-4 ">
                     <Link
                       href="/auth/forget-password"
                       className="text-sm text-gray-600 hover:text-[#11296B] hover:underline transition-colors"
@@ -201,7 +201,7 @@ function SignIn() {
 
                   <button
                     type="submit"
-                    className="w-full text-white font-normal bg-[#11296B] hover:bg-[#1E96FC] py-3.5 transition-colors mt-8 rounded-none"
+                    className="w-full text-white font-normal bg-[#11296B] hover:bg-[#1E96FC] py-3.5 transition-colors  rounded-none"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Signing In..." : "Sign In"}
@@ -221,7 +221,7 @@ function SignIn() {
                   items from any device and access your order history.
                 </p>
 
-                <div className="space-y-4 mb-12">
+                <div className="space-y-4 mb-8">
                   <div className="flex items-start">
                     <svg
                       className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0"
