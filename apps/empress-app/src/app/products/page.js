@@ -22,7 +22,24 @@ export default function ProductsPage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [collections, setCollections] = useState([]);
   const [productLoading, setProductLoading] = useState(true);
+  const [isFilterFixed, setIsFilterFixed] = useState(false);
   const { data } = useCollections();
+
+  // Handle scroll effect for fixed filters
+  useEffect(() => {
+    const handleScroll = () => {
+      // Adjust this value based on your navbar height
+      const scrollPosition = 150;
+      if (window.scrollY > scrollPosition) {
+        setIsFilterFixed(true);
+      } else {
+        setIsFilterFixed(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Update search params function
   const updateSearchParams = (key, value) => {
@@ -123,8 +140,12 @@ export default function ProductsPage() {
         </div>
 
         {/* Search and Filters */}
-        <div className="mb-12">
-          <div className="relative mx-auto max-w-6xl backdrop-blur-sm bg-white/80 rounded-xl p-6 shadow-[0_8px_30px_rgba(17,41,107,0.08)]">
+        <div
+          className={`${
+            isFilterFixed ? "sticky top-22 z-30" : ""
+          } transition-all duration-300 mb-12`}
+        >
+          <div className="relative mx-auto max-w-6xl backdrop-blur-sm bg-white/90 rounded-xl p-6 shadow-[0_8px_30px_rgba(17,41,107,0.08)]">
             <div className="grid grid-cols-1 gap-y-6 gap-x-8 lg:grid-cols-12">
               {/* Search Input */}
               <div className="lg:col-span-6 xl:col-span-7">
@@ -508,8 +529,6 @@ export default function ProductsPage() {
             </nav>
           </div>
         )}
-
-        
       </main>
       <Footer />
     </div>
