@@ -56,7 +56,7 @@ function SignIn() {
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
-      <main className="flex-grow pt-40 pb-20">
+      <main className="flex-grow pt-40 pb-25">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-20">
             {/* Sign In Section */}
