@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import Footer from "@/components/layout/footer";
 import ProductCard from "@/components/product/product-card";
 import ProductHero from "./product-hero";
+import Heading from "@/components/ui/heading";
 
 // Data fetching
 import { getAllProducts } from "@/lib/product-service";
@@ -128,11 +129,14 @@ export default function ProductsPage() {
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-screen-2xl">
         {/* Collection Title & Description */}
         <div className="mb-12 text-center">
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-[#11296B] mb-4">
-            Our <span className="font-semibold italic">Collection</span>
-          </h2>
-          <div className="w-24 h-1 bg-amber-300 mb-6 mx-auto"></div>
-          <p className="max-w-3xl mx-auto text-gray-600 leading-relaxed">
+          <Heading
+            level={1}
+            className="text-3xl sm:text-4xl text-[#11296B] font-light tracking-tight mb-4"
+          >
+            Our <span className="font-semibold">Collection</span>
+          </Heading>
+          <div className="w-16 h-0.5 bg-amber-300 mx-auto my-6"></div>
+          <p className="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed">
             Discover our exquisite collection of handcrafted bracelets, each
             designed with passion and precision to add a touch of elegance to
             your personal style.
@@ -142,7 +146,7 @@ export default function ProductsPage() {
         {/* Search and Filters */}
         <div
           className={`${
-            isFilterFixed ? "sticky top-22 z-30" : ""
+            isFilterFixed ? "sticky top-4 z-30" : ""
           } transition-all duration-300 mb-12`}
         >
           <div className="relative mx-auto max-w-6xl backdrop-blur-sm bg-white/90 rounded-xl p-6 shadow-[0_8px_30px_rgba(17,41,107,0.08)]">
