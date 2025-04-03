@@ -5,7 +5,7 @@ import Button from "@/components/ui/button";
 import { postSignIn } from "@/lib/auth-services";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Navbar from "@/components/ui/navbar";
@@ -19,6 +19,23 @@ function SignIn() {
     formState: { errors },
   } = useForm();
   const { user, setUser } = useAuthContext();
+
+  // Force the navbar to appear in "scrolled" state
+  useEffect(() => {
+    // Programmatically create a scroll event that the Navbar will detect
+    const scrollEvent = new Event("scroll");
+
+    // Set a small timeout to ensure the component is mounted
+    const timer = setTimeout(() => {
+      // Artificially set the scroll position to trigger the navbar's scrolled state
+      window.scrollY = 11; // Just above the 10px threshold in the Navbar
+
+      // Dispatch the event to trigger the navbar's scroll handler
+      window.dispatchEvent(scrollEvent);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   async function onSubmit(data) {
     console.log(data);
@@ -39,7 +56,7 @@ function SignIn() {
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
 
-      <main className="flex-grow pt-65 pb-60">
+      <main className="flex-grow pt-40 pb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-16">
             {/* Sign In Section */}
