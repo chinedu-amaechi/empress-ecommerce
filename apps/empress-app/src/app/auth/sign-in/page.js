@@ -72,7 +72,7 @@ function SignIn() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-0">
             {/* Sign In Section */}
-            <div className="md:border-r-2 md:border-gray-300 md:pr-10 lg:pr-16 pb-10 md:pb-0 w-full">
+            <div className="md:border-r md:border-[#1E96FC] md:pr-10 lg:pr-16 pb-10 md:pb-0 w-full">
               <div className="max-w-md md:ml-auto md:mr-0 mx-auto">
                 <Heading level={1} className="text-2xl text-gray-900 mb-2">
                   Sign In
@@ -134,10 +134,38 @@ function SignIn() {
                       />
                       <button
                         type="button"
-                        className="absolute right-0 bottom-2 text-xs text-gray-500 hover:text-gray-700"
+                        className="absolute right-0 bottom-2 text-gray-500 hover:text-gray-700"
                         onClick={() => setShowPassword(!showPassword)}
                       >
-                        {showPassword ? "HIDE" : "SHOW"}
+                        {showPassword ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path
+                              fillRule="evenodd"
+                              d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
+                              clipRule="evenodd"
+                            />
+                            <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+                          </svg>
+                        )}
                       </button>
                     </div>
                     {errors.password && (
@@ -171,13 +199,13 @@ function SignIn() {
                     </Link>
                   </div>
 
-                  <Button
+                  <button
                     type="submit"
-                    className="w-full text-white font-normal bg-[#11296B] hover:bg-[#0c1d45] py-3 transition-colors mt-8"
+                    className="w-full text-white font-normal bg-[#11296B] hover:bg-[#1E96FC] py-3.5 transition-colors mt-8 rounded-none"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Signing In..." : "Sign In"}
-                  </Button>
+                  </button>
                 </form>
               </div>
             </div>
@@ -247,10 +275,10 @@ function SignIn() {
                   </div>
                 </div>
 
-                <Link href="/auth/sign-up">
-                  <Button className="w-full bg-white text-[#11296B] font-normal hover:bg-gray-50 py-3 border border-[#11296B] transition-colors">
+                <Link href="/auth/sign-up" className="block w-full">
+                  <button className="w-full bg-[#11296B] text-white font-normal hover:bg-[#1E96FC] py-3.5 transition-colors rounded-none">
                     Create Account
-                  </Button>
+                  </button>
                 </Link>
               </div>
             </div>
