@@ -136,6 +136,7 @@ const Navbar = () => {
                         <Link
                           href={`/collections?collection=${collection.name}`}
                           key={collection._id}
+                          onClick={() => setActiveDropdown(null)}
                           className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                         >
                           {collection.name}
