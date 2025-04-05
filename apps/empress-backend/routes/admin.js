@@ -58,7 +58,10 @@ router.delete(
 );
 
 // Route to add a product to a collection
-router.put("/product/add-to-collection/:productId", adminControllers.addToCollection);
+router.put(
+  "/product/add-to-collection/:productId",
+  adminControllers.addToCollection
+);
 
 // Route to add new images to a product
 router.put(
@@ -194,6 +197,15 @@ router.delete(
   "/collection/remove-product/:collectionId",
   adminControllers.removeProductFromCollection
 );
+
+// Route to get all customers
+router.get("/customers", adminControllers.getAllCustomers);
+
+// Route to get a single customer
+router.get("/customer/:customerId", adminControllers.getSingleCustomer);
+
+// Route to delete a customer
+router.delete("/customer/delete/:customerId", adminControllers.deleteCustomer);
 
 // Route to get notifications for the admin
 router.get("/notifications", adminControllers.getNotifications);
