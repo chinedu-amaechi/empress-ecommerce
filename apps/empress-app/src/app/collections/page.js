@@ -218,8 +218,7 @@ export default function Collections() {
       <ScrollProgress />
 
       {/* Collection Navigation */}
-      <div className="fixed top-[95px] left-4 sm:left-6 lg:left-[calc((100%-1280px)/2+32px)] z-50">
-        
+      <div className="fixed top-[85px] left-4 sm:left-6 lg:left-[calc((100%-1280px)/2+32px)] z-50">
         <CollectionNavigationHeader
           collectionsData={collections}
           activeCollection={activeCollection}
@@ -455,7 +454,7 @@ export default function Collections() {
             <section id="products-section">
               <div className="text-center mb-16">
                 <Heading
-                  level={3}
+                  level={2}
                   className="text-2xl md:text-3xl text-gray-900 font-light tracking-tight mb-4"
                 >
                   Explore Other{" "}

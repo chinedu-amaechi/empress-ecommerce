@@ -20,7 +20,7 @@ function CollectionIntroduction({ collection }) {
       </div>
 
       <Heading
-        level={2}
+        level={1}
         className="text-3xl md:text-4xl text-gray-900 font-light tracking-tight mb-6"
       >
         The Essence of <span className="font-semibold">{collection.name}</span>
