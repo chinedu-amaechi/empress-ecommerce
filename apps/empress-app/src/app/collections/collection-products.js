@@ -6,7 +6,7 @@ function CollectionProduct({collection, products}) {
       <section id="products-section" className="mb-32">
         <div className="text-center mb-16">
           <Heading
-            level={3}
+            level={1}
             className="text-2xl md:text-3xl text-gray-900 font-light tracking-tight mb-4"
           >
             Explore the{" "}
