@@ -5,7 +5,7 @@ function CollectionNavigationHeader({
   onHandleCollectionChange,
 }) {
   return (
-    <div className="md:w-1/3 flex justify-end">
+    <div className="flex justify-end">
       <div
         className={`backdrop-blur-md rounded-full px-2 py-1 inline-flex transition-all duration-500 ${
           isScrolled

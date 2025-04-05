@@ -204,13 +204,6 @@ export default function Collections() {
   console.log(activeCollection);
   console.log(collections);
 
-  // return (
-  //   <div>
-  //     <h1>Collections</h1>
-  //     <h1>{activeCollection.name}</h1>
-  //     <img src={activeCollection.imageUrl.optimizeUrl } />
-  //   </div>
-  // );
 
   return (
     <main ref={mainRef} className="min-h-screen overflow-hidden bg-[#f9f9f9]">
@@ -218,7 +211,7 @@ export default function Collections() {
       <ScrollProgress />
 
       {/* Collection Navigation */}
-      <div className="fixed top-[95px] left-4 sm:left-6 lg:left-[calc((100%-1280px)/2+32px)] z-50">
+      <div className="fixed top-[95px] left-6 z-40">
         
         <CollectionNavigationHeader
           collectionsData={collections}
@@ -228,9 +221,6 @@ export default function Collections() {
           className={
             isScrolled ? "bg-white shadow-md py-3 px-6 rounded-full" : ""
           }
-          style={{
-            display: "inline-block",
-          }}
         />
       </div>
 
