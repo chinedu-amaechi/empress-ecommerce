@@ -83,10 +83,10 @@ const Navbar = () => {
       ref={navbarRef}
       className={`fixed top-0 left-0 right-0 z-50 py-3 ${
         isMenuOpen
-          ? "bg-white shadow-md" 
+          ? "bg-white shadow-md"
           : isScrolled
-          ? "bg-white/95 backdrop-blur-sm shadow-md transition-all duration-300" 
-          : "bg-transparent transition-all duration-300" 
+          ? "bg-white/95 backdrop-blur-sm shadow-md transition-all duration-300"
+          : "bg-transparent transition-all duration-300"
       }`}
     >
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-screen-2xl">
@@ -241,12 +241,14 @@ const Navbar = () => {
                         <Link
                           href="/auth/sign-in"
                           className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                          onClick={() => setActiveDropdown(null)}
                         >
                           Sign In
                         </Link>
                         <Link
                           href="/auth/sign-up"
                           className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                          onClick={() => setActiveDropdown(null)}
                         >
                           Create Account
                         </Link>
@@ -308,7 +310,7 @@ const Navbar = () => {
                     <div className="text-base text-gray-500 text-center py-5">
                       Your cart is empty
                     </div>
-                    <Link href="/cart">
+                    <Link href="/cart" onClick={() => setActiveDropdown(null)}>
                       <button className="w-full py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
                         View Cart
                       </button>
