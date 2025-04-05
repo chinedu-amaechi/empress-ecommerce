@@ -1,8 +1,6 @@
 // src/components/home/WhyChooseUs.js
 import React from "react";
 import Heading from "@/components/ui/heading";
-
-// Icons (using Lucide React for scalable icons)
 import { Shield, Gem, Globe, Clock } from "lucide-react";
 
 const WhyChooseUs = () => {
@@ -112,8 +110,6 @@ const WhyChooseUs = () => {
                 className="
                   text-xl font-semibold text-[#11296B] mb-3
                   relative z-10
-                  transition-colors duration-300
-                  group-hover:text-white
                 "
               >
                 {feature.title}
@@ -122,8 +118,6 @@ const WhyChooseUs = () => {
                 className="
                   text-gray-600 text-sm
                   relative z-10
-                  transition-colors duration-300
-                  group-hover:text-white group-hover:text-opacity-80
                 "
               >
                 {feature.description}

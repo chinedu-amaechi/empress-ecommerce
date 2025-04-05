@@ -7,36 +7,6 @@ import Link from "next/link";
 import Heading from "@/components/ui/heading";
 import useCollections from "@/hooks/use-collections";
 
-const collections = [
-  {
-    name: "Ethereal",
-    description: "Delicate designs that whisper elegance",
-    image: "/collections/ethereal-full.jpg",
-    href: "#",
-    accentColor: "bg-blue-400",
-  },
-  {
-    name: "Divine",
-    description: "Bold statements of inner strength",
-    image: "/collections/divine-full.jpg",
-    href: "#",
-    accentColor: "bg-amber-400",
-  },
-  {
-    name: "Heritage",
-    description: "Timeless craftsmanship passed down",
-    image: "/collections/heritage-full.jpg",
-    href: "#",
-    accentColor: "bg-emerald-400",
-  },
-  {
-    name: "Celestial Bloom",
-    description: "Inspired by the cosmic dance of stars",
-    image: "/collections/celestial-full.jpg",
-    href: "#",
-    accentColor: "bg-purple-400",
-  },
-];
 
 const CollectionsSection = () => {
   const [collections, setCollections] = useState([]);
