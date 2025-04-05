@@ -1,14 +1,31 @@
 // src/app/auth/sign-up/page.js
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import Heading from "@/components/ui/heading";
-import Button from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { postSignUp } from "@/lib/auth-services";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+// Import the bracelet viewer with dynamic loading (no SSR)
+const BraceletViewer = dynamic(
+  () => import("@/components/3d/bracelet-viewer"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#11296B]/20 border-t-[#11296B] rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-500">Loading 3D model...</p>
+        </div>
+      </div>
+    ),
+  }
+);
 
 const provinces = [
   { name: "Alberta", abbr: "AB" },
@@ -33,166 +50,378 @@ const SignUp = () => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
+  const [passwordFocus, setPasswordFocus] = useState(false);
+  const modelRef = useRef(null);
 
   async function onSubmit(data) {
-    console.log(data);
-    const response = await postSignUp({ ...data, country: "Canada" });
+    try {
+      const response = await postSignUp({ ...data, country: "Canada" });
 
-    if (response.status === 201) {
-      toast.success(response.message);
-      reset();
-      router.push("/auth/sign-in");
-    } else {
-      toast.error(response.message);
+      if (response.status === 201) {
+        toast.success(response.message);
+        reset();
+        router.push("/auth/sign-in");
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error("An error occurred during sign up");
+      console.error(error);
     }
   }
 
   const password = watch("password");
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <Heading level={2} className="text-center">
-          Sign Up
-        </Heading>
+    <div className="min-h-screen bg-[#f9f9f9] flex flex-col">
+      {/* Bracelet Viewer Section - Top */}
+      <div className="w-full py-10 px-4 bg-gradient-to-b from-gray-50 to-gray-100 flex justify-center">
+        <div className="w-full max-w-3xl h-[500px]">
+          <BraceletViewer />
+        </div>
+      </div>
 
-        {/* Error Messages at the Top */}
-        {Object.keys(errors).length > 0 && (
-          <div className="mb-4 p-4 bg-red-100 border border-red-500 text-red-700 rounded-lg">
-            <ul className="list-disc pl-5">
-              {Object.values(errors).map((error, index) => (
-                <li key={index} className="text-sm">
-                  {error.message}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <input
-            type="email"
-            {...register("email", { required: "Email is required" })}
-            placeholder="your@email.com"
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-
-          <input
-            type="password"
-            {...register("password", { required: "Password is required" })}
-            placeholder="••••••••"
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-              errors.password ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-
-          <input
-            type="password"
-            {...register("confirmPassword", {
-              required: "Confirm Password is required",
-              validate: (value) =>
-                value === password || "Passwords do not match",
-            })}
-            placeholder="••••••••"
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-              errors.confirmPassword ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-
-          <div className="flex space-x-4">
-            <input
-              type="text"
-              {...register("firstName", { required: "First Name is required" })}
-              placeholder="First Name"
-              className={`w-1/2 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-                errors.firstName ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-
-            <input
-              type="text"
-              {...register("lastName", { required: "Last Name is required" })}
-              placeholder="Last Name"
-              className={`w-1/2 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-                errors.lastName ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-          </div>
-
-          <input
-            type="tel"
-            {...register("phone", {
-              required: "Phone Number is required",
-              pattern: {
-                value: /^\d{10}$/,
-                message: "Phone number must be 10 digits",
-              },
-            })}
-            placeholder="Phone Number"
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-              errors.phone ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-
-          <input
-            type="text"
-            {...register("street")}
-            placeholder="Street Address"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all"
-          />
-
-          <div className="flex space-x-4">
-            <input
-              type="text"
-              {...register("city", { required: "City is required" })}
-              placeholder="City"
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-                errors.city ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-
-            <select
-              {...register("province", { required: "Province is required" })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-                errors.province ? "border-red-500" : "border-gray-300"
-              }`}
+      {/* Form Section - Bottom */}
+      <div className="w-full bg-white flex-grow py-12 px-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-8 text-center">
+            <Heading
+              level={1}
+              className="text-3xl font-light text-[#11296B] mb-2"
             >
-              <option value="">Province</option>
-              {provinces.map((province) => (
-                <option key={province.abbr} value={province.abbr}>
-                  {province.name}
-                </option>
-              ))}
-            </select>
-
-            <input
-              type="text"
-              {...register("postalCode", {
-                required: "Postcode is required",
-                pattern: {
-                  value: /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,
-                  message: "Invalid Canadian postal code",
-                },
-              })}
-              placeholder="Postcode"
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#1E96FC] outline-none transition-all ${
-                errors.postcode ? "border-red-500" : "border-gray-300"
-              }`}
-            />
+              Create an Account
+            </Heading>
+            <div className="w-16 h-px bg-[#11296B]/30 mx-auto my-4"></div>
+            <p className="text-gray-600">
+              Join Empress to enjoy personalized shopping experiences, save your
+              favorite pieces, and access exclusive content and offers.
+            </p>
           </div>
 
-          <Button type="submit">Create Account</Button>
-        </form>
-        <div className="mt-10 border-t border-gray-300"></div>
-        <div className="mt-2 text-center text-sm text-gray-600 flex justify-center items-center gap-1">
-          <p>Already have an account?</p>
-          <span className="text-[#11296B] hover:text-[#1E96FC] font-semibold">
-            <Link href="/auth/sign-in">Sign in</Link>
-          </span>
+          {/* Error Messages at the Top */}
+          {Object.keys(errors).length > 0 && (
+            <div className="mb-8 p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
+              <h3 className="text-sm font-medium mb-2">
+                Please correct the following:
+              </h3>
+              <ul className="list-disc pl-5 text-sm space-y-1">
+                {Object.values(errors).map((error, index) => (
+                  <li key={index}>{error.message}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+              {/* Email */}
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  {...register("email", {
+                    required: "Email address is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Please enter a valid email address",
+                    },
+                  })}
+                  placeholder="your@email.com"
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Password */}
+              <div className="sm:col-span-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                  })}
+                  placeholder="••••••••"
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  }`}
+                  onFocus={() => setPasswordFocus(true)}
+                  onBlur={() => setPasswordFocus(false)}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.password.message}
+                  </p>
+                )}
+                {passwordFocus && (
+                  <div className="mt-1 text-xs text-gray-500">
+                    Password must be at least 8 characters long
+                  </div>
+                )}
+              </div>
+
+              {/* Confirm Password */}
+              <div className="sm:col-span-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
+                  })}
+                  placeholder="••••••••"
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                    errors.confirmPassword
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
+              {/* First & Last Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  First Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  {...register("firstName", {
+                    required: "First name is required",
+                  })}
+                  placeholder="First Name"
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                    errors.firstName ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors.firstName && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.firstName.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  {...register("lastName", {
+                    required: "Last name is required",
+                  })}
+                  placeholder="Last Name"
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                    errors.lastName ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors.lastName && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.lastName.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Phone */}
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  {...register("phone", {
+                    required: "Phone number is required",
+                    pattern: {
+                      value: /^\d{10}$/,
+                      message: "Please enter a 10-digit phone number",
+                    },
+                  })}
+                  placeholder="Phone Number"
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                    errors.phone ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors.phone && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.phone.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="sm:col-span-2 border-t border-gray-200 pt-5 mt-2">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">
+                  Address Information
+                </h3>
+              </div>
+
+              {/* Street Address */}
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Street Address
+                </label>
+                <input
+                  type="text"
+                  {...register("street")}
+                  placeholder="Street Address"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all"
+                />
+              </div>
+
+              {/* City */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  City <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  {...register("city", { required: "City is required" })}
+                  placeholder="City"
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                    errors.city ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors.city && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.city.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Province */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Province <span className="text-red-500">*</span>
+                </label>
+                <select
+                  {...register("province", {
+                    required: "Province is required",
+                  })}
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all appearance-none ${
+                    errors.province ? "border-red-500" : "border-gray-300"
+                  }`}
+                >
+                  <option value="">Select Province</option>
+                  {provinces.map((province) => (
+                    <option key={province.abbr} value={province.abbr}>
+                      {province.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.province && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.province.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Postal Code */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Postal Code <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  {...register("postalCode", {
+                    required: "Postal code is required",
+                    pattern: {
+                      value: /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,
+                      message: "Please enter a valid Canadian postal code",
+                    },
+                  })}
+                  placeholder="A1A 1A1"
+                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                    errors.postalCode ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {errors.postalCode && (
+                  <p className="mt-1 text-xs text-red-600">
+                    {errors.postalCode.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Terms and Privacy Policy */}
+            <div className="mt-6">
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <input
+                    id="terms"
+                    name="terms"
+                    type="checkbox"
+                    {...register("terms", {
+                      required:
+                        "You must agree to the terms and privacy policy",
+                    })}
+                    className="h-4 w-4 text-[#11296B] border-gray-300 rounded focus:ring-[#11296B]"
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label htmlFor="terms" className="text-gray-600">
+                    I agree to the{" "}
+                    <a href="#" className="text-[#11296B] underline">
+                      Terms of Service
+                    </a>{" "}
+                    and{" "}
+                    <a href="#" className="text-[#11296B] underline">
+                      Privacy Policy
+                    </a>
+                  </label>
+                  {errors.terms && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {errors.terms.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="mt-8">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 px-6 bg-[#11296B] hover:bg-[#1E96FC] text-white font-medium transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#11296B] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Creating Account..." : "Create Account"}
+              </button>
+            </div>
+
+            {/* Sign In Link */}
+            <div className="text-center mt-6">
+              <p className="text-gray-600">
+                Already have an account?{" "}
+                <Link
+                  href="/auth/sign-in"
+                  className="text-[#11296B] hover:text-[#1E96FC] font-medium"
+                >
+                  Sign in
+                </Link>
+              </p>
+            </div>
+          </form>
         </div>
       </div>
     </div>

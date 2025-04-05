@@ -27,21 +27,46 @@ function SignIn() {
   const watchEmail = watch("email", "");
   const watchPassword = watch("password", "");
 
-  // Force the navbar to appear in "scrolled" state
+  // // Force the navbar to appear in "scrolled" state
+  // useEffect(() => {
+  //   // Programmatically create a scroll event that the Navbar will detect
+  //   const scrollEvent = new Event("scroll");
+
+  //   // Set a small timeout to ensure the component is mounted
+  //   const timer = setTimeout(() => {
+  //     // Artificially set the scroll position to trigger the navbar's scrolled state
+  //     window.scrollY = 11; // Just above the 10px threshold in the Navbar
+
+  //     // Dispatch the event to trigger the navbar's scroll handler
+  //     window.dispatchEvent(scrollEvent);
+  //   }, 100);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
+
+  // In your sign-in page
   useEffect(() => {
-    // Programmatically create a scroll event that the Navbar will detect
-    const scrollEvent = new Event("scroll");
+    // Force navbar into scrolled state for sign-in page
+    window.scrollY = 11;
+    window.dispatchEvent(new Event("scroll"));
 
-    // Set a small timeout to ensure the component is mounted
-    const timer = setTimeout(() => {
-      // Artificially set the scroll position to trigger the navbar's scrolled state
-      window.scrollY = 11; // Just above the 10px threshold in the Navbar
+    // Also set a flag that this is the sign-in page
+    document.body.dataset.signInPage = "true";
 
-      // Dispatch the event to trigger the navbar's scroll handler
-      window.dispatchEvent(scrollEvent);
-    }, 100);
+    return () => {
+      // When leaving sign-in page, clean up
+      // delete document.body.dataset.signInPage;
 
-    return () => clearTimeout(timer);
+      // Force a layout calculation that will cause the Navbar to update
+      requestAnimationFrame(() => {
+        // If we're not already scrolled, reset the navbar
+        if (window.scrollY <= 10) {
+          window.scrollY = 0; // Reset scroll position
+          // Dispatch a scroll event to trigger the navbar's scroll handler
+          window.dispatchEvent(new Event("scroll"));
+        }
+      });
+    };
   }, []);
 
   async function onSubmit(data) {
