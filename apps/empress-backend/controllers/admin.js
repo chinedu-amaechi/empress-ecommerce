@@ -845,8 +845,6 @@ export async function removeProductFromCollection(req, res, next) {
 
 export async function getAllCustomers(req, res, next) {
   try {
-    console.log(req.user);
-
     if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
@@ -866,8 +864,6 @@ export async function getAllCustomers(req, res, next) {
 
 export async function getSingleCustomer(req, res, next) {
   try {
-    console.log(req.user);
-
     if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
@@ -899,8 +895,6 @@ export async function getSingleCustomer(req, res, next) {
 
 export async function deleteCustomer(req, res, next) {
   try {
-    console.log(req.user);
-
     if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
