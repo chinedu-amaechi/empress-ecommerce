@@ -270,10 +270,10 @@ const Navbar = () => {
                 </span>
               </button>
               {activeDropdown === "cart" && (
-                <div className="absolute right-0 w-72 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
+                <div className="absolute right-0 w-80 mt-2 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-50">
                   <div className="p-4">
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-base font-medium text-gray-900">
+                    <div className="flex justify-between items-center mb-3 border-b pb-2">
+                      <h3 className="text-lg font-bold text-gray-900">
                         Shopping Cart
                       </h3>
                       <span className="text-sm text-gray-500">
@@ -282,26 +282,56 @@ const Navbar = () => {
                       </span>
                     </div>
                     {cart.length === 0 ? (
-                      <div className="text-base text-gray-500 text-center py-5">
+                      <div className="text-base text-gray-500 text-center py-8">
                         Your cart is empty
                       </div>
                     ) : (
-                      <div className="space-y-2">
-                        {cart.map((item, idx) => (
-                          <div
-                            key={idx}
-                            className="flex justify-between items-center"
-                          >
-                            <p className="text-gray-700">{item.name}</p>
-                            <p className="text-gray-700">
-                              {item.quantity} x ${item.price}
-                            </p>
+                      <>
+                        <div className="space-y-3 max-h-60 overflow-y-auto">
+                          {cart.map((item, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center space-x-3"
+                            >
+                              <div className="w-10 h-10">
+                                <img
+                                  src={item.imageURL}
+                                  alt={item.name}
+                                  className="w-full h-full object-cover rounded"
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-gray-700">
+                                  {item.name}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {item.quantity} x ${item.price}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-3 border-t pt-3">
+                          <div className="flex justify-between items-center">
+                            <span className="font-semibold text-gray-700">
+                              Total:
+                            </span>
+                            <span className="font-bold text-gray-900">
+                              $
+                              {cart
+                                .reduce(
+                                  (acc, item) =>
+                                    acc + item.price * item.quantity,
+                                  0
+                                )
+                                .toFixed(2)}
+                            </span>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      </>
                     )}
                     <Link href="/cart" onClick={() => setActiveDropdown(null)}>
-                      <button className="w-full mt-4 py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
+                      <button className="w-full mt-4 py-2 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
                         View Cart
                       </button>
                     </Link>
