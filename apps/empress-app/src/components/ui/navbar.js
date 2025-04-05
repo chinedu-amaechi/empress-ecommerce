@@ -196,12 +196,10 @@ const Navbar = () => {
                 {user === null ? (
                   <PersonOutline />
                 ) : (
-                  <>
-                    <p className="bg-blue-950 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">
-                      {user.firstName.split("")[0]}
-                      {user.lastName.split("")[0]}
-                    </p>
-                  </>
+                  <p className="bg-blue-950 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">
+                    {user.firstName.split("")[0]}
+                    {user.lastName.split("")[0]}
+                  </p>
                 )}
               </button>
               {activeDropdown === "account" && (
@@ -271,9 +269,9 @@ const Navbar = () => {
               </button>
               {activeDropdown === "cart" && (
                 <div className="absolute right-0 w-80 mt-2 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="p-4">
-                    <div className="flex justify-between items-center mb-3 border-b pb-2">
-                      <h3 className="text-lg font-bold text-gray-900">
+                  <div className="p-6">
+                    <div className="flex justify-between items-center border-b pb-3 mb-4">
+                      <h3 className="text-xl font-semibold text-gray-800">
                         Shopping Cart
                       </h3>
                       <span className="text-sm text-gray-500">
@@ -282,38 +280,34 @@ const Navbar = () => {
                       </span>
                     </div>
                     {cart.length === 0 ? (
-                      <div className="text-base text-gray-500 text-center py-8">
-                        Your cart is empty
+                      <div className="text-center py-10 text-gray-500">
+                        Your cart is empty.
                       </div>
                     ) : (
                       <>
-                        <div className="space-y-3 max-h-60 overflow-y-auto">
+                        <ul className="space-y-4 max-h-60 overflow-y-auto">
                           {cart.map((item, idx) => (
-                            <div
+                            <li
                               key={idx}
-                              className="flex items-center space-x-3"
+                              className="flex justify-between items-center"
                             >
-                              <div className="w-10 h-10">
-                                <img
-                                  src={item.imageURL}
-                                  alt={item.name}
-                                  className="w-full h-full object-cover rounded"
-                                />
-                              </div>
-                              <div className="flex-1">
-                                <p className="font-semibold text-gray-700">
+                              <div>
+                                <p className="font-medium text-gray-700">
                                   {item.name}
                                 </p>
                                 <p className="text-sm text-gray-500">
                                   {item.quantity} x ${item.price}
                                 </p>
                               </div>
-                            </div>
+                              <div className="text-gray-700 font-semibold">
+                                ${(item.quantity * item.price).toFixed(2)}
+                              </div>
+                            </li>
                           ))}
-                        </div>
-                        <div className="mt-3 border-t pt-3">
+                        </ul>
+                        <div className="border-t pt-4 mt-4">
                           <div className="flex justify-between items-center">
-                            <span className="font-semibold text-gray-700">
+                            <span className="font-medium text-gray-700">
                               Total:
                             </span>
                             <span className="font-bold text-gray-900">
@@ -331,7 +325,7 @@ const Navbar = () => {
                       </>
                     )}
                     <Link href="/cart" onClick={() => setActiveDropdown(null)}>
-                      <button className="w-full mt-4 py-2 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
+                      <button className="w-full mt-6 py-2 bg-[#11296B] text-white text-base font-medium rounded-lg hover:bg-opacity-90 transition-colors duration-300">
                         View Cart
                       </button>
                     </Link>
