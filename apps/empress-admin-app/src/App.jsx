@@ -11,6 +11,7 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 import Dashboard from "./pages/DashboardPage";
 import CollectionPage from "./pages/CollectionPage";
 import CustomersPage from "./pages/CustomersPage";
+import CustomerDetailPage from "./pages/CustomerDetailsPage";
 
 const queryClient = new QueryClient();
 
@@ -24,9 +25,10 @@ function App() {
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="/products" element={<ProductPage />} />
+              <Route path="/products/:id" element={<ProductDetailsPage />} />
               <Route path="/collections" element={<CollectionPage />} />
               <Route path="/customers" element={<CustomersPage />} />
-              <Route path="/products/:id" element={<ProductDetailsPage />} />
+              <Route path="/customers/:id" element={<CustomerDetailPage />} />
               <Route path="*" element={<h1>404</h1>} />
             </Route>
           </Routes>
