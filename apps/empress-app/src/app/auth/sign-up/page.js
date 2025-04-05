@@ -75,49 +75,49 @@ const SignUp = () => {
   const password = watch("password");
 
   return (
-    <div className="min-h-screen bg-[#f9f9f9] flex flex-col">
-      {/* Bracelet Viewer Section - Top */}
-      <div className="w-full py-10 px-4 bg-gradient-to-b from-gray-50 to-gray-100 flex justify-center">
-        <div className="w-full max-w-3xl h-[500px]">
-          <BraceletViewer />
-        </div>
-      </div>
-
-      {/* Form Section - Bottom */}
-      <div className="w-full bg-white flex-grow py-12 px-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-8 text-center">
-            <Heading
-              level={1}
-              className="text-3xl font-light text-[#11296B] mb-2"
-            >
-              Create an Account
-            </Heading>
-            <div className="w-16 h-px bg-[#11296B]/30 mx-auto my-4"></div>
-            <p className="text-gray-600">
-              Join Empress to enjoy personalized shopping experiences, save your
-              favorite pieces, and access exclusive content and offers.
-            </p>
+    <div className="min-h-screen bg-[#f9f9f9] flex">
+      <div className="flex flex-col md:flex-row w-full">
+        {/* 3D Bracelet Viewer Section - Left Side (50% width) */}
+        <div className="md:w-1/2 h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center">
+          <div className="w-full h-full max-h-screen">
+            <BraceletViewer />
           </div>
+        </div>
 
-          {/* Error Messages at the Top */}
-          {Object.keys(errors).length > 0 && (
-            <div className="mb-8 p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
-              <h3 className="text-sm font-medium mb-2">
-                Please correct the following:
-              </h3>
-              <ul className="list-disc pl-5 text-sm space-y-1">
-                {Object.values(errors).map((error, index) => (
-                  <li key={index}>{error.message}</li>
-                ))}
-              </ul>
+        {/* Form Section - Right Side (50% width) */}
+        <div className="md:w-1/2 bg-white flex items-center justify-center overflow-y-auto h-screen">
+          <div className="w-full max-w-xl py-10 px-8 lg:px-12">
+            <div className="mb-8">
+              <Heading
+                level={1}
+                className="text-3xl font-light text-[#11296B] mb-2"
+              >
+                Create an Account
+              </Heading>
+              <div className="w-16 h-px bg-[#11296B]/30 my-4"></div>
+              <p className="text-gray-600">
+                Join Empress to enjoy personalized shopping experiences, save
+                your favorite pieces, and access exclusive content and offers.
+              </p>
             </div>
-          )}
 
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+            {/* Error Messages at the Top */}
+            {Object.keys(errors).length > 0 && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
+                <h3 className="text-sm font-medium mb-2">
+                  Please correct the following:
+                </h3>
+                <ul className="list-disc pl-5 text-sm space-y-1">
+                  {Object.values(errors).map((error, index) => (
+                    <li key={index}>{error.message}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               {/* Email */}
-              <div className="sm:col-span-2">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email Address <span className="text-red-500">*</span>
                 </label>
@@ -143,7 +143,7 @@ const SignUp = () => {
               </div>
 
               {/* Password */}
-              <div className="sm:col-span-1">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Password <span className="text-red-500">*</span>
                 </label>
@@ -176,7 +176,7 @@ const SignUp = () => {
               </div>
 
               {/* Confirm Password */}
-              <div className="sm:col-span-1">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Confirm Password <span className="text-red-500">*</span>
                 </label>
@@ -202,50 +202,52 @@ const SignUp = () => {
               </div>
 
               {/* First & Last Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  First Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  {...register("firstName", {
-                    required: "First name is required",
-                  })}
-                  placeholder="First Name"
-                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
-                    errors.firstName ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                {errors.firstName && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {errors.firstName.message}
-                  </p>
-                )}
-              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    {...register("firstName", {
+                      required: "First name is required",
+                    })}
+                    placeholder="First Name"
+                    className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                      errors.firstName ? "border-red-500" : "border-gray-300"
+                    }`}
+                  />
+                  {errors.firstName && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {errors.firstName.message}
+                    </p>
+                  )}
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Last Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  {...register("lastName", {
-                    required: "Last name is required",
-                  })}
-                  placeholder="Last Name"
-                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
-                    errors.lastName ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                {errors.lastName && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {errors.lastName.message}
-                  </p>
-                )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    {...register("lastName", {
+                      required: "Last name is required",
+                    })}
+                    placeholder="Last Name"
+                    className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                      errors.lastName ? "border-red-500" : "border-gray-300"
+                    }`}
+                  />
+                  {errors.lastName && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {errors.lastName.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Phone */}
-              <div className="sm:col-span-2">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
@@ -270,14 +272,14 @@ const SignUp = () => {
                 )}
               </div>
 
-              <div className="sm:col-span-2 border-t border-gray-200 pt-5 mt-2">
-                <h3 className="text-lg font-medium text-gray-900 mb-3">
+              <div className="border-t border-gray-200 pt-4 mt-2">
+                <h3 className="text-base font-medium text-gray-900 mb-3">
                   Address Information
                 </h3>
               </div>
 
               {/* Street Address */}
-              <div className="sm:col-span-2">
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Street Address
                 </label>
@@ -309,119 +311,120 @@ const SignUp = () => {
                 )}
               </div>
 
-              {/* Province */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Province <span className="text-red-500">*</span>
-                </label>
-                <select
-                  {...register("province", {
-                    required: "Province is required",
-                  })}
-                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all appearance-none ${
-                    errors.province ? "border-red-500" : "border-gray-300"
-                  }`}
-                >
-                  <option value="">Select Province</option>
-                  {provinces.map((province) => (
-                    <option key={province.abbr} value={province.abbr}>
-                      {province.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.province && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {errors.province.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Postal Code */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Postal Code <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  {...register("postalCode", {
-                    required: "Postal code is required",
-                    pattern: {
-                      value: /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,
-                      message: "Please enter a valid Canadian postal code",
-                    },
-                  })}
-                  placeholder="A1A 1A1"
-                  className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
-                    errors.postalCode ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
-                {errors.postalCode && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {errors.postalCode.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Terms and Privacy Policy */}
-            <div className="mt-6">
-              <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="terms"
-                    name="terms"
-                    type="checkbox"
-                    {...register("terms", {
-                      required:
-                        "You must agree to the terms and privacy policy",
-                    })}
-                    className="h-4 w-4 text-[#11296B] border-gray-300 rounded focus:ring-[#11296B]"
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="terms" className="text-gray-600">
-                    I agree to the{" "}
-                    <a href="#" className="text-[#11296B] underline">
-                      Terms of Service
-                    </a>{" "}
-                    and{" "}
-                    <a href="#" className="text-[#11296B] underline">
-                      Privacy Policy
-                    </a>
+              {/* Province & Postal Code */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Province <span className="text-red-500">*</span>
                   </label>
-                  {errors.terms && (
+                  <select
+                    {...register("province", {
+                      required: "Province is required",
+                    })}
+                    className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all appearance-none ${
+                      errors.province ? "border-red-500" : "border-gray-300"
+                    }`}
+                  >
+                    <option value="">Select</option>
+                    {provinces.map((province) => (
+                      <option key={province.abbr} value={province.abbr}>
+                        {province.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.province && (
                     <p className="mt-1 text-xs text-red-600">
-                      {errors.terms.message}
+                      {errors.province.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Postal Code <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    {...register("postalCode", {
+                      required: "Postal code is required",
+                      pattern: {
+                        value: /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,
+                        message: "Please enter a valid Canadian postal code",
+                      },
+                    })}
+                    placeholder="A1A 1A1"
+                    className={`w-full px-4 py-2 border rounded-none focus:ring-1 focus:ring-[#11296B] outline-none transition-all ${
+                      errors.postalCode ? "border-red-500" : "border-gray-300"
+                    }`}
+                  />
+                  {errors.postalCode && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {errors.postalCode.message}
                     </p>
                   )}
                 </div>
               </div>
-            </div>
 
-            {/* Submit Button */}
-            <div className="mt-8">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 px-6 bg-[#11296B] hover:bg-[#1E96FC] text-white font-medium transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#11296B] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? "Creating Account..." : "Create Account"}
-              </button>
-            </div>
+              {/* Terms and Privacy Policy */}
+              <div className="mt-6">
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="terms"
+                      name="terms"
+                      type="checkbox"
+                      {...register("terms", {
+                        required:
+                          "You must agree to the terms and privacy policy",
+                      })}
+                      className="h-4 w-4 text-[#11296B] border-gray-300 rounded focus:ring-[#11296B]"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="terms" className="text-gray-600">
+                      I agree to the{" "}
+                      <a href="#" className="text-[#11296B] underline">
+                        Terms of Service
+                      </a>{" "}
+                      and{" "}
+                      <a href="#" className="text-[#11296B] underline">
+                        Privacy Policy
+                      </a>
+                    </label>
+                    {errors.terms && (
+                      <p className="mt-1 text-xs text-red-600">
+                        {errors.terms.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-            {/* Sign In Link */}
-            <div className="text-center mt-6">
-              <p className="text-gray-600">
-                Already have an account?{" "}
-                <Link
-                  href="/auth/sign-in"
-                  className="text-[#11296B] hover:text-[#1E96FC] font-medium"
+              {/* Submit Button */}
+              <div className="mt-8">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-3 px-6 bg-[#11296B] hover:bg-[#1E96FC] text-white font-medium transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#11296B] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Sign in
-                </Link>
-              </p>
-            </div>
-          </form>
+                  {isSubmitting ? "Creating Account..." : "Create Account"}
+                </button>
+              </div>
+
+              {/* Sign In Link */}
+              <div className="text-center mt-6">
+                <p className="text-gray-600">
+                  Already have an account?{" "}
+                  <Link
+                    href="/auth/sign-in"
+                    className="text-[#11296B] hover:text-[#1E96FC] font-medium"
+                  >
+                    Sign in
+                  </Link>
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
