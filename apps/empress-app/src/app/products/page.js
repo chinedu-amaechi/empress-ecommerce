@@ -431,16 +431,16 @@ export default function ProductsPage() {
         ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {filteredProducts.map((product) => (
-              <div
-                key={product._id}
-                className="transition-all duration-300 
-                  hover:scale-105 
-                  hover:shadow-lg 
-                  rounded-xl 
-                  overflow-hidden"
-              >
-                <ProductCard product={product} />
-              </div>
+              // <div
+              //   key={product._id}
+              //   className="transition-all duration-300
+              //     hover:scale-105
+              //     hover:shadow-lg
+              //     rounded-xl
+              //     overflow-hidden"
+              // >
+              <ProductCard product={product} key={product._id} />
+              // </div>
             ))}
           </div>
         ) : (
