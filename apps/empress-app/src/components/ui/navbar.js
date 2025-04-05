@@ -156,38 +156,10 @@ const Navbar = () => {
               <Link
                 href="/products"
                 className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300"
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   toggleDropdown("shop");
-                // }}
               >
                 Shop
                 <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#11296B]"></span>
               </Link>
-              {/* {activeDropdown === "shop" && (
-                <div className="absolute left-0 w-64 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="py-1">
-                    <a
-                      href="#new-arrivals"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      New Arrivals
-                    </a>
-                    <a
-                      href="#bestsellers"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      Bestsellers
-                    </a>
-                    <Link
-                      href="/products"
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      All Bracelets
-                    </Link>
-                  </div>
-                </div>
-              )} */}
             </div>
 
             {/* About Us - simple link */}
@@ -237,7 +209,6 @@ const Navbar = () => {
                   <div className="py-1">
                     {user === null ? (
                       <>
-                        {" "}
                         <Link
                           href="/auth/sign-in"
                           className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
@@ -305,13 +276,32 @@ const Navbar = () => {
                       <h3 className="text-base font-medium text-gray-900">
                         Shopping Cart
                       </h3>
-                      <span className="text-sm text-gray-500">0 items</span>
+                      <span className="text-sm text-gray-500">
+                        {cart.reduce((acc, item) => acc + item.quantity, 0)}{" "}
+                        items
+                      </span>
                     </div>
-                    <div className="text-base text-gray-500 text-center py-5">
-                      Your cart is empty
-                    </div>
+                    {cart.length === 0 ? (
+                      <div className="text-base text-gray-500 text-center py-5">
+                        Your cart is empty
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {cart.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="flex justify-between items-center"
+                          >
+                            <p className="text-gray-700">{item.name}</p>
+                            <p className="text-gray-700">
+                              {item.quantity} x ${item.price}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <Link href="/cart" onClick={() => setActiveDropdown(null)}>
-                      <button className="w-full py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
+                      <button className="w-full mt-4 py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
                         View Cart
                       </button>
                     </Link>
@@ -466,27 +456,6 @@ const Navbar = () => {
 
             <div className="flex items-center justify-between px-3 py-4 border-t border-gray-100 mt-2">
               <div className="flex space-x-4">
-                <button
-                  className="p-2 text-gray-900 rounded-full hover:bg-[#11296B]/10 transition-colors duration-200"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    setIsSearchOpen(true);
-                  }}
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </button>
                 <button className="p-2 text-gray-900 rounded-full hover:bg-[#11296B]/10 transition-colors duration-200">
                   <svg
                     className="w-6 h-6"
