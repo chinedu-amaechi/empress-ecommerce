@@ -36,7 +36,7 @@ const CtaSection = () => {
           </p>
 
           <Link
-            href="/collections"
+            href="/collections?collection=Heritage"
             className="inline-block px-8 py-3 bg-[#11296B] text-white hover:bg-amber-500 transition-colors duration-300 rounded-sm"
           >
             Explore Collections

@@ -12,7 +12,7 @@ const testimonials = [
     name: "Emily Richardson",
     location: "New York, NY",
     quote:
-      "The Moonlight Elegance bracelet is absolutely stunning. It's become my go-to piece for both casual and formal events.",
+      "The Selene bracelet is absolutely stunning. It's become my go-to piece for both casual and formal events.",
     image: "/testimonials/emily.jpeg",
     rating: 5,
   },
@@ -36,11 +36,11 @@ const testimonials = [
   },
   {
     id: "4",
-    name: "Ethan Johnson",
+    name: "Beth Johnson",
     location: "Los Angeles, CA",
     quote:
-      "The Golden Horizon bracelet is a work of art. It's the perfect blend of elegance and sophistication.",
-    image: "/testimonials/ethan.jpeg",
+      "The Jinhua bracelet is a work of art. It's the perfect blend of elegance and sophistication.",
+    image: "/testimonials/beth.jpeg",
     rating: 4,
   },
   {
@@ -48,7 +48,7 @@ const testimonials = [
     name: "Isabella Thompson",
     location: "Toronto, ON",
     quote:
-      "The Cosmic Whisper bracelet is simply breathtaking. It's a beautiful statement piece that I wear with pride.",
+      "The Marisole bracelet is simply breathtaking. It's a beautiful statement piece that I wear with pride.",
     image: "/testimonials/isabella.jpeg",
     rating: 5,
   },

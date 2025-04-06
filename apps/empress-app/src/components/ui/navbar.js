@@ -6,6 +6,7 @@ import useCollections from "@/hooks/use-collections";
 import { PersonOutline } from "@mui/icons-material";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from 'next/navigation'; 
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,6 +17,15 @@ const Navbar = () => {
   const { cart } = useCartContext();
   const { user, setUser } = useAuthContext();
 
+  const pathname = usePathname();
+
+  useEffect(() => {
+  // Close mobile menu when route changes
+  setIsMenuOpen(false);
+  // Close any open dropdowns
+  setActiveDropdown(null);
+}, [pathname]);
+  
   // Refs for dropdown containers
   const dropdownRefs = useRef({});
   const navbarRef = useRef(null);
@@ -109,46 +119,16 @@ const Navbar = () => {
               className="relative group"
               ref={(el) => (dropdownRefs.current["collections"] = el)}
             >
-              <a
-                href="#"
+              <Link
+                href="/collections?collection=Heritage"
                 className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300"
-                onClick={(e) => {
-                  e.preventDefault();
-                  toggleDropdown("collections");
-                }}
               >
                 Collections
                 <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#11296B]"></span>
-              </a>
-              {activeDropdown === "collections" && (
-                <div className="absolute left-0 w-64 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="py-1">
-                    {isLoading ? (
-                      <div className="px-4 py-2.5 text-base text-gray-700">
-                        Loading...
-                      </div>
-                    ) : error ? (
-                      <div className="px-4 py-2.5 text-base text-red-500">
-                        Error loading collections
-                      </div>
-                    ) : (
-                      data.map((collection) => (
-                        <Link
-                          href={`/collections?collection=${collection.name}`}
-                          key={collection._id}
-                          onClick={() => setActiveDropdown(null)}
-                          className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                        >
-                          {collection.name}
-                        </Link>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
+              </Link>
             </div>
 
-            {/* Shop dropdown */}
+            {/* Shop*/}
             <div
               className="relative group"
               ref={(el) => (dropdownRefs.current["shop"] = el)}
@@ -208,7 +188,13 @@ const Navbar = () => {
                     {user === null ? (
                       <>
                         <Link
-                          href="/auth/sign-in"
+                        href="/auth/sign-in"
+                        onClick={(e) => {
+                          if (pathname === "/auth/sign-in") {
+                            e.preventDefault();
+                            setActiveDropdown(null);
+                          }
+                        }}
                           className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
                           onClick={() => setActiveDropdown(null)}
                         >
@@ -379,56 +365,14 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="absolute inset-x-0 top-full bg-white shadow-lg md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <button
-              className="flex justify-between w-full px-3 py-2 text-base font-medium text-gray-900 hover:bg-[#11296B]/10 rounded transition-colors duration-200"
-              onClick={() => toggleDropdown("mobile-collections")}
-            >
-              <span>Collections</span>
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-            {activeDropdown === "mobile-collections" && (
-              <div className="pl-4 py-2 space-y-1 border-l-2 border-[#11296B]/20 ml-3">
-                {isLoading ? (
-                  <div className="px-4 py-2.5 text-base text-gray-700">
-                    Loading...
-                  </div>
-                ) : error ? (
-                  <div className="px-4 py-2.5 text-base text-red-500">
-                    Error loading collections
-                  </div>
-                ) : (
-                  data.map((collection) => (
-                    <Link
-                      href={`/collections?collection=${collection.name}`}
-                      key={collection._id}
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
-                    >
-                      {collection.name}
-                    </Link>
-                  ))
-                )}
-              </div>
-            )}
 
-            <button
+          <button
               className="flex justify-between w-full px-3 py-2 text-base font-medium text-gray-900 hover:bg-[#11296B]/10 rounded transition-colors duration-200"
               onClick={() => toggleDropdown("mobile-shop")}
             >
               <span>Shop</span>
               <svg
-                className="w-6 h-6"
+                className={`w-6 h-6 transition-transform duration-200 ${activeDropdown === "mobile-shop" ? "transform rotate-180" : ""}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -444,67 +388,57 @@ const Navbar = () => {
             {activeDropdown === "mobile-shop" && (
               <div className="pl-4 py-2 space-y-1 border-l-2 border-[#11296B]/20 ml-3">
                 <a
-                  href="#new-arrivals"
+                  href="/collections?collection=heritage"
+                  className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200">
+                  Collections
+                </a>
+                <a
+                  href="/new-arrivals"
                   className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
                 >
                   New Arrivals
                 </a>
                 <a
-                  href="#bestsellers"
+                  href="/bestsellers"
                   className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
                 >
                   Bestsellers
                 </a>
                 <a
-                  href="#all"
+                  href="/products"
                   className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200"
                 >
-                  All Bracelets
+                  All Products
                 </a>
               </div>
             )}
 
             <a
-              href="#about"
+              href="/about-us"
               className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-[#11296B]/10 rounded transition-colors duration-200"
             >
               About
             </a>
 
             <a
-              href="#faq"
+              href="/faq"
               className="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-[#11296B]/10 rounded transition-colors duration-200"
             >
               FAQ
             </a>
+  
+            <Link
+      href="/auth/sign-in"
+      className="flex items-center space-x-2 px-4 py-2 bg-[#11296B] text-white rounded-md hover:bg-opacity-90 transition-all duration-300"
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+      <span className="text-base font-medium">Sign In</span>
+    </Link>
+                </div>
+                </div>
 
-            <div className="flex items-center justify-between px-3 py-4 border-t border-gray-100 mt-2">
-              <div className="flex space-x-4">
-                <button className="p-2 text-gray-900 rounded-full hover:bg-[#11296B]/10 transition-colors duration-200">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <Link
-                href="/auth/sign-in"
-                className="px-4 py-2 text-base font-medium text-white bg-[#11296B] rounded-md hover:bg-opacity-90 transition-all duration-300"
-              >
-                Sign In
-              </Link>
-            </div>
-          </div>
-        </div>
       )}
     </nav>
   );
