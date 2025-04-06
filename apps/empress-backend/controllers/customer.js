@@ -2,6 +2,7 @@
 import Product from "../models/product.js";
 import Customer from "../models/customer.js";
 import serverResponse from "../utils/serverResponse.js";
+import Stripe from "stripe";
 
 export async function addToCart(req, res, next) {
   try {
@@ -202,6 +203,58 @@ export async function removeFromCart(req, res, next) {
       "Product removed from cart successfully",
       customer.cart
     );
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function makePayment(req, res, next) {
+  try {
+    if (req.user?.role !== "customer") {
+      return serverResponse(res, 401, "Unauthorized access", null);
+    }
+
+    const customerId = req.user.id;
+
+    // Find the customer and process the payment
+    const customer = await Customer.findById(customerId).populate(
+      "cart.productId"
+    );
+
+    if (!customer) {
+      return serverResponse(res, 404, "Customer not found", null);
+    }
+
+    const session = await new Stripe(
+      process.env.STRIPE_API_KEY
+    ).checkout.sessions.create({
+      line_items: [
+        ...customer.cart.map((item) => {
+          const unitAmount = (item.productId.price * 100).toFixed(0);
+          return {
+            price_data: {
+              currency: "cad",
+              product_data: {
+                name: item.productId.name,
+                images: [item.productId.image],
+              },
+              unit_amount: unitAmount,
+            },
+            quantity: item.quantity,
+          };
+        }),
+      ],
+      mode: "payment",
+      success_url: `${process.env.YOUR_DOMAIN}?/products?success=true`,
+      cancel_url: `${process.env.YOUR_DOMAIN}/cart?canceled=true`,
+    });
+    console.log("session");
+
+    // console.log(session.url);
+
+    return serverResponse(res, 200, "Payment session created successfully", {
+      url: session.url,
+    });
   } catch (error) {
     next(error);
   }
