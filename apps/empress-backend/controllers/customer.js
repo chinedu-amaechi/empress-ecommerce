@@ -85,18 +85,15 @@ export async function getCart(req, res, next) {
       return serverResponse(res, 404, "Customer not found", null);
     }
 
-    const cartWithProductDetails = customer.cart.map(async (item) => {
-      return {
-        product: await Product.findById(item.productId),
-        quantity: item.quantity,
-      };
+    const cartWithProductDetails = customer.cart.map((item) => {
+      return { ...item.productId._doc, quantity: item.quantity };
     });
 
     return serverResponse(
       res,
       200,
       "Cart retrieved successfully",
-      customer.cart
+      cartWithProductDetails
     );
   } catch (error) {
     next(error);
@@ -104,49 +101,67 @@ export async function getCart(req, res, next) {
 }
 
 export async function updateCart(req, res, next) {
-  try {
-    if (req.user?.role !== "customer") {
-      return serverResponse(res, 401, "Unauthorized access", null);
+    try {
+        if (req.user?.role !== "customer") {
+            return serverResponse(res, 401, "Unauthorized access", null);
+        }
+
+        const customerId = req.user.id;
+        const productId = req.params.productId;
+        const { quantity, operation = "add" } = req.body;
+
+        // Validate input
+        if (!productId || !quantity || !operation) {
+            return serverResponse(
+                res,
+                400,
+                "Product ID, quantity, and operation are required",
+                null
+            );
+        }
+
+        if (!["add", "subtract"].includes(operation)) {
+            return serverResponse(
+                res,
+                400,
+                "Invalid operation. Use 'add' or 'subtract'.",
+                null
+            );
+        }
+
+        // Find the customer and update the cart
+        const customer = await Customer.findById(customerId);
+
+        if (!customer) {
+            return serverResponse(res, 404, "Customer not found", null);
+        }
+
+        const productInCart = customer.cart.find(
+            (item) => item.productId.toString() === productId.toString()
+        );
+
+        if (!productInCart) {
+            return serverResponse(res, 404, "Product not found in cart", null);
+        }
+
+        if (operation === "add") {
+            productInCart.quantity += quantity;
+        } else if (operation === "subtract") {
+            productInCart.quantity -= quantity;
+            if (productInCart.quantity <= 0) {
+                customer.cart = customer.cart.filter(
+                    (item) => item.productId.toString() !== productId.toString()
+                );
+            }
+        }
+
+        // Save the updated customer document
+        await customer.save();
+
+        return serverResponse(res, 200, "Cart updated successfully", customer.cart);
+    } catch (error) {
+        next(error);
     }
-
-    const customerId = req.user.id;
-    const productId = req.params.productId;
-    const { quantity } = req.body;
-
-    // Validate input
-    if (!productId || !quantity) {
-      return serverResponse(
-        res,
-        400,
-        "Product ID and quantity are required",
-        null
-      );
-    }
-
-    // Find the customer and update the cart
-    const customer = await Customer.findById(customerId);
-
-    if (!customer) {
-      return serverResponse(res, 404, "Customer not found", null);
-    }
-
-    const productInCart = customer.cart.find(
-      (item) => item.productId.toString() === productId.toString()
-    );
-
-    if (!productInCart) {
-      return serverResponse(res, 404, "Product not found in cart", null);
-    }
-
-    productInCart.quantity = quantity;
-
-    // Save the updated customer document
-    await customer.save();
-
-    return serverResponse(res, 200, "Cart updated successfully", customer.cart);
-  } catch (error) {
-    next(error);
-  }
 }
 
 export async function removeFromCart(req, res, next) {
