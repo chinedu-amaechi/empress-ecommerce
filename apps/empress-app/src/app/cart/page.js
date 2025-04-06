@@ -97,14 +97,16 @@ function CartPage() {
                 </a>
               </div>
             ) : (
-              <div className="space-y-6">
-                {cart.map((product) => (
+              <div className="space-y-0">
+                {cart.map((product, index) => (
                   <div
                     key={product._id}
-                    className="bg-white shadow-soft p-6 flex items-center justify-between hover:shadow-md transition-shadow"
+                    className={`bg-white shadow-soft p-6 flex items-center justify-between hover:shadow-md transition-shadow border-b border-gray-200 mb-2 ${
+                      index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    }`}
                   >
                     <div className="flex items-center space-x-6">
-                      <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden relative">
+                      <div className="w-24 h-24 bg-gray-100 overflow-hidden relative flex-shrink-0 border border-gray-200">
                         <Image
                           src={product.image || "/placeholder-product.jpg"}
                           alt={product.name}
@@ -113,40 +115,55 @@ function CartPage() {
                         />
                       </div>
                       <div>
-                        <h3 className="text-xl font-medium text-gray-900">
+                        <h3 className="text-xl font-medium text-gray-900 mb-1">
                           {product.name}
                         </h3>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 text-sm">
                           ${product.price.toFixed(2)}
                         </p>
+                        {product.color && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Color: {product.color}
+                          </p>
+                        )}
+                        {product.size && (
+                          <p className="text-xs text-gray-500">
+                            Size: {product.size}
+                          </p>
+                        )}
                       </div>
                     </div>
-                    <div className="flex items-center space-x-8">
-                      <div className="flex items-center space-x-2 border border-gray-200 px-1">
-                        <button
-                          className={`w-8 h-8 flex items-center justify-center text-gray-700 ${
-                            product.quantity <= 1
-                              ? "bg-gray-100 cursor-not-allowed opacity-50"
-                              : "bg-gray-100 hover:bg-gray-200 hover:text-[#11296B]"
-                          }`}
-                          onClick={() => handleDecrement(product._id)}
-                          disabled={product.quantity <= 1}
-                          aria-label="Decrease quantity"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </button>
-                        <span className="text-lg font-medium w-6 text-center">
-                          {product.quantity}
+                    <div className="flex items-center justify-end space-x-6">
+                      <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500 mb-1">
+                          Quantity
                         </span>
-                        <button
-                          className="w-8 h-8 bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200 hover:text-[#11296B]"
-                          onClick={() => handleIncrement(product._id)}
-                          aria-label="Increase quantity"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center space-x-2 border border-gray-200 px-1">
+                          <button
+                            className={`w-8 h-8 flex items-center justify-center text-gray-700 ${
+                              product.quantity <= 1
+                                ? "bg-gray-100 cursor-not-allowed opacity-50"
+                                : "bg-gray-100 hover:bg-gray-200 hover:text-[#11296B]"
+                            }`}
+                            onClick={() => handleDecrement(product._id)}
+                            disabled={product.quantity <= 1}
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </button>
+                          <span className="text-lg font-medium w-6 text-center">
+                            {product.quantity}
+                          </span>
+                          <button
+                            className="w-8 h-8 bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200 hover:text-[#11296B]"
+                            onClick={() => handleIncrement(product._id)}
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
-                      <div className="text-lg font-semibold text-gray-900">
+                      <div className="text-lg font-semibold text-gray-900 border-l border-gray-200 pl-6">
                         ${(product.price * product.quantity).toFixed(2)}
                       </div>
                       <button
@@ -165,7 +182,7 @@ function CartPage() {
 
           {/* Order Summary Section - Right Column */}
           <div className="md:col-span-1 md:w-[120%]">
-            <div className="bg-white shadow-soft p-2 sticky top-24">
+            <div className="bg-white shadow-soft p-8 sticky top-24">
               <h2 className="text-3xl font-light tracking-tight text-gray-900 mb-6 pt-8 border-b-2 border-gray-300 pb-6">
                 Order Summary
               </h2>
