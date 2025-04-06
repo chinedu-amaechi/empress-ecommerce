@@ -388,7 +388,7 @@ const Navbar = () => {
             {activeDropdown === "mobile-shop" && (
               <div className="pl-4 py-2 space-y-1 border-l-2 border-[#11296B]/20 ml-3">
                 <a
-                  href="/collections?collection=heritage"
+                  href="/collections?collection=Heritage"
                   className="block py-1.5 text-base text-gray-700 hover:bg-[#11296B]/10 rounded px-3 transition-colors duration-200">
                   Collections
                 </a>

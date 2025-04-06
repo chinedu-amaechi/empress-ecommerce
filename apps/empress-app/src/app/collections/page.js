@@ -75,7 +75,7 @@ export default function Collections() {
         // setting featured product to the first product in the collection
         const featuredProductId =
           activeCollection.products[
-            Math.floor(Math.random() * activeCollection.products.length)
+           0
           ];
 
         activeCollection.featuredProduct = productsData.find(

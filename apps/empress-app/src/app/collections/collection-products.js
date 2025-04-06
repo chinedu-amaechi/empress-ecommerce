@@ -25,9 +25,8 @@ function CollectionProduct({collection, products}) {
           </p>
         </div>
 
-        {/* Plain grid with no motion effects, just basic centering */}
-        <div className="mx-auto flex justify-center">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center max-w-7xl">
+        <div className="flex justify-center">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
             {products.map((product) => (
               <div key={product.id}>
                 <ProductCard product={product} />
@@ -36,14 +35,6 @@ function CollectionProduct({collection, products}) {
           </div>
         </div>
 
-        {/* <div className="text-center mt-12">
-                <Link
-                  href={`/collections/${activeCollection}`}
-                  className="inline-block border border-[#11296B] text-[#11296B] hover:bg-[#11296B] hover:text-white px-8 py-3 rounded-full transition-colors duration-300"
-                >
-                  View All {collectionsData[activeCollection].name} Pieces
-                </Link>
-              </div> */}
       </section>
     );
 }
