@@ -212,61 +212,12 @@ export default function FAQ() {
     console.log("Searching for:", searchQuery);
   };
 
-  // Handle Contact Us click to open chatbot
-  const handleContactClick = () => {
-    // Trigger a click on the hidden chatbot trigger
-    if (chatbotTriggerRef.current) {
-      chatbotTriggerRef.current.click();
-    }
-  };
-
   return (
     <main className="min-h-screen bg-white">
       {/* Hidden button to trigger chatbot */}
       <div className="hidden">
         <EmpressChatbot ref={chatbotTriggerRef} />
       </div>
-
-      {/* Elegant Luxury Hero Header with Gradient */}
-      <section className="relative h-[80vh] overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <Image
-            src="/faq-hero.jpg"
-            alt="Luxury jewelry background"
-            fill
-            className="object-cover"
-            quality={100}
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30"></div>
-        </div>
-
-        {/* Hero Content with Animation */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={heroVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="absolute inset-0 flex flex-col items-center justify-center px-4"
-        >
-          <div className="text-center text-white max-w-4xl mx-auto">
-            <div className="mb-6">
-              <div className="h-px w-20 bg-white/50 mx-auto mb-6"></div>
-              <Heading
-                level={1}
-                className="text-4xl md:text-5xl lg:text-6xl font-extralight tracking-wider mb-6"
-              >
-                CUSTOMER CARE
-              </Heading>
-              <div className="h-px w-20 bg-white/50 mx-auto"></div>
-            </div>
-            <p className="text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto text-white/80">
-              Discover answers to your questions about our products, services,
-              and policies
-            </p>
-          </div>
-        </motion.div>
-      </section>
 
       {/* Content Container */}
       <section className="max-w-4xl mx-auto px-4 py-16 relative">
@@ -281,12 +232,9 @@ export default function FAQ() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="uppercase text-sm tracking-widest text-gray-500 mb-4">
-              FIND YOUR ANSWER
-            </p>
             <Heading
               level={1}
-              className="text-3xl font-light text-[#11296B] mb-6"
+              className="text-3xl font-light text-[#11296B] mb-6 mt-12"
             >
               Frequently Asked Questions
             </Heading>
@@ -361,15 +309,15 @@ export default function FAQ() {
             Our customer care specialists are here to assist you with any
             inquiries about our products or services.
           </p>
-          <button
-            onClick={handleContactClick}
+          <a
+            href='/contact'
             className="inline-block px-8 py-4 border border-[#11296B] text-[#11296B] 
             hover:bg-[#11296B] hover:text-white 
             transition-all duration-300 
             uppercase tracking-wider text-sm font-light"
           >
             Contact Us
-          </button>
+          </a>
         </div>
       </section>
 

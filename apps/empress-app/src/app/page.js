@@ -9,7 +9,7 @@ import RecentlyViewedItems from "@/components/home/recentlyviewed-item";
 import WhyChooseUs from "@/components/home/whychoose-us";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
-
+import NewArrivalsSection from "@/components/home/newarrivals-section";
 
 export default function Home() {
   return (
@@ -17,9 +17,9 @@ export default function Home() {
       <Header />
       <CollectionsSection />
       <BestsellersSection />
+      <NewArrivalsSection />
       <WhyChooseUs />
       <TestimonialsCarousel />
-      <RecentlyViewedItems />
       <Footer />
     </main>
   );

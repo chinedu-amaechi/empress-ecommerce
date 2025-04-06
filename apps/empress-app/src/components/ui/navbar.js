@@ -120,7 +120,7 @@ const Navbar = () => {
               ref={(el) => (dropdownRefs.current["collections"] = el)}
             >
               <Link
-                href="/collections?collection=heritage"
+                href="/collections?collection=Heritage"
                 className="text-base font-medium text-gray-900 hover:text-[#11296B] transition-colors duration-300"
               >
                 Collections

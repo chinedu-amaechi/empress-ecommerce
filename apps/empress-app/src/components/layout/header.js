@@ -32,14 +32,6 @@ const Header = () => {
             <p className="mt-4 text-lg text-white font-light">
               Handcrafted bracelets designed for timeless sophistication.
             </p>
-            <div className="mt-8">
-              <a
-                href="/collections"
-                className="bg-white text-gray-900 hover:bg-amber-500 text-sm font-medium px-6 py-3 rounded-sm shadow-sm hover:shadow-md transition-all duration-300"
-              >
-                Explore Collections
-              </a>
-            </div>
           </div>
         </div>
       </div>

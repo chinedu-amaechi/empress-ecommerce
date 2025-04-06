@@ -73,7 +73,7 @@ const Footer = () => {
             <ul className="mt-4 space-y-3">
               <li>
                 <Link
-                   href="/collections?collection=heritage"
+                   href="/collections?collection=Heritage"
                   className="text-base text-white/80 hover:text-white transition-colors duration-200 group flex items-center"
                 >
                   <span className="group-hover:translate-x-1 transition-transform duration-200">

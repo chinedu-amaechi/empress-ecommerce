@@ -1,4 +1,3 @@
-// src/components/home/BestsellersSection.js
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -6,9 +5,8 @@ import Heading from "@/components/ui/heading";
 import ProductCard from "@/components/product/product-card";
 import useProducts from "@/hooks/use-products";
 
-
-const BestsellersSection = () => {
-  const [bestsellers, setBestsellers] = useState([]);
+const NewArrivalsSection = () => {
+  const [newArrivals, setNewArrivals] = useState([]);
   const { data, isLoading, error } = useProducts();
   const scrollContainerRef = useRef(null);
 
@@ -32,11 +30,11 @@ const BestsellersSection = () => {
 
   useEffect(() => {
     if (data) {
-      // Assuming data is an array of products
-      const bestsellersData = data.sort((a, b) => {
-        return b.itemsSold - a.itemsSold; // Sort by items sold in descending order
-      });
-      setBestsellers(bestsellersData.slice(0, 8));
+      // Sort products by newest (assuming each product has a "createdAt" property)
+      const sortedByNewest = data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setNewArrivals(sortedByNewest.slice(0, 8));
     }
   }, [data]);
 
@@ -44,30 +42,25 @@ const BestsellersSection = () => {
     return <div>Loading...</div>;
   }
   if (error) {
-    return <div>Error loading bestsellers</div>;
+    return <div>Error loading new arrivals</div>;
   }
-
-  console.log(bestsellers);
 
   return (
     <section className="bg-white py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative">
-      
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-4">
           <Heading
             level={2}
             className="text-center mb-4 text-3xl md:text-5xl text-[#11296B] font-light tracking-tight"
           >
-            Bestselling <span className="font-semibold">Bracelets</span>
+            New <span className="font-semibold">Arrivals</span>
           </Heading>
-          {/* Added thin decorative line above heading */}
+          {/* Decorative line */}
           <div className="w-12 h-0.5 bg-gradient-to-r from-[#11296B]/30 via-[#11296B] to-[#11296B]/30 rounded-full mb-6 mx-auto"></div>
         </div>
 
-        {/* Added descriptive subtitle */}
         <p className="text-gray-600 max-w-xl mx-auto text-lg text-center mb-12">
-          Explore our most beloved pieces, each crafted with exceptional
-          artistry and timeless design.
+          Discover our latest pieces newly added to our collection.
         </p>
 
         {/* Scroll Navigation */}
@@ -123,7 +116,7 @@ const BestsellersSection = () => {
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {bestsellers.map((product) => (
+          {newArrivals.map((product) => (
             <div
               key={product.id}
               className="flex-shrink-0 w-80 scroll-snap-align-start"
@@ -136,10 +129,10 @@ const BestsellersSection = () => {
 
         <div className="text-center mt-12">
           <a
-            href="/bestsellers"
+            href="/new-arrivals"
             className="inline-block px-8 py-3 border border-[#11296B] text-[#11296B] rounded-full text-sm font-medium hover:bg-[#11296B] hover:text-white transition-all duration-300"
           >
-            View All Bestsellers
+            View All New Arrivals
           </a>
         </div>
       </div>
@@ -158,4 +151,4 @@ const BestsellersSection = () => {
   );
 };
 
-export default BestsellersSection;
+export default NewArrivalsSection;
