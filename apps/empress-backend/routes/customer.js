@@ -21,4 +21,7 @@ router.get("/cart", customerControllers.getCart);
 // route to remove a product from the cart
 router.delete("/cart/:productId", customerControllers.removeFromCart);
 
+// route to make a payment
+router.post("/payment", customerControllers.makePayment);
+
 export default router;

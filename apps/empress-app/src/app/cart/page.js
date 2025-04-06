@@ -7,6 +7,7 @@ import { removeFromCart, updateCart } from "@/lib/cart-services";
 import { Trash2, CreditCard, Lock, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { useAuthContext } from "../contexts/auth-context";
+import backendUrl from "@/lib/backend-url";
 
 function CartPage() {
   const { cart, setCart } = useCartContext();
@@ -125,6 +126,36 @@ function CartPage() {
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
     });
+  }
+
+  // Handler for making payment (placeholder function)
+  async function makePayment(e) {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${backendUrl}/api/customer/payment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          cart,
+          total,
+          shipping,
+          tax,
+        }),
+      });
+
+      const result = await response.json();
+      console.log("Payment response:", result);
+      if (result.status === 200) {
+        window.location.href = result.data.url;
+      } else {
+        console.error("Payment failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error during payment:", error);
+    }
   }
 
   return (
@@ -296,87 +327,16 @@ function CartPage() {
                   ${total.toFixed(2)}
                 </span>
               </div>
-
-              <form className="space-y-4">
-                <div className="relative">
-                  <label
-                    htmlFor="cardNumber"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Card Number
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      id="cardNumber"
-                      placeholder="1234 5678 9012 3456"
-                      className="w-full border-b border-gray-300 pb-2 focus:border-[#11296B] outline-none transition-colors"
-                    />
-                    <CreditCard className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="expiry"
-                      className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                      Expiry
-                    </label>
-                    <input
-                      type="text"
-                      id="expiry"
-                      placeholder="MM/YY"
-                      className="w-full border-b border-gray-300 pb-2 focus:border-[#11296B] outline-none transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="cvv"
-                      className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                      CVV
-                    </label>
-                    <input
-                      type="text"
-                      id="cvv"
-                      placeholder="123"
-                      className="w-full border-b border-gray-300 pb-2 focus:border-[#11296B] outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="cardHolder"
-                    className="block text-sm font-medium text-gray-700 mb-2 mt-4"
-                  >
-                    Card Holder Name
-                  </label>
-                  <input
-                    type="text"
-                    id="cardHolder"
-                    placeholder="John Doe"
-                    className="w-full border-b border-gray-300 pb-2 focus:border-[#11296B] outline-none transition-colors"
-                  />
-                </div>
-
-                <div className="pt-6">
-                  <button
-                    type="submit"
-                    className="w-full bg-[#11296B] text-white py-4 hover:bg-[#1E96FC] transition-colors flex items-center justify-center space-x-2"
-                  >
-                    <Lock className="w-5 h-5 mr-2" />
-                    Secure Checkout
-                  </button>
-                </div>
-
-                <p className="text-xs text-gray-500 text-center flex items-center justify-center mt-4">
-                  <Lock className="w-4 h-4 mr-2 text-gray-400" />
-                  Secure and encrypted payment
-                </p>
-              </form>
+              <div className="pt-6">
+                <button
+                  type="submit"
+                  className="w-full bg-[#11296B] text-white py-4 hover:bg-[#1E96FC] transition-colors flex items-center justify-center space-x-2"
+                  onClick={makePayment}
+                >
+                  <Lock className="w-5 h-5 mr-2" />
+                  Secure Checkout
+                </button>
+              </div>
             </div>
           </div>
         </div>
