@@ -1,6 +1,11 @@
 import Heading from "@/components/ui/heading";
 
 function CollectionIntroduction({ collection }) {
+   // Calculate total number of ratings (reviews) for the collection.
+  const totalRatings = collection.products.reduce(
+    (total, product) => total + (product.ratings ? product.ratings.length : 0),
+    0
+  );
   return (
     <div className="flex flex-col items-center text-center mb-24">
       <div className="w-16 h-16 rounded-full bg-[#11296B]/10 flex items-center justify-center mb-8">
@@ -36,7 +41,7 @@ function CollectionIntroduction({ collection }) {
       </p>
 
       {/* Collection Stats in Elegant Layout */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-16 mt-12">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-6 md:gap-16 mt-12">
         <div className="text-center">
           <div className="text-4xl font-light text-[#11296B] mb-2">
             {collection.products.length}
@@ -45,18 +50,14 @@ function CollectionIntroduction({ collection }) {
             Unique Pieces
           </div>
         </div>
-        <div className="text-center">
-          <div className="text-4xl font-light text-[#11296B] mb-2">6</div>
-          <div className="text-xs text-gray-500 uppercase tracking-widest">
-            Color Variants
+        {/* <div className="text-center">
+          <div className="text-4xl font-light text-[#11296B] mb-2">
+            {totalRatings}
           </div>
-        </div>
-        <div className="text-center">
-          <div className="text-4xl font-light text-[#11296B] mb-2">5</div>
           <div className="text-xs text-gray-500 uppercase tracking-widest">
             Customer Reviews
           </div>
-        </div>
+        </div> */}
         <div className="text-center">
           <div className="text-4xl font-light text-[#11296B] mb-2">100%</div>
           <div className="text-xs text-gray-500 uppercase tracking-widest">

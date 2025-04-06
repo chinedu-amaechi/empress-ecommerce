@@ -8,11 +8,9 @@ import Heading from "@/components/ui/heading";
 const ProductHero = () => {
   // Hero slideshow images
   const heroImages = [
-    "/product-hero/hero-background-1.jpg",
-    "/product-hero/hero-background-2.jpg",
-    "/product-hero/hero-background-3.jpg",
-    "/product-hero/hero-background-4.jpg",
-    "/product-hero/hero-background-5.jpg"
+    "/Empress/Divine/Verdana/IMG_2089 2.jpg",
+    "/Empress/Ethereal/Aurelia/IMG_1959.jpg",
+    "/Empress/Heritage/Suyan/IMG_1802.jpg"
   ];
 
   // Ref for chatbot trigger
@@ -26,7 +24,7 @@ const ProductHero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
-    }, 3000); // Change image every 5 seconds
+    }, 5000); // Change image every 5 seconds
 
     // Set visibility
     setIsVisible(true);

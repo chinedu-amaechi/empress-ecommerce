@@ -9,10 +9,6 @@ const ProductGallery = ({ images = [], name = "Product" }) => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
-  // If no images provided, use a default image
-  const displayImages =
-    images.length > 0 ? images : ["/products/default-product.jpg"];
-
   // Handle image click
   const handleImageClick = (index) => {
     setSelectedImage(index);
@@ -108,15 +104,7 @@ const ProductGallery = ({ images = [], name = "Product" }) => {
             </div>
           ))}
 
-          {/* Add empty thumbnails if we have fewer than 5 images */}
-          {Array.from({ length: Math.max(0, 5 - displayImages.length) }).map(
-            (_, index) => (
-              <div
-                key={`empty-${index}`}
-                className="h-20 rounded-md bg-gray-100"
-              />
-            )
-          )}
+          
         </div>
       )}
     </div>

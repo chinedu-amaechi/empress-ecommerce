@@ -127,27 +127,11 @@ export default function ProductsPage() {
       <ProductHero />
 
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-screen-2xl">
-        {/* Collection Title & Description */}
-        <div className="mb-12 text-center">
-          <Heading
-            level={1}
-            className="text-3xl sm:text-4xl text-[#11296B] font-light tracking-tight mb-4"
-          >
-            Our <span className="font-semibold">Collection</span>
-          </Heading>
-          <div className="w-16 h-0.5 bg-amber-300 mx-auto my-6"></div>
-          <p className="max-w-3xl mx-auto text-lg text-gray-600 leading-relaxed">
-            Discover our exquisite collection of handcrafted bracelets, each
-            designed with passion and precision to add a touch of elegance to
-            your personal style.
-          </p>
-        </div>
+
 
         {/* Search and Filters */}
         <div
-          className={`${
-            isFilterFixed ? "sticky top-4 z-30" : ""
-          } transition-all duration-300 mb-12`}
+
         >
           <div className="relative mx-auto max-w-6xl backdrop-blur-sm bg-white/90 rounded-xl p-6 shadow-[0_8px_30px_rgba(17,41,107,0.08)]">
             <div className="grid grid-cols-1 gap-y-6 gap-x-8 lg:grid-cols-12">
@@ -302,7 +286,7 @@ export default function ProductsPage() {
         {(searchQuery ||
           collectionFilter !== "all" ||
           sortBy !== "featured") && (
-          <div className="mb-8">
+          <div className="mb-8 mt-4">
             <div className="flex flex-wrap gap-2 items-center">
               <span className="text-sm text-gray-500">Active filters:</span>
 
@@ -477,53 +461,7 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {/* Pagination - Only show if there are products */}
-        {!productLoading && filteredProducts.length > 0 && (
-          <div className="mt-16 flex justify-center">
-            <nav className="flex items-center">
-              <button
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 mr-2 text-gray-500 hover:bg-gray-50 disabled:opacity-50"
-                disabled
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-
-              <button className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-[#11296B] font-medium text-[#11296B] mx-1">
-                1
-              </button>
-
-              <button className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 mx-1 text-gray-700 hover:bg-gray-50">
-                2
-              </button>
-
-              <button className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 ml-2 text-gray-700 hover:bg-gray-50">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </nav>
-          </div>
-        )}
+        
       </main>
       <Footer />
     </div>
