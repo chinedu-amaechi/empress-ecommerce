@@ -51,7 +51,7 @@ function SideNav() {
         <nav>
           <ul className="flex flex-col gap-0.5">
             <SideNavList to="/" text="Dashboard" icon={Dashboard} />
-            <SideNavList to="/users" text="Users" icon={People} />
+            <SideNavList to="/customers" text="Customers" icon={People} />
             <SideNavList to="/products" text="Products" icon={Inventory2} />
             <SideNavList to="/collections" text="Collections" icon={Category} />
             <SideNavList to="/orders" text="Orders" icon={DriveEta} />

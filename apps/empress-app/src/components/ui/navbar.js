@@ -93,10 +93,10 @@ const Navbar = () => {
       ref={navbarRef}
       className={`fixed top-0 left-0 right-0 z-50 py-3 ${
         isMenuOpen
-          ? "bg-white shadow-md" 
+          ? "bg-white shadow-md"
           : isScrolled
-          ? "bg-white/95 backdrop-blur-sm shadow-md transition-all duration-300" 
-          : "bg-transparent transition-all duration-300" 
+          ? "bg-white/95 backdrop-blur-sm shadow-md transition-all duration-300"
+          : "bg-transparent transition-all duration-300"
       }`}
     >
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-screen-2xl">
@@ -176,18 +176,17 @@ const Navbar = () => {
                 {user === null ? (
                   <PersonOutline />
                 ) : (
-                  <>
-                    <p className="bg-blue-950 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">
-                      {user.firstName.split("")[0]}
-                      {user.lastName.split("")[0]}
-                    </p>
-                  </>
+                  <p className="bg-blue-950 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">
+                    {user.firstName.split("")[0]}
+                    {user.lastName.split("")[0]}
+                  </p>
                 )}
               </button>
               {activeDropdown === "account" && (
                 <div className="absolute right-0 w-52 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
                   <div className="py-1">
                     {user === null ? (
+                      <>
                         <Link
                         href="/auth/sign-in"
                         onClick={(e) => {
@@ -197,10 +196,18 @@ const Navbar = () => {
                           }
                         }}
                           className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                          onClick={() => setActiveDropdown(null)}
                         >
                           Sign In
                         </Link>
-
+                        <Link
+                          href="/auth/sign-up"
+                          className="block px-4 py-2.5 text-base text-gray-700 hover:bg-[#11296B]/10 transition-colors duration-200"
+                          onClick={() => setActiveDropdown(null)}
+                        >
+                          Create Account
+                        </Link>
+                      </>
                     ) : (
                       <>
                         <Link
@@ -247,19 +254,64 @@ const Navbar = () => {
                 </span>
               </button>
               {activeDropdown === "cart" && (
-                <div className="absolute right-0 w-72 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-                  <div className="p-4">
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-base font-medium text-gray-900">
+                <div className="absolute right-0 w-80 mt-2 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-50">
+                  <div className="p-6">
+                    <div className="flex justify-between items-center border-b pb-3 mb-4">
+                      <h3 className="text-xl font-semibold text-gray-800">
                         Shopping Cart
                       </h3>
-                      <span className="text-sm text-gray-500">0 items</span>
+                      <span className="text-sm text-gray-500">
+                        {cart.reduce((acc, item) => acc + item.quantity, 0)}{" "}
+                        items
+                      </span>
                     </div>
-                    <div className="text-base text-gray-500 text-center py-5">
-                      Your cart is empty
-                    </div>
-                    <Link href="/cart">
-                      <button className="w-full py-2.5 px-4 bg-[#11296B] text-white text-base font-medium rounded hover:bg-opacity-90 transition-all duration-300">
+                    {cart.length === 0 ? (
+                      <div className="text-center py-10 text-gray-500">
+                        Your cart is empty.
+                      </div>
+                    ) : (
+                      <>
+                        <ul className="space-y-4 max-h-60 overflow-y-auto">
+                          {cart.map((item, idx) => (
+                            <li
+                              key={idx}
+                              className="flex justify-between items-center"
+                            >
+                              <div>
+                                <p className="font-medium text-gray-700">
+                                  {item.name}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {item.quantity} x ${item.price}
+                                </p>
+                              </div>
+                              <div className="text-gray-700 font-semibold">
+                                ${(item.quantity * item.price).toFixed(2)}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="border-t pt-4 mt-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium text-gray-700">
+                              Total:
+                            </span>
+                            <span className="font-bold text-gray-900">
+                              $
+                              {cart
+                                .reduce(
+                                  (acc, item) =>
+                                    acc + item.price * item.quantity,
+                                  0
+                                )
+                                .toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <Link href="/cart" onClick={() => setActiveDropdown(null)}>
+                      <button className="w-full mt-6 py-2 bg-[#11296B] text-white text-base font-medium rounded-lg hover:bg-opacity-90 transition-colors duration-300">
                         View Cart
                       </button>
                     </Link>

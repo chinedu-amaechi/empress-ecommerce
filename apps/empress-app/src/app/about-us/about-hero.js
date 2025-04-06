@@ -14,7 +14,7 @@ const AboutHero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[95vh] flex items-center overflow-hidden">
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
         <Image

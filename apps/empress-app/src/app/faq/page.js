@@ -228,7 +228,7 @@ export default function FAQ() {
       </div>
 
       {/* Elegant Luxury Hero Header with Gradient */}
-      <section className="relative h-[60vh] overflow-hidden">
+      <section className="relative h-[80vh] overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <Image
@@ -285,7 +285,7 @@ export default function FAQ() {
               FIND YOUR ANSWER
             </p>
             <Heading
-              level={2}
+              level={1}
               className="text-3xl font-light text-[#11296B] mb-6"
             >
               Frequently Asked Questions

@@ -8,7 +8,7 @@ import Product from "../models/product.js";
 import Collection from "../models/collection.js";
 import { deleteImage, uploadImage } from "../utils/helper.js";
 import mongoose from "mongoose";
-import product from "../models/product.js";
+import Customer from "../models/customer.js";
 
 // This function is used to add a new product to the database
 export async function postNewProduct(req, res, next) {
@@ -838,6 +838,86 @@ export async function removeProductFromCollection(req, res, next) {
       "Product removed from collection successfully",
       collection.toObject()
     );
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllCustomers(req, res, next) {
+  try {
+    if (req.user.role !== "admin") {
+      return serverResponse(res, 401, "Unauthorized access", null);
+    }
+
+    const customers = await Customer.find();
+
+    return serverResponse(
+      res,
+      200,
+      "Customers retrieved successfully",
+      customers
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getSingleCustomer(req, res, next) {
+  try {
+    if (req.user.role !== "admin") {
+      return serverResponse(res, 401, "Unauthorized access", null);
+    }
+
+    // Check if the customer ID is valid
+    const customerId = mongoose.isValidObjectId(req.params.customerId)
+      ? req.params.customerId
+      : null;
+
+    if (!customerId) {
+      return serverResponse(res, 400, "Invalid customer ID", null);
+    }
+
+    // Find the customer in the database
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return serverResponse(res, 404, "Customer not found", null);
+    }
+    return serverResponse(
+      res,
+      200,
+      "Customer retrieved successfully",
+      customer
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteCustomer(req, res, next) {
+  try {
+    if (req.user.role !== "admin") {
+      return serverResponse(res, 401, "Unauthorized access", null);
+    }
+
+    // Check if the customer ID is valid
+    const customerId = mongoose.isValidObjectId(req.params.customerId)
+      ? req.params.customerId
+      : null;
+
+    if (!customerId) {
+      return serverResponse(res, 400, "Invalid customer ID", null);
+    }
+
+    // Find the customer in the database
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return serverResponse(res, 404, "Customer not found", null);
+    }
+
+    // Delete the customer from the database
+    await Customer.findByIdAndDelete(customerId);
+
+    return serverResponse(res, 200, "Customer deleted successfully", null);
   } catch (error) {
     next(error);
   }

@@ -6,6 +6,8 @@ function useProducts() {
     queryFn: getAllProducts,
     queryKey: ["products"],
     refetchOnWindowFocus: true,
+    refetchInterval: 15000, // Refetch every 60 seconds
+    refetchIntervalInBackground: true,
   });
 
   return { data, isLoading, error };
