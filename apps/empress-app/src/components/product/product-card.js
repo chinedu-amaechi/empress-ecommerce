@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartContext } from "@/app/contexts/cart-context";
+import { addToCart, updateCart } from "@/lib/cart-services";
+import { useAuthContext } from "@/app/contexts/auth-context";
 
 // Utility function to generate star ratings
 const generateStars = (rating) => {
@@ -79,6 +81,8 @@ export default function ProductCard({
   const [quantity, setQuantity] = useState(1);
   const modalRef = useRef(null);
 
+  const { user } = useAuthContext();
+
   // Navigation for image carousel - now with safe array access
   const nextImage = (e) => {
     e?.stopPropagation();
@@ -126,12 +130,33 @@ export default function ProductCard({
     setQuantity((prev) => prev + 1);
   };
 
-  function handleAddToCart(quantity) {
-    console.log("Adding to cart");
+  async function handleAddToCart(quantity) {
+    if (user) {
+      const productInCart = user.cart.find(
+        (item) => item.productId === product._id
+      );
+      if (productInCart) {
+        const response = await updateCart({
+          productId: product._id,
+          quantity: quantity,
+        });
+
+        console.log("Updated cart:", response);
+      } else {
+        const response = await addToCart({
+          _id: product._id,
+          quantity: quantity,
+        });
+
+        console.log("Added to cart:", response);
+      }
+    }
+
     setCart((prev) => {
       const existingProduct = prev.find((item) => item._id === product._id);
+      let updatedCart;
       if (existingProduct) {
-        return prev.map((item) =>
+        updatedCart = prev.map((item) =>
           item._id === product._id
             ? {
                 ...item,
@@ -139,16 +164,19 @@ export default function ProductCard({
               }
             : item
         );
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        return updatedCart;
       }
-      return [...prev, { ...product, quantity: quantity }];
+
+      updatedCart = [...prev, { ...product, quantity: quantity }];
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
     });
   }
 
   const decreaseQuantity = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   };
-  console.log(safeImages);
-  console.log(product);
 
   return (
     <>

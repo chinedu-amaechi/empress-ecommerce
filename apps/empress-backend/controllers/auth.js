@@ -99,6 +99,7 @@ export async function checkAuth(req, res, next) {
           country: customer.address.country,
           postalCode: customer.address.postalCode,
         },
+        cart: customer.cart || [],
       });
     }
     return serverResponse(res, 401, "Unauthorized", null);
@@ -203,6 +204,7 @@ export async function loginCustomer(req, res, next) {
           country: customer.address.country,
           postalCode: customer.address.postalCode,
         },
+        cart: customer.cart || [],
       },
     });
   } catch (error) {

@@ -10,8 +10,6 @@ function AutoSignIn({ children }) {
   const { user, setUser } = useAuthContext();
 
   useEffect(() => {
-    console.log("hello");
-
     async function checkUser() {
       const token = localStorage.getItem("token");
       if (token) {
