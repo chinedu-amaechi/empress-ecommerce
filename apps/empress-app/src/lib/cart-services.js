@@ -54,6 +54,7 @@ export async function updateCart(data) {
         },
         body: JSON.stringify({
           quantity: data.quantity,
+          operation: data.operation || "add",
         }),
       }
     );
@@ -61,5 +62,25 @@ export async function updateCart(data) {
     return result.data;
   } catch (error) {
     console.error("Error updating cart:", error);
+  }
+}
+
+export async function removeFromCart(data) {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      `${backendUrl}/api/customer/cart/${data.productId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      }
+    );
+    const result = await response.json();
+    return result.data;
+  } catch (error) {
+    console.error("Error removing from cart:", error);
   }
 }

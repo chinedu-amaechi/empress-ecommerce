@@ -3,11 +3,14 @@
 import { useCartContext } from "../contexts/cart-context";
 import CartItem from "./cart-item";
 import Footer from "@/components/layout/footer";
+import { removeFromCart, updateCart } from "@/lib/cart-services";
 import { Trash2, CreditCard, Lock, Minus, Plus } from "lucide-react";
 import Image from "next/image";
+import { useAuthContext } from "../contexts/auth-context";
 
 function CartPage() {
   const { cart, setCart } = useCartContext();
+  const { user, setUser } = useAuthContext();
 
   // Calculate the subtotal based on cart items (business logic remains unchanged)
   const subtotal = cart.reduce(
@@ -23,32 +26,106 @@ function CartPage() {
   const total = subtotal + shipping + tax;
 
   // Handler for incrementing item quantity
-  const handleIncrement = (productId) => {
-    const updatedCart = cart.map((item) => {
-      if (item._id === productId) {
-        return { ...item, quantity: item.quantity + 1 };
+  async function handleIncrement(product) {
+    if (user) {
+      const productInCart = user.cart.find(
+        (item) => item.productId === product._id
+      );
+      if (productInCart) {
+        const response = await updateCart({
+          productId: productInCart.productId,
+          quantity: 1,
+          operation: "add",
+        });
+
+        console.log("Updated cart:", response);
       }
-      return item;
+    }
+
+    setCart((prev) => {
+      const existingProduct = prev.find((item) => item._id === product._id);
+      console.log("Existing product:", existingProduct);
+
+      let updatedCart;
+      if (existingProduct) {
+        updatedCart = prev.map((item) =>
+          item._id === product._id
+            ? {
+                ...item,
+                quantity: item.quantity + 1,
+              }
+            : item
+        );
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        return updatedCart;
+      }
+
+      updatedCart = [...prev, { ...product, quantity: quantity }];
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
     });
-    setCart(updatedCart);
-  };
+  }
 
   // Handler for decrementing item quantity
-  const handleDecrement = (productId) => {
-    const updatedCart = cart.map((item) => {
-      if (item._id === productId && item.quantity > 1) {
-        return { ...item, quantity: item.quantity - 1 };
+  async function handleDecrement(product) {
+    if (user) {
+      const productInCart = user.cart.find(
+        (item) => item.productId === product._id
+      );
+
+      if (productInCart && productInCart.quantity > 1) {
+        const response = await updateCart({
+          productId: productInCart.productId,
+          quantity: 1,
+          operation: "subtract", // Assuming backend handles decrement
+        });
+
+        console.log("Updated cart:", response);
       }
-      return item;
+    }
+
+    setCart((prev) => {
+      const existingProduct = prev.find((item) => item._id === product._id);
+
+      if (!existingProduct) return prev;
+
+      let updatedCart;
+      if (existingProduct.quantity > 1) {
+        updatedCart = prev.map((item) =>
+          item._id === product._id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        );
+      } else {
+        updatedCart = prev.filter((item) => item._id !== product._id);
+      }
+
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
     });
-    setCart(updatedCart);
-  };
+  }
 
   // Handler for removing item from cart
-  const handleRemove = (productId) => {
-    const updatedCart = cart.filter((item) => item._id !== productId);
-    setCart(updatedCart);
-  };
+  async function handleRemove(productId) {
+    if (user) {
+      const productInCart = user.cart.find(
+        (item) => item.productId === productId
+      );
+
+      console.log("Product in cart:", productInCart);
+
+      if (productInCart) {
+        const response = await removeFromCart(productInCart);
+        console.log("Removed from cart:", response);
+      }
+    }
+
+    setCart((prev) => {
+      const updatedCart = prev.filter((item) => item._id !== productId);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F5F5] selection:bg-[#11296B]/20">
@@ -108,7 +185,10 @@ function CartPage() {
                     <div className="flex items-center space-x-6">
                       <div className="w-24 h-24 bg-gray-100 overflow-hidden relative flex-shrink-0 border border-gray-200">
                         <Image
-                          src={product.image || "/placeholder-product.jpg"}
+                          src={
+                            product.imagesUrl[0].optimizeUrl ||
+                            "/placeholder-product.jpg"
+                          }
                           alt={product.name}
                           fill
                           className="object-cover"
@@ -145,7 +225,7 @@ function CartPage() {
                                 ? "bg-gray-100 cursor-not-allowed opacity-50"
                                 : "bg-gray-100 hover:bg-gray-200 hover:text-[#11296B]"
                             }`}
-                            onClick={() => handleDecrement(product._id)}
+                            onClick={() => handleDecrement(product)}
                             disabled={product.quantity <= 1}
                             aria-label="Decrease quantity"
                           >
@@ -156,7 +236,7 @@ function CartPage() {
                           </span>
                           <button
                             className="w-8 h-8 bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200 hover:text-[#11296B]"
-                            onClick={() => handleIncrement(product._id)}
+                            onClick={() => handleIncrement(product)}
                             aria-label="Increase quantity"
                           >
                             <Plus className="w-4 h-4" />
