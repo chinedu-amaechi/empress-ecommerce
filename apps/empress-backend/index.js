@@ -11,6 +11,7 @@ import Admin from "./models/admin.js";
 
 // Routes
 import adminRoutes from "./routes/admin.js";
+import customerRoutes from "./routes/customer.js";
 import authRoutes from "./routes/auth.js";
 import { checkAuthMiddleware } from "./utils/middleware.js";
 import Customer from "./models/customer.js";
@@ -65,6 +66,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/admin", adminRoutes);
+app.use("/api/customer", customerRoutes);
 app.use("/api/auth", authRoutes);
 
 // 404 route
