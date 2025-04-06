@@ -248,9 +248,6 @@ export async function makePayment(req, res, next) {
       success_url: `${process.env.YOUR_DOMAIN}?/products?success=true`,
       cancel_url: `${process.env.YOUR_DOMAIN}/cart?canceled=true`,
     });
-    console.log("session");
-
-    // console.log(session.url);
 
     return serverResponse(res, 200, "Payment session created successfully", {
       url: session.url,

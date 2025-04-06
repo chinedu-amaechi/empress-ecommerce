@@ -177,8 +177,6 @@ export async function deleteProduct(req, res, next) {
 
 export async function changeVisibility(req, res, next) {
   try {
-    console.log(req.user);
-
     if (req.user.role !== "admin") {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
@@ -314,9 +312,6 @@ export async function putProductImage(req, res, next) {
       return serverResponse(res, 401, "Unauthorized access", null);
     }
 
-    console.log(req.body);
-    console.log(req.files);
-
     // Check if there are any validation errors
     if (!req.files.images) {
       return serverResponse(res, 400, "At least one image is required", null);
@@ -359,12 +354,9 @@ export async function putProductImage(req, res, next) {
         publicId
       );
       imagesCloudUrl.push({ optimizeUrl, autoCropUrl, publicId });
-      console.log(imagesCloudUrl);
 
       deleteFile(file.filepath);
     }
-
-    console.log(imagesCloudUrl);
 
     // Add the images to the product
     product.imagesUrl.push(...imagesCloudUrl);
@@ -406,7 +398,6 @@ export async function removeProductImage(req, res, next) {
     const imageIndex = product.imagesUrl.findIndex(
       (image) => image.publicId === req.body.publicId
     );
-    console.log(imageIndex);
 
     if (imageIndex === -1) {
       return serverResponse(
