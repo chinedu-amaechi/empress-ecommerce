@@ -52,19 +52,21 @@ function CartPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F5F5F5] selection:bg-[#11296B]/20">
-      <main className="flex-grow container mx-auto px-4 py-16 max-w-6xl">
+      <main className="flex-grow container mx-auto px-4 py-16 pt-32 max-w-6xl">
         <div className="grid md:grid-cols-3 gap-12">
           {/* Cart Items Section - Left Column */}
           <div className="md:col-span-2 space-y-8">
-            <div className="flex justify-between items-center border-b pb-4">
+            <div className="flex justify-between items-center border-b-2 border-gray-300 pb-6 mb-8 pt-8">
               <h1 className="text-4xl font-light tracking-tight text-gray-900">
                 Shopping Cart
               </h1>
-              <p className="text-gray-600">{cart.length} Items</p>
+              <p className="text-gray-600 bg-gray-50 px-4 py-2">
+                {cart.length} {cart.length === 1 ? "Item" : "Items"}
+              </p>
             </div>
 
             {cart.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-xl shadow-soft">
+              <div className="text-center py-16 bg-white shadow-soft">
                 <div className="mx-auto w-24 h-24 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +91,7 @@ function CartPage() {
                 </p>
                 <a
                   href="/products"
-                  className="inline-block px-8 py-3 bg-[#11296B] text-white font-medium rounded-full hover:bg-[#1E96FC] transition-colors"
+                  className="inline-block px-8 py-3 bg-[#11296B] text-white font-medium hover:bg-[#1E96FC] transition-colors"
                 >
                   Continue Shopping
                 </a>
@@ -99,7 +101,7 @@ function CartPage() {
                 {cart.map((product) => (
                   <div
                     key={product._id}
-                    className="bg-white rounded-xl shadow-soft p-6 flex items-center justify-between hover:shadow-md transition-shadow"
+                    className="bg-white shadow-soft p-6 flex items-center justify-between hover:shadow-md transition-shadow"
                   >
                     <div className="flex items-center space-x-6">
                       <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden relative">
@@ -115,17 +117,17 @@ function CartPage() {
                           {product.name}
                         </h3>
                         <p className="text-gray-600">
-                          ${product.price.toFixed(2)} each
+                          ${product.price.toFixed(2)}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-6">
-                      <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-8">
+                      <div className="flex items-center space-x-2 border border-gray-200 px-1">
                         <button
-                          className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-700 ${
+                          className={`w-8 h-8 flex items-center justify-center text-gray-700 ${
                             product.quantity <= 1
                               ? "bg-gray-100 cursor-not-allowed opacity-50"
-                              : "bg-gray-100 hover:bg-gray-200"
+                              : "bg-gray-100 hover:bg-gray-200 hover:text-[#11296B]"
                           }`}
                           onClick={() => handleDecrement(product._id)}
                           disabled={product.quantity <= 1}
@@ -133,11 +135,11 @@ function CartPage() {
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="text-lg font-medium">
+                        <span className="text-lg font-medium w-6 text-center">
                           {product.quantity}
                         </span>
                         <button
-                          className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-200"
+                          className="w-8 h-8 bg-gray-100 flex items-center justify-center text-gray-700 hover:bg-gray-200 hover:text-[#11296B]"
                           onClick={() => handleIncrement(product._id)}
                           aria-label="Increase quantity"
                         >
@@ -148,7 +150,7 @@ function CartPage() {
                         ${(product.price * product.quantity).toFixed(2)}
                       </div>
                       <button
-                        className="text-red-500 hover:text-red-700 transition-colors"
+                        className="text-gray-400 hover:text-red-600 transition-colors p-1 border border-transparent hover:border-gray-200"
                         onClick={() => handleRemove(product._id)}
                         aria-label="Remove item"
                       >
@@ -162,13 +164,13 @@ function CartPage() {
           </div>
 
           {/* Order Summary Section - Right Column */}
-          <div className="md:col-span-1">
-            <div className="bg-white rounded-xl shadow-soft p-8 sticky top-24">
-              <h2 className="text-3xl font-light tracking-tight text-gray-900 mb-6">
+          <div className="md:col-span-1 md:w-[120%]">
+            <div className="bg-white shadow-soft p-2 sticky top-24">
+              <h2 className="text-3xl font-light tracking-tight text-gray-900 mb-6 pt-8 border-b-2 border-gray-300 pb-6">
                 Order Summary
               </h2>
 
-              <div className="space-y-4 border-b pb-6 mb-6">
+              <div className="space-y-4 border-b border-gray-200 pb-6 mb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
                   <span className="font-medium text-gray-900">
@@ -266,7 +268,7 @@ function CartPage() {
                 <div className="pt-6">
                   <button
                     type="submit"
-                    className="w-full bg-[#11296B] text-white py-4 rounded-full hover:bg-[#1E96FC] transition-colors flex items-center justify-center space-x-2"
+                    className="w-full bg-[#11296B] text-white py-4 hover:bg-[#1E96FC] transition-colors flex items-center justify-center space-x-2"
                   >
                     <Lock className="w-5 h-5 mr-2" />
                     Secure Checkout
