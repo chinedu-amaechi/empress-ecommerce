@@ -146,7 +146,7 @@ export default function ProductsPage() {
         {/* Search and Filters */}
         <div
           className={`${
-            isFilterFixed ? "sticky top-4 z-30" : ""
+            isFilterFixed ? "sticky top-18 z-30" : ""
           } transition-all duration-300 mb-12`}
         >
           <div className="relative mx-auto max-w-6xl backdrop-blur-sm bg-white/90 rounded-xl p-6 shadow-[0_8px_30px_rgba(17,41,107,0.08)]">
