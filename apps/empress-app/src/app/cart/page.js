@@ -9,10 +9,12 @@ import Image from "next/image";
 import { useAuthContext } from "../contexts/auth-context";
 import backendUrl from "@/lib/backend-url";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 function CartPage() {
   const { cart, setCart } = useCartContext();
   const { user, setUser } = useAuthContext();
+  const router = useRouter();
 
   // Calculate the subtotal based on cart items (business logic remains unchanged)
   const subtotal = cart.reduce(
@@ -134,6 +136,12 @@ function CartPage() {
   // Handler for making payment (placeholder function)
   async function makePayment(e) {
     e.preventDefault();
+
+    if (!user) {
+      toast.error("Please sign in to proceed with payment.");
+      router.push("/auth/sign-in");
+    }
+
     try {
       const response = await fetch(`${backendUrl}/api/customer/payment`, {
         method: "POST",

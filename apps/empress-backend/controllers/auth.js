@@ -1,6 +1,8 @@
 // 3rd party modules
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Nodemailer from "nodemailer";
+import { MailtrapTransport } from "mailtrap";
 
 // Custom modules
 import Admin from "../models/admin.js";
@@ -164,6 +166,27 @@ export async function createCustomer(req, res, next) {
 
     const savedCustomer = await customer.save();
 
+    const recipients = [customer.email];
+
+    const transport = Nodemailer.createTransport(
+      MailtrapTransport({
+        token: process.env.MAILTRAP_TOKEN,
+      })
+    );
+
+    const sender = {
+      address: process.env.MAILTRAP_SENDER_EMAIL,
+      name: process.env.MAILTRAP_SENDER_NAME,
+    };
+
+    transport.sendMail({
+      from: sender,
+      to: recipients,
+      subject: "🎉 Welcome to Empress!",
+      text: "Hey there!\n\nWe're so excited to have you join the Empress family. Your journey to elegance starts now! Explore our exclusive collection of handcrafted bracelets, designed just for you.\n\nHave any questions? We're here to help—just reply to this email!\n\nEnjoy your Empress experience! 💫\n\nCheers,\nThe Empress Team",
+      category: "Integration Test",
+    });
+
     return serverResponse(res, 201, "Customer created", savedCustomer);
   } catch (error) {
     next(error);
@@ -207,6 +230,80 @@ export async function loginCustomer(req, res, next) {
         cart: customer.cart || [],
       },
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function forgotPassword(req, res, next) {
+  try {
+    const { email } = req.body;
+
+    const customer = await Customer.findOne({ email });
+    if (!customer) {
+      return serverResponse(res, 404, "Customer not found", null);
+    }
+
+    // Generate a reset token
+    const resetToken = jwt.sign({ _id: customer._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    const resetLink = `${process.env.CLIENT_URL}/auth/reset-password?token=${resetToken}`;
+
+    const transport = Nodemailer.createTransport(
+      MailtrapTransport({
+        token: process.env.MAILTRAP_TOKEN,
+      })
+    );
+
+    const sender = {
+      address: process.env.MAILTRAP_SENDER_EMAIL,
+      name: process.env.MAILTRAP_SENDER_NAME,
+    };
+
+    transport.sendMail({
+      from: sender,
+      to: email,
+      subject: "Password Reset Request",
+      text: `Hi ${customer.firstName},\n\nWe received a request to reset your password. Click the link below to reset it:\n\n${resetLink}\n\nIf you didn't request this, please ignore this email.\n\nThanks,\nThe Empress Team`,
+    });
+
+    return serverResponse(res, 200, "Password reset email sent", null);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function resetPassword(req, res, next) {
+  try {
+    const { token, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return serverResponse(res, 400, "Passwords do not match", null);
+    }
+
+    // Verify the reset token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      return serverResponse(res, 400, "Invalid or expired token", null);
+    }
+
+    const customer = await Customer.findById(decoded._id);
+    if (!customer) {
+      return serverResponse(res, 404, "Customer not found", null);
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update the customer's password
+    customer.password = hashedPassword;
+    await customer.save();
+
+    return serverResponse(res, 200, "Password reset successful", null);
   } catch (error) {
     next(error);
   }

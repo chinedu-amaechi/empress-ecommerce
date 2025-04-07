@@ -11,6 +11,7 @@ import Button from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
 import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/layout/footer";
+import { postForgotPassword } from "@/lib/auth-services";
 
 // Mock service (replace with actual service)
 const requestPasswordReset = async (email) => {
@@ -57,7 +58,7 @@ function ForgetPassword() {
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
-      const response = await requestPasswordReset(data.email);
+      const response = await postForgotPassword(data.email);
 
       if (response.status === 200) {
         setUserEmail(data.email);

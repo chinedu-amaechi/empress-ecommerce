@@ -31,4 +31,10 @@ router.post(
 // Route to login a customer
 router.post("/login/customer", authControllers.loginCustomer);
 
+// Route for forgot password
+router.post("/forgot/password", authControllers.forgotPassword);
+
+// Route for reset password
+router.post("/reset/password", authControllers.resetPassword);
+
 export default router;
