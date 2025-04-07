@@ -8,6 +8,7 @@ import { Trash2, CreditCard, Lock, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { useAuthContext } from "../contexts/auth-context";
 import backendUrl from "@/lib/backend-url";
+import toast from "react-hot-toast";
 
 function CartPage() {
   const { cart, setCart } = useCartContext();
@@ -120,6 +121,8 @@ function CartPage() {
         console.log("Removed from cart:", response);
       }
     }
+
+    toast.success("Item removed from cart");
 
     setCart((prev) => {
       const updatedCart = prev.filter((item) => item._id !== productId);

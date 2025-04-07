@@ -13,6 +13,7 @@ import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/layout/footer";
 import Heading from "@/components/ui/heading";
 import Button from "@/components/ui/button";
+import { updatePassword, updateProfile } from "@/lib/account-services";
 
 // Mock services (replace with actual services)
 const updateAccount = async (data) => {
@@ -62,6 +63,7 @@ export default function AccountPage() {
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
       phone: user?.phone || "",
+      email: user?.email || "",
     },
   });
 
@@ -110,7 +112,7 @@ export default function AccountPage() {
   // Profile update handler
   const onProfileUpdate = async (data) => {
     try {
-      const response = await updateAccount(data);
+      const response = await updateProfile({ ...data, email: user?.email });
       if (response.status === 200) {
         toast.success("Profile updated successfully");
         setUser((prev) => ({ ...prev, ...data }));
@@ -127,21 +129,19 @@ export default function AccountPage() {
   const onAddressUpdate = async (data) => {
     try {
       const addressData = {
-        address: {
-          street: data.street,
-          city: data.city,
-          province: data.province,
-          postalCode: data.postalCode,
-          country: "Canada",
-        },
+        street: data.street,
+        city: data.city,
+        province: data.province,
+        postalCode: data.postalCode,
+        country: "Canada",
       };
 
-      const response = await updateAccount(addressData);
+      const response = await updateProfile(addressData);
       if (response.status === 200) {
-        toast.success("Address updated successfully");
+        toast.success(response.message || "Address updated successfully");
         setUser((prev) => ({
           ...prev,
-          address: addressData.address,
+          address: addressData,
         }));
       } else {
         toast.error(response.message || "Failed to update address");
@@ -155,7 +155,12 @@ export default function AccountPage() {
   // Password change handler
   const onPasswordChange = async (data) => {
     try {
-      const response = await changePassword(data);
+      console.log("Changing password with:", data);
+
+      const response = await updatePassword(data);
+
+      console.log("Password change response:", response);
+
       if (response.status === 200) {
         toast.success("Password changed successfully");
         resetPasswordForm();
@@ -374,10 +379,6 @@ export default function AccountPage() {
                         type="tel"
                         {...profileRegister("phone", {
                           required: "Phone number is required",
-                          pattern: {
-                            value: /^\d{10}$/,
-                            message: "Please enter a 10-digit phone number",
-                          },
                         })}
                         className="w-full rounded-lg border border-gray-300 px-4 py-2.5 focus:border-[#11296B] focus:outline-none focus:ring-1 focus:ring-[#11296B]"
                       />
@@ -679,7 +680,7 @@ export default function AccountPage() {
                         . This adds an extra layer of security to your account.
                       </p>
                       <p className="text-xs text-gray-500">
-                        When signing in, you'll need to provide both your
+                        When signing in, you will need to provide both your
                         password and a verification code sent to your device.
                       </p>
                     </div>

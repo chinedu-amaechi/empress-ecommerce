@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useCartContext } from "@/app/contexts/cart-context";
 import { addToCart, updateCart } from "@/lib/cart-services";
 import { useAuthContext } from "@/app/contexts/auth-context";
+import toast from "react-hot-toast";
 
 // Utility function to generate star ratings
 const generateStars = (rating) => {
@@ -152,6 +153,8 @@ export default function ProductCard({
       }
     }
 
+    toast.success("Added to cart successfully!");
+
     setCart((prev) => {
       const existingProduct = prev.find((item) => item._id === product._id);
       let updatedCart;
@@ -165,11 +168,14 @@ export default function ProductCard({
             : item
         );
         localStorage.setItem("cart", JSON.stringify(updatedCart));
+
         return updatedCart;
       }
 
       updatedCart = [...prev, { ...product, quantity: quantity }];
       localStorage.setItem("cart", JSON.stringify(updatedCart));
+      console.log("Added to cart:", updatedCart);
+
       return updatedCart;
     });
   }

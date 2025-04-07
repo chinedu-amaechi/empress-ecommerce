@@ -3,6 +3,8 @@ import Product from "../models/product.js";
 import Customer from "../models/customer.js";
 import serverResponse from "../utils/serverResponse.js";
 import Stripe from "stripe";
+import { validationResult } from "express-validator";
+import bcrypt from "bcrypt";
 
 export async function addToCart(req, res, next) {
   try {
@@ -49,6 +51,9 @@ export async function addToCart(req, res, next) {
 
     if (!productInCart) {
       // If the product is not in the cart, add it
+      console.log("Product not in cart, adding it now");
+      console.log(productId);
+
       customerExists.cart.push({ productId, quantity });
     } else {
       // If the product is already in the cart, update the quantity
@@ -251,6 +256,126 @@ export async function makePayment(req, res, next) {
 
     return serverResponse(res, 200, "Payment session created successfully", {
       url: session.url,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateCustomerDetails(req, res, next) {
+  try {
+    if (req.user?.role !== "customer") {
+      return serverResponse(res, 401, "Unauthorized access", null);
+    }
+
+    const customerId = req.user.id;
+
+    const { firstName, lastName, email, phone, street, city, province } =
+      req.body;
+
+    // Validate input
+    const { errors } = validationResult(req);
+
+    if (errors.length > 0) {
+      return serverResponse(res, 400, errors[0].msg, null);
+    }
+
+    // Find the customer and update their details
+    const customerExists = await Customer.findById(customerId);
+
+    if (!customerExists) {
+      return serverResponse(res, 404, "Customer not found", null);
+    }
+
+    // check if email already exists in the database
+    const emailExist = await Customer.findOne({
+      email: email,
+    });
+
+    if (emailExist && emailExist._id.toString() !== customerId) {
+      return serverResponse(res, 400, "Email already exists", null);
+    }
+
+    customerExists.firstName = firstName || customerExists.firstName;
+    customerExists.lastName = lastName || customerExists.lastName;
+    customerExists.email = email || customerExists.email;
+    customerExists.phone = phone || customerExists.phone;
+    customerExists.address.street = street || customerExists.address.street;
+    customerExists.address.city = city || customerExists.address.city;
+    customerExists.address.province =
+      province || customerExists.address.province;
+    customerExists.address.country =
+      req.body.country || customerExists.address.country;
+    customerExists.address.postalCode =
+      req.body.postalCode || customerExists.address.postalCode;
+
+    // Save the updated customer document
+
+    await customerExists.save();
+
+    return serverResponse(
+      res,
+      200,
+      "Customer details updated successfully",
+      customerExists
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateCustomerPassword(req, res, next) {
+  try {
+    if (req.user?.role !== "customer") {
+      return serverResponse(res, 401, "Unauthorized access", null);
+    }
+
+    const customerId = req.user.id;
+    const { newPassword, currentPassword } = req.body;
+
+    // Validate input
+    const { errors } = validationResult(req);
+
+    if (errors.length > 0) {
+      return serverResponse(res, 400, errors[0].msg, null);
+    }
+
+    // Find the customer and update their password
+    const customerExists = await Customer.findById(customerId);
+
+    if (!customerExists) {
+      return serverResponse(res, 404, "Customer not found", null);
+    }
+
+    const passwordMatch = await bcrypt.compare(
+      currentPassword,
+      customerExists.password
+    );
+
+    if (!passwordMatch) {
+      return serverResponse(res, 400, "Current password is incorrect", null);
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    customerExists.password = hashedPassword || customerExists.password;
+
+    // Save the updated customer document
+    await customerExists.save();
+
+    return serverResponse(res, 200, "Customer password updated successfully", {
+      firstName: customerExists.firstName,
+      lastName: customerExists.lastName,
+      email: customerExists.email,
+      phone: customerExists.phone,
+      address: {
+        street: customerExists.address.street,
+        city: customerExists.address.city,
+        province: customerExists.address.province,
+        country: customerExists.address.country,
+        postalCode: customerExists.address.postalCode,
+      },
+      cart: customerExists.cart || [],
     });
   } catch (error) {
     next(error);
