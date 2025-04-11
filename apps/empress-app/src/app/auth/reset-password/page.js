@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 // Components
 import Button from "@/components/ui/button";
 import Heading from "@/components/ui/heading";
-import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/layout/footer";
 import { postResetPassword } from "@/lib/auth-services";
 
@@ -81,7 +80,6 @@ function ResetPassword() {
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <Navbar />
       <main className="flex-grow pt-32 pb-16 px-4">
         <div className="max-w-md mx-auto">
           <div className="bg-white rounded-xl shadow-lg p-8">

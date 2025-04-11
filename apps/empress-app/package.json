@@ -10,7 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    // "test:components": "jest --testPathPattern=src/components",
+    "test:components": "jest --testPathPattern=src/components",
     "test:about-us": "jest --testPathPattern=src/about-us",
     "test:authentication": "jest --testPathPattern=src/app/auth",
     "test:cart": "jest --testPathPattern=src/app/cart",

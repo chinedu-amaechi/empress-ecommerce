@@ -1,13 +1,10 @@
 "use client";
 
 import React from "react";
-import Navbar from "@/components/ui/navbar";
 
 const Header = () => {
   return (
     <header className="relative">
-      {/* Navbar Component */}
-      <Navbar />
 
       {/* Compact Hero Section */}
       <div className="relative pt-16 flex items-center min-h-[100vh]">
