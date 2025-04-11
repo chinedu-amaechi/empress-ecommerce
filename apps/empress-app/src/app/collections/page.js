@@ -2,24 +2,18 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import ProductCard from "@/components/product/product-card";
 import CollectionNavigator from "./collection-navigator";
-import Breadcrumb from "@/components/ui/breadcrumb";
 import ScrollProgress from "./scroll-progress";
 import Heading from "@/components/ui/heading";
 import Footer from "@/components/layout/footer";
-import { getAllCollections } from "@/lib/collection-service";
 import CollectionNavigationHeader from "./collection-navigation-header";
 import CollectionIntroduction from "./collection-introduction";
 import CollectionFeaturedProduct from "./collection-featured-product";
 import CollectionProduct from "./collection-products";
-import { useQuery } from "@tanstack/react-query";
 import useCollections from "@/hooks/use-collections";
 import useProducts from "@/hooks/use-products";
-import Navbar from "@/components/ui/navbar";
 
 // Add these styles directly in the component
 const checkerboardStyles = {

@@ -9,6 +9,12 @@ const ProductGallery = ({ images = [], name = "Product" }) => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
+  // Ensure we have valid images with fallback
+  const displayImages = images && images.length > 0 
+    ? images.map(img => typeof img === 'string' ? img : (img.optimizeUrl || '/product/product-placeholder.jpg'))
+    : ['/product/product-placeholder.jpg'];
+
+  
   // Handle image click
   const handleImageClick = (index) => {
     setSelectedImage(index);

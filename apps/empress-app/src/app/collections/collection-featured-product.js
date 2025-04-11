@@ -1,17 +1,29 @@
 import Image from "next/image";
 
 function CollectionFeaturedProduct({ collection }) {
+  // Check if featuredProduct exists and has valid image data
+  const hasValidImage =
+    collection?.featuredProduct?.imagesUrl?.[0]?.optimizeUrl;
+  const productName = collection?.featuredProduct?.name || "Featured Product";
+  const productDescription =
+    collection?.featuredProduct?.description || "No description available";
+  const productMaterials = collection?.featuredProduct?.materials || [];
+
+  // Use a placeholder image if no valid image URL is available
+  const imageUrl = hasValidImage
+    ? collection.featuredProduct.imagesUrl[0].optimizeUrl
+    : "/product/product-placeholder.jpg";
+
   return (
     <div className="relative mb-32 border-1 border-[#d4d4d4] rounded-3xl overflow-hidden">
       <div className="absolute -inset-4 bg-[#11296B]/5 rounded-3xl -z-10 transform -rotate-1"></div>
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300">
         <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-          {/* Added h-full here */}
           {/* Image Side */}
           <div className="relative h-80 lg:h-auto lg:min-h-[600px] overflow-hidden">
             <Image
-              src={collection.featuredProduct?.imagesUrl[0].optimizeUrl}
-              alt={collection.featuredProduct?.name}
+              src={imageUrl}
+              alt={productName}
               fill
               className="object-cover"
               priority
@@ -26,13 +38,13 @@ function CollectionFeaturedProduct({ collection }) {
           {/* Content Side */}
           <div className="flex flex-col justify-center p-10 lg:p-16">
             <h3 className="text-3xl font-light text-gray-900 mb-4">
-              {collection.featuredProduct?.name}
+              {productName}
             </h3>
 
             <div className="w-12 h-px bg-[#11296B]/30 my-6"></div>
 
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              {collection.featuredProduct?.description}
+              {productDescription}
               {/* Extended description */}
               <span className="block mt-4">
                 Designed to embody the essence of the {collection.name}{" "}
@@ -55,17 +67,20 @@ function CollectionFeaturedProduct({ collection }) {
                       Materials
                     </div>
                     <ul>
-                      {collection.featuredProduct?.materials &&
-                        collection.featuredProduct.materials?.map(
-                          (material, index) => (
-                            <li
-                              key={index}
-                              className="flex items-center mb-1 font-semibold text-sm "
-                            >
-                              {material}
-                            </li>
-                          )
-                        )}
+                      {productMaterials.length > 0 ? (
+                        productMaterials.map((material, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center mb-1 font-semibold text-sm"
+                          >
+                            {material}
+                          </li>
+                        ))
+                      ) : (
+                        <li className="flex items-center mb-1 font-semibold text-sm">
+                          Premium Materials
+                        </li>
+                      )}
                     </ul>
                   </div>
 
@@ -85,7 +100,6 @@ function CollectionFeaturedProduct({ collection }) {
                     <div className="text-sm font-medium">*****</div>
                   </div>
                 </div>
-                
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-auto"></div>

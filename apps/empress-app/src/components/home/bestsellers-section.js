@@ -1,11 +1,10 @@
-// src/components/home/BestsellersSection.js
+// src/components/home/bestsellers-section.js
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import Heading from "@/components/ui/heading";
 import ProductCard from "@/components/product/product-card";
 import useProducts from "@/hooks/use-products";
-
 
 const BestsellersSection = () => {
   const [bestsellers, setBestsellers] = useState([]);
@@ -47,11 +46,8 @@ const BestsellersSection = () => {
     return <div>Error loading bestsellers</div>;
   }
 
-  console.log(bestsellers);
-
   return (
     <section className="bg-white py-16 md:py-20 px-4 sm:px-6 lg:px-8 relative">
-      
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-4">
           <Heading
@@ -75,6 +71,7 @@ const BestsellersSection = () => {
           <button
             onClick={scrollLeft}
             className="hidden md:block bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-all"
+            aria-label="Previous image"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -96,6 +93,7 @@ const BestsellersSection = () => {
           <button
             onClick={scrollRight}
             className="hidden md:block bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-all"
+            aria-label="Next image"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +123,7 @@ const BestsellersSection = () => {
         >
           {bestsellers.map((product) => (
             <div
-              key={product.id}
+              key={product._id || `product-${product.name}`}
               className="flex-shrink-0 w-80 scroll-snap-align-start"
               style={{ scrollSnapAlign: "start" }}
             >
