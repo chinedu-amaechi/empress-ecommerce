@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import ProductCard from "@/components/product/product-card";
 import CollectionNavigator from "./collection-navigator";
+import Breadcrumb from "@/components/ui/breadcrumb";
 import ScrollProgress from "./scroll-progress";
 import Heading from "@/components/ui/heading";
 import Footer from "@/components/layout/footer";
@@ -12,8 +15,10 @@ import CollectionNavigationHeader from "./collection-navigation-header";
 import CollectionIntroduction from "./collection-introduction";
 import CollectionFeaturedProduct from "./collection-featured-product";
 import CollectionProduct from "./collection-products";
+import { useQuery } from "@tanstack/react-query";
 import useCollections from "@/hooks/use-collections";
 import useProducts from "@/hooks/use-products";
+import Navbar from "@/components/ui/navbar";
 
 // Add these styles directly in the component
 const checkerboardStyles = {
@@ -34,8 +39,7 @@ export default function Collections() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Checkerboard transition state
-  const [previousCollection, setPreviousCollection] =
-    useState(activeCollection);
+  const [previousCollection, setPreviousCollection] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [cells, setCells] = useState([]);
   const gridSize = 8; // 8x8 grid for the checkerboard
@@ -55,50 +59,9 @@ export default function Collections() {
     error: productsError,
   } = useProducts();
 
-  useEffect(() => {
-    async function fetchCollections() {
-      if (collectionsData && productsData) {
-        setCollections(collectionsData);
-        console.log("All collections:", collectionsData);
-        console.log(collections);
-        setActiveCollection(
-          collectionsData.filter(
-            (collection) => collection.name === highlightCollection
-          )[0]
-        );
-        // setting featured product to the first product in the collection
-        const featuredProductId =
-          activeCollection.products[
-           0
-          ];
-
-        activeCollection.featuredProduct = productsData.find(
-          (product) => product._id === featuredProductId
-        );
-      } else {
-        return;
-      }
-    }
-
-    fetchCollections();
-  }, [
-    collectionsData,
-    collections,
-    highlightCollection,
-    productsData,
-    activeCollection,
-  ]);
-
   // Handle initial load and collection change
   useEffect(() => {
     setIsVisible(true);
-
-    if (
-      highlightCollection &&
-      Object.keys(collections).includes(highlightCollection)
-    ) {
-      setActiveCollection(highlightCollection);
-    }
 
     // Check initial scroll position immediately
     setIsScrolled(window.scrollY > 100);
@@ -112,11 +75,73 @@ export default function Collections() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [highlightCollection]);
 
+  // Setup collections and active collection with featured product
+  useEffect(() => {
+    async function setupCollections() {
+      try {
+        if (collectionsData && productsData) {
+          // Set collections data
+          setCollections(collectionsData);
+
+          // Skip further processing if collections data is empty
+          if (!collectionsData.length) {
+            console.log("No collections data available");
+            return;
+          }
+
+          let targetCollection = null;
+
+          // Try to find the highlighted collection if specified
+          if (highlightCollection) {
+            targetCollection = collectionsData.find(
+              (collection) => collection.name === highlightCollection
+            );
+          }
+
+          // If no highlighted collection or it wasn't found, use the first one
+          if (!targetCollection && collectionsData.length > 0) {
+            targetCollection = collectionsData[0];
+          }
+
+          // Set the active collection
+          if (targetCollection) {
+            setActiveCollection(targetCollection);
+
+            // Try to find and set a featured product only if collection has products array
+            if (
+              targetCollection.products &&
+              targetCollection.products.length > 0
+            ) {
+              const featuredProductId = targetCollection.products[0];
+
+              const featuredProduct = productsData.find(
+                (product) => product._id === featuredProductId
+              );
+
+              if (featuredProduct) {
+                // Use functional state update to avoid race conditions
+                setActiveCollection((prevState) => ({
+                  ...prevState,
+                  featuredProduct: featuredProduct,
+                }));
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error in collections page setup:", error);
+      }
+    }
+
+    setupCollections();
+  }, [collectionsData, highlightCollection, productsData]);
+
   // Handle checkerboard transition when collection changes
   useEffect(() => {
-    if (previousCollection !== activeCollection) {
+    if (previousCollection !== activeCollection && activeCollection) {
       // Setup the transition
       setIsTransitioning(true);
+      setPreviousCollection(activeCollection);
 
       // Create the cells array for the checkerboard
       const newCells = [];
@@ -135,7 +160,6 @@ export default function Collections() {
       // After the transition completes
       const timer = setTimeout(() => {
         setIsTransitioning(false);
-        setPreviousCollection(activeCollection);
       }, 1000); // Slightly longer than the transition time
 
       return () => clearTimeout(timer);
@@ -157,15 +181,16 @@ export default function Collections() {
 
   // Handle collection change without scrolling to top
   const handleCollectionChange = (collectionName) => {
-    console.log(collectionName);
+    if (!collectionName || !collections.length) return;
 
-    // Only proceed if we're changing to a different collection
-    if (activeCollection.name !== collectionName) {
-      setActiveCollection(
-        collections.filter(
-          (collection) => collection.name === collectionName
-        )[0]
-      );
+    // Find the collection with the given name
+    const targetCollection = collections.find(
+      (collection) => collection.name === collectionName
+    );
+
+    // Only proceed if we found a collection and it's different from current
+    if (targetCollection && activeCollection?.name !== collectionName) {
+      setActiveCollection(targetCollection);
 
       // Always scroll to top of the page when changing collections
       window.scrollTo({
@@ -180,24 +205,33 @@ export default function Collections() {
     }
   };
 
-  if (collectionsIsLoading || !collections || !activeCollection) {
+  // Early return for loading or error states
+  if (collectionsIsLoading || productsIsLoading || !activeCollection) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-lg text-gray-600">Loading collections...</p>
+      <main className="min-h-screen flex items-center justify-center bg-[#f9f9f9]">
+        <div className="text-center">
+          <div className="inline-block w-12 h-12 border-4 border-[#11296B]/20 border-t-[#11296B] rounded-full animate-spin mb-4"></div>
+          <p className="text-lg text-gray-600">Loading collections...</p>
+        </div>
       </main>
     );
   }
 
   if (collectionsError || productsError) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-lg text-red-600">Error loading collections</p>
+      <main className="min-h-screen flex items-center justify-center bg-[#f9f9f9]">
+        <div className="text-center">
+          <p className="text-lg text-red-600 mb-2">Error loading collections</p>
+          <p className="text-gray-600">Please try refreshing the page</p>
+        </div>
       </main>
     );
   }
-  console.log(activeCollection);
-  console.log(collections);
 
+  // Get filtered products for this collection
+  const collectionProducts = productsData.filter(
+    (product) => product.collectionId === activeCollection._id
+  );
 
   return (
     <main ref={mainRef} className="min-h-screen overflow-hidden bg-[#f9f9f9]">
@@ -206,7 +240,6 @@ export default function Collections() {
 
       {/* Collection Navigation */}
       <div className="fixed top-[95px] left-6 z-40">
-        
         <CollectionNavigationHeader
           collectionsData={collections}
           activeCollection={activeCollection}
@@ -220,86 +253,93 @@ export default function Collections() {
 
       {/* Elegant Header with Dynamic Background and Checkerboard Transition */}
       <header className="relative h-[90vh] overflow-hidden">
-        <div className={checkerboardStyles.checkerboardContainer}>
-          {!isTransitioning ? (
-            // Regular image when not transitioning
-            <div className={checkerboardStyles.imageWrapper}>
-              <Image
-                src={activeCollection.imageUrl.optimizeUrl}
-                alt={activeCollection.name}
-                fill
-                className="object-cover"
-                priority
-                quality={95}
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent"></div>
-            </div>
-          ) : (
-            // Checkerboard transition
-            <>
-              {/* Previous image underneath */}
-              <div
-                className={checkerboardStyles.imageWrapper}
-                style={{ zIndex: 1 }}
-              >
+        {activeCollection?.imageUrl?.optimizeUrl ? (
+          <div className={checkerboardStyles.checkerboardContainer}>
+            {!isTransitioning ? (
+              // Regular image when not transitioning
+              <div className={checkerboardStyles.imageWrapper}>
                 <Image
                   src={activeCollection.imageUrl.optimizeUrl}
-                  alt={activeCollection.name}
+                  alt={activeCollection.name || "Collection image"}
                   fill
                   className="object-cover"
                   priority
                   quality={95}
                 />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent"></div>
               </div>
+            ) : (
+              // Checkerboard transition
+              <>
+                {/* Previous image underneath */}
+                <div
+                  className={checkerboardStyles.imageWrapper}
+                  style={{ zIndex: 1 }}
+                >
+                  <Image
+                    src={activeCollection.imageUrl.optimizeUrl}
+                    alt={activeCollection.name || "Collection image"}
+                    fill
+                    className="object-cover"
+                    priority
+                    quality={95}
+                  />
+                </div>
 
-              {/* Checkerboard cells with new image */}
-              {cells.map((cell) => {
-                const width = 100 / gridSize;
-                const height = 100 / gridSize;
-                const left = cell.col * width;
-                const top = cell.row * height;
+                {/* Checkerboard cells with new image */}
+                {cells.map((cell) => {
+                  const width = 100 / gridSize;
+                  const height = 100 / gridSize;
+                  const left = cell.col * width;
+                  const top = cell.row * height;
 
-                return (
-                  <div
-                    key={cell.key}
-                    className={`${checkerboardStyles.checkerCell} ${
-                      isTransitioning ? "" : checkerboardStyles.cellHidden
-                    }`}
-                    style={{
-                      width: `${width}%`,
-                      height: `${height}%`,
-                      left: `${left}%`,
-                      top: `${top}%`,
-                      transitionDelay: `${cell.delay}s`,
-                      zIndex: 2,
-                    }}
-                  >
+                  return (
                     <div
-                      className={checkerboardStyles.cellContent}
+                      key={cell.key}
+                      className={`${checkerboardStyles.checkerCell} ${
+                        isTransitioning ? "" : checkerboardStyles.cellHidden
+                      }`}
                       style={{
-                        backgroundImage: `url(${activeCollection.imageUrl.optimizeUrl})`,
-                        backgroundSize: `${gridSize * 100}%`,
-                        backgroundPosition: `${-left * gridSize}% ${
-                          -top * gridSize
-                        }%`,
+                        width: `${width}%`,
+                        height: `${height}%`,
+                        left: `${left}%`,
+                        top: `${top}%`,
+                        transitionDelay: `${cell.delay}s`,
+                        zIndex: 2,
                       }}
-                    />
-                  </div>
-                );
-              })}
+                    >
+                      <div
+                        className={checkerboardStyles.cellContent}
+                        style={{
+                          backgroundImage: `url(${activeCollection.imageUrl.optimizeUrl})`,
+                          backgroundSize: `${gridSize * 100}%`,
+                          backgroundPosition: `${-left * gridSize}% ${
+                            -top * gridSize
+                          }%`,
+                        }}
+                      />
+                    </div>
+                  );
+                })}
 
-              {/* Gradient overlay */}
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent"
-                style={{ zIndex: 3 }}
-              ></div>
-            </>
-          )}
-        </div>
+                {/* Gradient overlay */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent"
+                  style={{ zIndex: 3 }}
+                ></div>
+              </>
+            )}
+          </div>
+        ) : (
+          // Fallback for missing image
+          <div className="absolute inset-0 bg-gradient-to-b from-[#11296B] to-[#1E96FC]">
+            <div className="absolute inset-0 bg-[url('/pattern-bg.png')] opacity-10"></div>
+          </div>
+        )}
 
         {/* Elegant Header Content */}
         <motion.div
-          key={`header-content-${activeCollection}`}
+          key={`header-content-${activeCollection._id}`}
           initial="hidden"
           animate="visible"
           variants={{
@@ -337,7 +377,7 @@ export default function Collections() {
                   }}
                   className="font-semibold inline-block"
                 >
-                  {activeCollection.name}
+                  {activeCollection.name || "Collection"}
                 </motion.span>
               </Heading>
 
@@ -358,7 +398,8 @@ export default function Collections() {
               }}
               className="max-w-2xl mx-auto text-xl md:text-2xl text-white/90 leading-relaxed font-light mb-12"
             >
-              {activeCollection.description}
+              {activeCollection.description ||
+                "Explore our collection of handcrafted jewelry."}
             </motion.p>
 
             <motion.div
@@ -410,10 +451,11 @@ export default function Collections() {
           </motion.div>
         </div>
       </header>
+
       {/* Collection Detail Section */}
       <AnimatePresence mode="wait">
         <motion.section
-          key={activeCollection}
+          key={activeCollection._id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -429,9 +471,7 @@ export default function Collections() {
 
             {/* Collection Products Grid Section */}
             <CollectionProduct
-              products={productsData.filter(
-                (product) => product.collectionId === activeCollection._id
-              )}
+              products={collectionProducts}
               collection={activeCollection}
             />
 
@@ -450,28 +490,34 @@ export default function Collections() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {Object.entries(collections)
-                  .filter(([slug]) => slug !== activeCollection)
+                {collections
+                  .filter(
+                    (collection) => collection._id !== activeCollection._id
+                  )
                   .slice(0, 3)
-                  .map(([slug, collection]) => (
+                  .map((collection) => (
                     <div
-                      key={slug}
+                      key={collection._id}
                       className="relative h-80 rounded-lg overflow-hidden shadow-lg group cursor-pointer"
                       onClick={() => handleCollectionChange(collection.name)}
                     >
-                      <Image
-                        src={collection.imageUrl.optimizeUrl}
-                        alt={collection.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
+                      {collection.imageUrl?.optimizeUrl ? (
+                        <Image
+                          src={collection.imageUrl.optimizeUrl}
+                          alt={collection.name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[#11296B] to-[#1E96FC]"></div>
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                         <h4 className="text-xl font-medium mb-2">
                           {collection.name}
                         </h4>
                         <p className="text-white/80 text-sm line-clamp-2 mb-4">
-                          {collection.description}
+                          {collection.description || "Explore this collection"}
                         </p>
                         <span className="inline-flex items-center text-sm font-medium text-white group-hover:underline">
                           Explore Collection
@@ -493,14 +539,13 @@ export default function Collections() {
                     </div>
                   ))}
               </div>
+
               {/* Collection Navigator */}
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <CollectionNavigator
                   collections={collections}
                   currentCollection={activeCollection}
-                  onNavigate={(collection) =>
-                    handleCollectionChange(collection, true)
-                  }
+                  onNavigate={handleCollectionChange}
                 />
               </div>
             </section>
