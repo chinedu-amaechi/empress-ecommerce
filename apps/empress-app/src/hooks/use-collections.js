@@ -6,7 +6,7 @@ function useCollections() {
     queryFn: getAllCollections,
     queryKey: ["collections"],
     refetchOnWindowFocus: true,
-    refetchInterval: 30000, // Refetch every 60 seconds
+    refetchInterval: 15000,
     refetchIntervalInBackground: true,
   });
 
