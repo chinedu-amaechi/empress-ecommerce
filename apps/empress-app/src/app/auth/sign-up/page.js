@@ -8,7 +8,6 @@ import Heading from "@/components/ui/heading";
 import toast from "react-hot-toast";
 import { postSignUp } from "@/lib/auth-services";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/layout/footer";
 
 // Bracelet Image Carousel component
@@ -169,7 +168,6 @@ function SignUp() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Navbar />
 
       <main className="flex-grow pt-40 pb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

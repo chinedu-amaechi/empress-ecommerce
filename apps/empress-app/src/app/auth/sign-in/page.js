@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/layout/footer";
 
 function SignIn() {
@@ -91,7 +90,6 @@ function SignIn() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Navbar />
 
       <main className="flex-grow pt-40 pb-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
