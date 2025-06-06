@@ -271,7 +271,7 @@ const BraceletPreview = ({
                         ? `
                       bg-blue-50 border-2 border-blue-500
                       ring-4 ring-blue-200
-                      animate-[pulse_1.5s_ease-in-out_infinite,bounce_2s_ease-in-out_infinite]
+                      animate-[pulse_1.5s_ease-in-out_infinite]
                       hover:scale-125 hover:bg-blue-100
                     `
                         : `
